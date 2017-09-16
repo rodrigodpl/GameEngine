@@ -19,9 +19,6 @@
     <Filter Include="Sources\Modules\Game">
       <UniqueIdentifier>{83f46af7-e02f-40c0-9e56-41d76082527b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Imgui">
-      <UniqueIdentifier>{94da592c-8464-473c-89fd-143e1512694f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -81,17 +78,14 @@
     <ClInclude Include="PhysBody3D.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="PhysVehicle3D.h">
+    <ClInclude Include="imconfig.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="imgui-1.51\imgui.h">
-      <Filter>Sources\Imgui</Filter>
+    <ClInclude Include="imgui.h">
+      <Filter>Sources\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="imgui-1.51\imgui_internal.h">
-      <Filter>Sources\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui-1.51\imgui_impl_sdl_gl3.h">
-      <Filter>Sources\Imgui</Filter>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>Sources\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -143,20 +137,14 @@
     <ClCompile Include="PhysBody3D.cpp">
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="PhysVehicle3D.cpp">
+    <ClCompile Include="imgui.cpp">
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="imgui-1.51\imgui.cpp">
-      <Filter>Sources\Imgui</Filter>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>Sources\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="imgui-1.51\imgui_demo.cpp">
-      <Filter>Sources\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui-1.51\imgui_draw.cpp">
-      <Filter>Sources\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui-1.51\imgui_impl_sdl_gl3.cpp">
-      <Filter>Sources\Imgui</Filter>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>Sources\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
