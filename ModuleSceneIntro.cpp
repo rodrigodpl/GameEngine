@@ -57,14 +57,17 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	/*Plane p(0, 1, 0, 0);
+	Plane p(0, 1, 0, 0);
 	p.axis = true;
-	p.Render();*/
+	p.Render();
 
 	ImGui::NewFrame();
 	
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN) ImGui::ShowTestWindow();
-
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
+		ImVec2 aux(0, 0);
+		ImGui::SetNextWindowPos(aux);
+		ImGui::ShowTestWindow();
+	}
 
 	return UPDATE_CONTINUE;
 }
