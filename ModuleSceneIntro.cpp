@@ -63,11 +63,11 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	ImGui::NewFrame();
 	
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
+//*	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
 		ImVec2 aux(0, 0);
 		ImGui::SetNextWindowPos(aux);
 		ImGui::ShowTestWindow();
-	}
-
+	//}
+		ImGui::Render();
 	return UPDATE_CONTINUE;
 }
