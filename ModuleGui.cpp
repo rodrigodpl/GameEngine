@@ -43,3 +43,10 @@ update_status ModuleGui::PostUpdate(float dt) {
 
 	return UPDATE_CONTINUE;
 }
+
+bool ModuleGui::CleanUp()
+{
+	LOG("Unloading Intro scene");
+
+	return true;
+}
