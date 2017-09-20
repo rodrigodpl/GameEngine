@@ -22,11 +22,6 @@ bool ModuleGui::Start() {
 
 	io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
 	io.Fonts->TexID = (void*)SDL_CreateTextureFromSurface(SDL_GetRenderer(App->window->window), font);
-<<<<<<< HEAD
-
-=======
-	
->>>>>>> 7a2cc0eeb51e9fd85f84bcf372a53efc5de37a09
 	return true;
 }
 
