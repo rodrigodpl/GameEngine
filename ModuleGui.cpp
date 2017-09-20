@@ -11,19 +11,19 @@ ModuleGui::~ModuleGui(){}
 
 bool ModuleGui::Start() {
 	showdemo = true;
-
 	ImGuiIO& io = ImGui::GetIO();
 	io.DisplaySize.x = 1920.0f;
 	io.DisplaySize.y = 1280.0f;
 	io.RenderDrawListsFn = nullptr;
-
+	
 	unsigned char* pixels;
 	int width, height;
 	SDL_Surface* font = SDL_CreateRGBSurfaceFrom(pixels, width, height, 32, (4 * width), 0, 0, 0, 0);
 
 	io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
 	io.Fonts->TexID = (void*)SDL_CreateTextureFromSurface(SDL_GetRenderer(App->window->window), font);
-
+	
+	return true;
 }
 
 update_status ModuleGui::PreUpdate(float dt) {
