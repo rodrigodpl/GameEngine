@@ -34,6 +34,7 @@ bool ModuleSceneIntro::Start()
 	SDL_Surface* font = SDL_CreateRGBSurfaceFrom(pixels, width, height, 32, (4 * width), 0, 0, 0, 0);
 
 	return ret;
+
 }
 
 // Load assets

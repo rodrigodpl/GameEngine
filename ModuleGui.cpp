@@ -1,5 +1,5 @@
 #include "ModuleGui.h"
-#include "imgui.h"
+#include "imgui-1.51\imgui.h"
 #include "glut\glut.h"
 
 #include <stdlib.h>
@@ -24,6 +24,7 @@ bool ModuleGui::Start() {
 	io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
 	io.Fonts->TexID = (void*)SDL_CreateTextureFromSurface(SDL_GetRenderer(App->window->window), font);
 
+	return true;
 }
 
 update_status ModuleGui::PreUpdate(float dt) {
