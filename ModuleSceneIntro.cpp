@@ -29,10 +29,6 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
-	unsigned char* pixels;
-	int width, height;
-	SDL_Surface* font = SDL_CreateRGBSurfaceFrom(pixels, width, height, 32, (4 * width), 0, 0, 0, 0);
-
 	return ret;
 
 }

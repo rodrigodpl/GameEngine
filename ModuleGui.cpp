@@ -18,9 +18,10 @@ bool ModuleGui::Start() {
 	
 	unsigned char* pixels;
 	int width, height;
-	SDL_Surface* font = SDL_CreateRGBSurfaceFrom(pixels, width, height, 32, (4 * width), 0, 0, 0, 0);
 
 	io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
+	SDL_Surface* font = SDL_CreateRGBSurfaceFrom(pixels, width, height, 32, (4 * width), 0, 0, 0, 0);
+
 	io.Fonts->TexID = (void*)SDL_CreateTextureFromSurface(SDL_GetRenderer(App->window->window), font);
 	return true;
 }

@@ -98,6 +98,9 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="glmath.cpp" />
+    <ClCompile Include="imgui-1.51\imgui.cpp" />
+    <ClCompile Include="imgui-1.51\imgui_demo.cpp" />
+    <ClCompile Include="imgui-1.51\imgui_draw.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
