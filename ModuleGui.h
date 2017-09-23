@@ -2,7 +2,6 @@
 
 #include "Module.h"
 #include "Globals.h"
-#include "Application.h"
 
 class ModuleGui : public Module
 {
