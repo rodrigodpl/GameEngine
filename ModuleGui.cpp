@@ -18,6 +18,7 @@ bool ModuleGui::Start() {
 
 	show_menu = true;
 	showdemo = false;
+	show_about = false;
 
 	return true;
 }
@@ -30,12 +31,16 @@ update_status ModuleGui::PreUpdate(float dt) {
 	{
 		if (ImGui::BeginMenu("File", &show_menu))
 		{
-			if (ImGui::MenuItem("Exit", "Alt+F4"));
+			if (ImGui::MenuItem("Exit")) {
+				return UPDATE_STOP;
+			}
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("About"))
+		if (ImGui::BeginMenu("Help"))
 		{
-			if (ImGui::MenuItem("Exit", "Alt+F4"));
+			if (ImGui::MenuItem("About", NULL, &show_about)) {
+				showaboutmenu();
+			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
@@ -64,4 +69,15 @@ bool ModuleGui::CleanUp()
 	LOG("Unloading Intro scene");
 
 	return true;
+}
+
+void ModuleGui::showaboutmenu() {
+	ImGui::Begin("About", &show_about, ImGuiWindowFlags_AlwaysAutoResize |
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_ShowBorders);
+	ImGui::Text("dear imgui, %s", ImGui::GetVersion());
+	ImGui::Separator();
+	ImGui::Text("By Omar Cornut and all github contributors.");
+	ImGui::Text("ImGui is licensed under the MIT License, see LICENSE for more information.");
+	ImGui::End();
 }

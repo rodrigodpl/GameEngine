@@ -17,4 +17,7 @@ public:
 private:
 	bool showdemo;
 	bool show_menu;
+	bool show_about;
+
+	void showaboutmenu();
 };
