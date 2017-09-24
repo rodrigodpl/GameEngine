@@ -16,4 +16,5 @@ public:
 
 private:
 	bool showdemo;
+	bool show_menu;
 };

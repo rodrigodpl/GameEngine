@@ -13,12 +13,18 @@ ModuleGui::~ModuleGui(){}
 bool ModuleGui::Start() {
 
 	ImGui_ImplSdl_Init(App->window->window);
+	/*ImGuiStyle * style = &ImGui::GetStyle();
+	style->Alpha = 1.0f;*/
+
+	show_menu = true;
+	showdemo = false;
 
 	return true;
 }
 
 update_status ModuleGui::PreUpdate(float dt) {
 
+	// Test window ------
 	ImGui_ImplSdl_NewFrame(App->window->window);
 
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
@@ -26,7 +32,25 @@ update_status ModuleGui::PreUpdate(float dt) {
 
 	if(showdemo)
 		ImGui::ShowTestWindow(&showdemo);
+	// ------------------
+
+	//  Main Menu -------
+	ImGui_ImplSdl_NewFrame(App->window->window);
 	
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File", &show_menu))
+		{
+			if (ImGui::MenuItem("Exit", "Alt+F4"));
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("About"))
+		{
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
+	// ------------------
 
 	return UPDATE_CONTINUE;
 }
