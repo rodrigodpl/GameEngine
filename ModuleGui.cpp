@@ -23,17 +23,6 @@ bool ModuleGui::Start() {
 }
 
 update_status ModuleGui::PreUpdate(float dt) {
-
-	// Test window ------
-	ImGui_ImplSdl_NewFrame(App->window->window);
-
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-		showdemo = !showdemo;
-
-	if(showdemo)
-		ImGui::ShowTestWindow(&showdemo);
-	// ------------------
-
 	//  Main Menu -------
 	ImGui_ImplSdl_NewFrame(App->window->window);
 	
@@ -46,10 +35,19 @@ update_status ModuleGui::PreUpdate(float dt) {
 		}
 		if (ImGui::BeginMenu("About"))
 		{
+			if (ImGui::MenuItem("Exit", "Alt+F4"));
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
 	}
+	// ------------------
+
+	// Test window ------
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+		showdemo = !showdemo;
+
+	if (showdemo)
+		ImGui::ShowTestWindow(&showdemo);
 	// ------------------
 
 	return UPDATE_CONTINUE;
