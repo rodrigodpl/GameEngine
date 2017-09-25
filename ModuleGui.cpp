@@ -38,8 +38,14 @@ update_status ModuleGui::PreUpdate(float dt) {
 		}
 		if (ImGui::BeginMenu("Help"))
 		{
-			if (ImGui::MenuItem("About", NULL, &show_about)) {
-				showaboutmenu();
+			if (ImGui::MenuItem("ShowAbout")) {
+				ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
+				ImGui::Begin("About", &show_about, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders);
+				ImGui::Text("Space Engine");
+				ImGui::Text("It renders in parseks");
+				ImGui::Separator();
+				ImGui::Text("By Rodrigo de Pedro & Daniel Garcia");
+				ImGui::End();
 			}
 			ImGui::EndMenu();
 		}
@@ -72,12 +78,5 @@ bool ModuleGui::CleanUp()
 }
 
 void ModuleGui::showaboutmenu() {
-	ImGui::Begin("About", &show_about, ImGuiWindowFlags_AlwaysAutoResize |
-		ImGuiWindowFlags_NoCollapse |
-		ImGuiWindowFlags_ShowBorders);
-	ImGui::Text("dear imgui, %s", ImGui::GetVersion());
-	ImGui::Separator();
-	ImGui::Text("By Omar Cornut and all github contributors.");
-	ImGui::Text("ImGui is licensed under the MIT License, see LICENSE for more information.");
-	ImGui::End();
+	
 }
