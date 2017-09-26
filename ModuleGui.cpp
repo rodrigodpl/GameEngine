@@ -4,7 +4,7 @@
 #include "Globals.h"
 #include "Application.h"
 
-
+#include <Windows.h>
 #include <stdlib.h>
 
 ModuleGui::ModuleGui(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -18,11 +18,15 @@ bool ModuleGui::Start() {
 	/*ImGuiStyle * style = &ImGui::GetStyle();
 	style->Alpha = 1.0f;*/
 
+	GetSystemInfo(&SysInfo);
+
 	return true;
 
 }
 
 update_status ModuleGui::PreUpdate(float dt) {
+
+
 	//  Main Menu -------
 	ImGui_ImplSdl_NewFrame(App->window->window);
 	
@@ -37,35 +41,46 @@ update_status ModuleGui::PreUpdate(float dt) {
 		}
 		if (ImGui::BeginMenu("Help"))
 		{
-			if (ImGui::MenuItem("ShowAbout")) {
-				ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
-				ImGui::Begin("About", &show_about, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders);
-				ImGui::Text("Space Engine");
-				ImGui::Text("It renders in parseks");
-				ImGui::Separator();
-				ImGui::Text("By Rodrigo de Pedro & Daniel Garcia");
-				ImGui::End();
-			}
+			if (ImGui::MenuItem("ShowAbout")) 
+				show_about = !show_about;
+
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Hardware"))
+		{
+			if (ImGui::MenuItem("ShowHardware"))
+				show_hardware = !show_hardware;
+
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
 	}
 	// ------------------
 
+
 	// Test window ------
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 		showdemo = !showdemo;
 
-	if (showdemo)
-		ImGui::ShowTestWindow(&showdemo);
-	// ------------------
 
 	// Log Window -----
 	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
 		show_log = !show_log;
 
+
+	//Blits
+	if (showdemo)
+		ImGui::ShowTestWindow(&showdemo);
+
 	if (show_log)
 		app_log.Draw("Log", &show_log);
+
+	if(show_about)
+		DrawAbout();
+
+	if(show_hardware)
+		DrawHardware();
+	// ----------
 
 	return UPDATE_CONTINUE;
 }
@@ -84,6 +99,30 @@ bool ModuleGui::CleanUp()
 
 void ModuleGui::showaboutmenu() {
 	
+}
+
+void ModuleGui::DrawHardware() {
+
+	ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
+	ImGui::Begin("Hardware", &show_hardware, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders);
+	ImGui::Text("Number of processors");
+	ImGui::Text("%d", SysInfo.dwNumberOfProcessors);
+	ImGui::Separator();
+	ImGui::Text("Processor Architecture");
+	ImGui::Text("%d", SysInfo.wProcessorArchitecture);
+	ImGui::Separator();
+	ImGui::End();
+}
+
+void ModuleGui::DrawAbout() {
+
+	ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
+	ImGui::Begin("About", &show_about, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders);
+	ImGui::Text("Space Engine");
+	ImGui::Text("It renders in parseks");
+	ImGui::Separator();
+	ImGui::Text("By Rodrigo de Pedro & Daniel Garcia");
+	ImGui::End();
 }
 
 void AppLog::Clear() { Buf.clear(); LineOffsets.clear(); }

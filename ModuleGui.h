@@ -25,16 +25,19 @@ public:
 	bool Start();
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
+	void DrawHardware();
+	void DrawAbout();
 	bool CleanUp();
 
 	AppLog app_log;
+	SYSTEM_INFO SysInfo;
 
 private:
 	bool showdemo = false;
 	bool show_menu = true;
 	bool show_about = false;
-	bool show_log = true;
-	
+	bool show_log = false;
+	bool show_hardware = true;
 
 	void showaboutmenu();
 };
