@@ -13,8 +13,6 @@ ModuleGui::~ModuleGui(){}
 bool ModuleGui::Start() {
 
 	ImGui_ImplSdl_Init(App->window->window);
-	/*ImGuiStyle * style = &ImGui::GetStyle();
-	style->Alpha = 1.0f;*/
 
 	show_menu = true;
 	showdemo = false;
