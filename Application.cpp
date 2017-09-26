@@ -1,4 +1,6 @@
 #include "Application.h"
+#include "Brofiler.h"
+
 
 Application::Application()
 {
@@ -10,6 +12,7 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
 	physics = new ModulePhysics3D(this);
 	gui = new ModuleGui(this);
+
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -55,7 +58,7 @@ bool Application::Init()
 	}
 
 	// After all Init calls we call Start() in all modules
-	LOG("Application Start --------------");
+	gui->app_log.AddLog("Application Start --------------");
 	item = list_modules.getFirst();
 
 	while(item != NULL && ret == true)
@@ -82,7 +85,7 @@ void Application::FinishUpdate()
 
 // Call PreUpdate, Update and PostUpdate on all modules
 update_status Application::Update()
-{
+{BROFILER_FRAME("Game")
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
 	
@@ -131,3 +134,4 @@ void Application::AddModule(Module* mod)
 {
 	list_modules.add(mod);
 }
+

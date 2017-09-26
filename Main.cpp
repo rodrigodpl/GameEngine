@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include "Application.h"
 #include "Globals.h"
-#include "Brofiler.h"
 
 #include "SDL/include/SDL.h"
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
@@ -18,35 +17,33 @@ enum main_states
 
 int main(int argc, char ** argv)
 {
-	LOG("Starting game '%s'...", TITLE);
-
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
 	Application* App = NULL;
 
 	while (state != MAIN_EXIT)
-	{	BROFILER_FRAME("Game")
+	{	
 		switch (state)
 		{
 		case MAIN_CREATION:
 
-			LOG("-------------- Application Creation --------------");
 			App = new Application();
 			state = MAIN_START;
+			App->gui->app_log.AddLog("-------------- Application Creation --------------\n");
 			break;
 
 		case MAIN_START:
 
-			LOG("-------------- Application Init --------------");
+			App->gui->app_log.AddLog("-------------- Application Init --------------\n");
 			if (App->Init() == false)
 			{
-				LOG("Application Init exits with ERROR");
+				App->gui->app_log.AddLog("Application Init exits with ERROR\n");
 				state = MAIN_EXIT;
 			}
 			else
 			{
 				state = MAIN_UPDATE;
-				LOG("-------------- Application Update --------------");
+				App->gui->app_log.AddLog("-------------- Application Update --------------\n");
 			}
 
 			break;
@@ -57,7 +54,7 @@ int main(int argc, char ** argv)
 
 			if (update_return == UPDATE_ERROR)
 			{
-				LOG("Application Update exits with ERROR");
+				App->gui->app_log.AddLog("Application Update exits with ERROR\n");
 				state = MAIN_EXIT;
 			}
 
@@ -68,22 +65,22 @@ int main(int argc, char ** argv)
 
 		case MAIN_FINISH:
 
-			LOG("-------------- Application CleanUp --------------");
+			App->gui->app_log.AddLog("-------------- Application CleanUp --------------\n");
 			if (App->CleanUp() == false)
 			{
-				LOG("Application CleanUp exits with ERROR");
+				App->gui->app_log.AddLog("Application CleanUp exits with ERROR\n");
 			}
 			else
 				main_return = EXIT_SUCCESS;
 
 			state = MAIN_EXIT;
 
+			App->gui->app_log.AddLog("Exiting game '%s'...\n", TITLE);
 			break;
 
 		}
 	}
 
 	delete App;
-	LOG("Exiting game '%s'...\n", TITLE);
 	return main_return;
 }
