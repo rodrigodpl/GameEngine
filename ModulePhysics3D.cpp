@@ -3,6 +3,7 @@
 #include "ModulePhysics3D.h"
 #include "PhysBody3D.h"
 #include "Primitive.h"
+#include "Brofiler.h"
 
 #ifdef _DEBUG
 	#pragma comment (lib, "Bullet/libx86/BulletDynamics_debug.lib")
@@ -70,6 +71,7 @@ bool ModulePhysics3D::Start()
 // ---------------------------------------------------------
 update_status ModulePhysics3D::PreUpdate(float dt)
 {
+	
 	world->stepSimulation(dt, 15);
 
 	int numManifolds = world->getDispatcher()->getNumManifolds();
@@ -109,7 +111,7 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 
 // ---------------------------------------------------------
 update_status ModulePhysics3D::Update(float dt)
-{
+{ BROFILER_CATEGORY("physics_update", Profiler::Color::AliceBlue)
 	if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		debug = !debug;
 
