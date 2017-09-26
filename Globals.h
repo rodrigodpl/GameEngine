@@ -29,6 +29,6 @@ enum update_status
 #define WIN_FULLSCREEN false
 #define WIN_RESIZABLE false
 #define WIN_BORDERLESS false
-#define WIN_FULLSCREEN_DESKTOP true
+#define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
-#define TITLE "3D Physics Playground"
+#define TITLE "Space Engine"

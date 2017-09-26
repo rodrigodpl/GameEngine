@@ -4,19 +4,16 @@
 #include "Globals.h"
 #include "Application.h"
 
-#include <Windows.h>
 #include <stdlib.h>
 
 ModuleGui::ModuleGui(Application* app, bool start_enabled) : Module(app, start_enabled)
 {}
 
-ModuleGui::~ModuleGui(){}
+ModuleGui::~ModuleGui() {}
 
 bool ModuleGui::Start() {
 
 	ImGui_ImplSdl_Init(App->window->window);
-	/*ImGuiStyle * style = &ImGui::GetStyle();
-	style->Alpha = 1.0f;*/
 
 	GetSystemInfo(&SysInfo);
 
@@ -29,7 +26,7 @@ update_status ModuleGui::PreUpdate(float dt) {
 
 	//  Main Menu -------
 	ImGui_ImplSdl_NewFrame(App->window->window);
-	
+
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File", &show_menu))
@@ -39,17 +36,17 @@ update_status ModuleGui::PreUpdate(float dt) {
 			}
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Help"))
+		if (ImGui::BeginMenu("Window"))
 		{
-			if (ImGui::MenuItem("ShowAbout")) 
-				show_about = !show_about;
+			if (ImGui::MenuItem("Hardware"))
+				show_hardware = !show_hardware;
 
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Hardware"))
+		if (ImGui::BeginMenu("Help"))
 		{
-			if (ImGui::MenuItem("ShowHardware"))
-				show_hardware = !show_hardware;
+			if (ImGui::MenuItem("About"))
+				show_about = !show_about;
 
 			ImGui::EndMenu();
 		}
@@ -75,10 +72,10 @@ update_status ModuleGui::PreUpdate(float dt) {
 	if (show_log)
 		app_log.Draw("Log", &show_log);
 
-	if(show_about)
+	if (show_about)
 		DrawAbout();
 
-	if(show_hardware)
+	if (show_hardware)
 		DrawHardware();
 	// ----------
 
@@ -98,19 +95,17 @@ bool ModuleGui::CleanUp()
 }
 
 void ModuleGui::showaboutmenu() {
-	
+
 }
 
 void ModuleGui::DrawHardware() {
 
 	ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
-	ImGui::Begin("Hardware", &show_hardware, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders);
-	ImGui::Text("Number of processors");
-	ImGui::Text("%d", SysInfo.dwNumberOfProcessors);
+	ImGui::Begin("Hardware", &show_hardware, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse);
+	ImGui::Text("CPU cores: %d", SDL_GetCPUCount());
+	ImGui::Text("CPU architecture: x%d", SDL_GetCPUCacheLineSize());
 	ImGui::Separator();
-	ImGui::Text("Processor Architecture");
-	ImGui::Text("%d", SysInfo.wProcessorArchitecture);
-	ImGui::Separator();
+	ImGui::Text("System RAM: %d MB", SDL_GetSystemRAM());
 	ImGui::End();
 }
 
@@ -122,6 +117,12 @@ void ModuleGui::DrawAbout() {
 	ImGui::Text("It renders in parseks");
 	ImGui::Separator();
 	ImGui::Text("By Rodrigo de Pedro & Daniel Garcia");
+	ImGui::Separator();
+	ImGui::Text("Made with:");
+	ImGui::Text("Brofiler      v.1.1.1");
+	ImGui::Text("Bullet        v.2.84");
+	ImGui::Text("Imgui         v.1.51");
+	ImGui::Text("MathGeoLib    v.1.51");
 	ImGui::End();
 }
 
@@ -179,7 +180,3 @@ void AppLog::Draw(const char* title, bool* p_opened)
 	ImGui::EndChild();
 	ImGui::End();
 }
-
-
-
-
