@@ -1,12 +1,17 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+
+#include "glew-2.1.0\include\GL\glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
+
+#pragma comment( lib, "glew-2.1.0/lib/Release/Win32/glew32.lib")
+#pragma comment( lib, "glew-2.1.0/lib/Release/Win32/glew32s.lib")
 
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -29,6 +34,14 @@ bool ModuleRenderer3D::Init()
 		App->gui->app_log.AddLog("OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
+
+	GLenum err = glewInit();
+	App->gui->app_log.AddLog("Using Glew %s\n", glewGetString(GLEW_VERSION));
+
+	App->gui->app_log.AddLog("Vendor: %s\n", glGetString(GL_VENDOR));
+	App->gui->app_log.AddLog("Renderer: %s\n", glGetString(GL_RENDERER));
+	App->gui->app_log.AddLog("OpenGL version supported %s\n", glGetString(GL_VERSION));
+	App->gui->app_log.AddLog("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 	
 	if(ret == true)
 	{
@@ -123,6 +136,16 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	//first draw scene
+	App->scene_intro->Draw();
+
+	//then debug features
+	if (debug_draw)
+		DebugDraw();
+	
+	//and editor last
+	App->gui->Draw();
+
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }
@@ -150,3 +173,5 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
+
+void ModuleRenderer3D::DebugDraw() {}

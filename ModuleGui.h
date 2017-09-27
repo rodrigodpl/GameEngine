@@ -3,6 +3,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "imgui.h"
+#include "SDL\include\SDL.h"
 
 struct AppLog
 {
@@ -24,21 +25,19 @@ public:
 
 	bool Start();
 	update_status PreUpdate(float dt);
-	update_status PostUpdate(float dt);
-	void DrawHardware();
-	void DrawAbout();
+	void HandleEvent(SDL_Event* sdl_event);
 	bool CleanUp();
+	void Draw();
 
 	AppLog app_log;
-	SYSTEM_INFO SysInfo;
 
 private:
-	bool showdemo = false;
-	bool show_menu = true;
-	bool show_about = false;
-	bool show_log = false;
-	bool show_hardware = true;
+	bool draw_demo = false;
+	bool draw_menu = true;
+	bool draw_about = false;
+	bool draw_log = false;
+	bool draw_hardware = false;
 
-	void showaboutmenu();
+
 };
 

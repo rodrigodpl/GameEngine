@@ -15,8 +15,6 @@ bool ModuleGui::Start() {
 
 	ImGui_ImplSdl_Init(App->window->window);
 
-	GetSystemInfo(&SysInfo);
-
 	return true;
 
 }
@@ -29,7 +27,7 @@ update_status ModuleGui::PreUpdate(float dt) {
 
 	if (ImGui::BeginMainMenuBar())
 	{
-		if (ImGui::BeginMenu("File", &show_menu))
+		if (ImGui::BeginMenu("File", &draw_menu))
 		{
 			if (ImGui::MenuItem("Exit")) {
 				return UPDATE_STOP;
@@ -39,14 +37,14 @@ update_status ModuleGui::PreUpdate(float dt) {
 		if (ImGui::BeginMenu("Window"))
 		{
 			if (ImGui::MenuItem("Hardware"))
-				show_hardware = !show_hardware;
+				draw_hardware = !draw_hardware;
 
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Help"))
 		{
 			if (ImGui::MenuItem("About"))
-				show_about = !show_about;
+				draw_about = !draw_about;
 
 			ImGui::EndMenu();
 		}
@@ -57,36 +55,16 @@ update_status ModuleGui::PreUpdate(float dt) {
 
 	// Test window ------
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-		showdemo = !showdemo;
-
+		draw_demo = !draw_demo;
 
 	// Log Window -----
 	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
-		show_log = !show_log;
+		draw_log = !draw_log;
 
-
-	//Blits
-	if (showdemo)
-		ImGui::ShowTestWindow(&showdemo);
-
-	if (show_log)
-		app_log.Draw("Log", &show_log);
-
-	if (show_about)
-		DrawAbout();
-
-	if (show_hardware)
-		DrawHardware();
-	// ----------
 
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleGui::PostUpdate(float dt) {
-	ImGui::Render();
-
-	return UPDATE_CONTINUE;
-}
 
 bool ModuleGui::CleanUp()
 {
@@ -94,37 +72,48 @@ bool ModuleGui::CleanUp()
 	return true;
 }
 
-void ModuleGui::showaboutmenu() {
-
+void ModuleGui::HandleEvent(SDL_Event* sdl_event)
+{
+	ImGui_ImplSdl_ProcessEvent(sdl_event);
 }
 
-void ModuleGui::DrawHardware() {
+void ModuleGui::Draw() {
 
-	ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
-	ImGui::Begin("Hardware", &show_hardware, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse);
-	ImGui::Text("CPU cores: %d", SDL_GetCPUCount());
-	ImGui::Text("CPU architecture: x%d", SDL_GetCPUCacheLineSize());
-	ImGui::Separator();
-	ImGui::Text("System RAM: %d MB", SDL_GetSystemRAM());
-	ImGui::End();
+	if (draw_demo)
+		ImGui::ShowTestWindow(&draw_demo);
+
+	if (draw_log)
+		app_log.Draw("Log", &draw_log);
+
+	if (draw_hardware) {
+		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin("Hardware", &draw_hardware, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse);
+		ImGui::Text("CPU cores: %d", SDL_GetCPUCount());
+		ImGui::Text("CPU architecture: x%d", SDL_GetCPUCacheLineSize());
+		ImGui::Separator();
+		ImGui::Text("System RAM: %d MB", SDL_GetSystemRAM());
+		ImGui::End();
+	}
+
+	if (draw_about) {
+		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin("About", &draw_about, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders);
+		ImGui::Text("Space Engine");
+		ImGui::Text("It renders in parseks");
+		ImGui::Separator();
+		ImGui::Text("By Rodrigo de Pedro & Daniel Garcia");
+		ImGui::Separator();
+		ImGui::Text("Made with:");
+		ImGui::Text("Brofiler      v.1.1.1");
+		ImGui::Text("Bullet        v.2.84");
+		ImGui::Text("Imgui         v.1.51");
+		ImGui::Text("MathGeoLib    v.1.51");
+		ImGui::End();
+	}
+
+	ImGui::Render();
 }
 
-void ModuleGui::DrawAbout() {
-
-	ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
-	ImGui::Begin("About", &show_about, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders);
-	ImGui::Text("Space Engine");
-	ImGui::Text("It renders in parseks");
-	ImGui::Separator();
-	ImGui::Text("By Rodrigo de Pedro & Daniel Garcia");
-	ImGui::Separator();
-	ImGui::Text("Made with:");
-	ImGui::Text("Brofiler      v.1.1.1");
-	ImGui::Text("Bullet        v.2.84");
-	ImGui::Text("Imgui         v.1.51");
-	ImGui::Text("MathGeoLib    v.1.51");
-	ImGui::End();
-}
 
 void AppLog::Clear() { Buf.clear(); LineOffsets.clear(); }
 

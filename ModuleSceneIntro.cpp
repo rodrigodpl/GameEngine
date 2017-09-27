@@ -50,3 +50,5 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	return UPDATE_CONTINUE;
 }
+
+void ModuleSceneIntro::Draw() {}
