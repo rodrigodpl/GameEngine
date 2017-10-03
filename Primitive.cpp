@@ -264,7 +264,7 @@ void Plane::InnerRender() const
 	glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
 	glBegin(GL_LINES);
 
-	float d = 200.0f;
+	float d = 20.0f;
 
 	for(float i = -d; i <= d; i += 1.0f)
 	{
