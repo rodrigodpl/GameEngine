@@ -112,6 +112,26 @@ bool ModuleRenderer3D::Init()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	/*
+	uint my_id = 0;
+	struct TRI {
+		float x, y, z;
+	};
+	TRI* vertices = new TRI[3];
+	vertices[0].x = 0.f;
+	vertices[0].y = 1.f;
+	vertices[0].z = 0.f;
+	vertices[1].x = 0.f;
+	vertices[1].y = 0.f;
+	vertices[1].z = 0.f;
+	vertices[2].x = 1.f;
+	vertices[2].y = 0.f;
+	vertices[2].z = 0.f;
+
+	glGenBuffers(1, (GLuint*) &(my_id));
+	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*3* 3, vertices, GL_STATIC_DRAW);
+	*/
 	return ret;
 }
 
@@ -129,6 +149,80 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
+
+	//Direct draw of a cube using TRIS
+	/*glLineWidth(2.0f);
+	glBegin(GL_TRIANGLES);
+		glVertex3f(0.f, 1.f, 0.f); //C
+		glVertex3f(0.f, 0.f, 0.f); //A
+		glVertex3f(1.f, 0.f, 0.f); //B
+
+		glVertex3f(0.f, 1.f, 0.f); //C
+		glVertex3f(1.f, 0.f, 0.f); //B
+		glVertex3f(1.f, 1.f, 0.f); //D
+
+		glVertex3f(1.f, 1.f, 0.f); //D
+		glVertex3f(1.f, 0.f, 0.f); //B
+		glVertex3f(1.f, 0.f, -1.f); //F
+
+		glVertex3f(1.f, 1.f, 0.f); //D
+		glVertex3f(1.f, 0.f, -1.f); //F
+		glVertex3f(1.f, 1.f, -1.f); //H
+
+		glVertex3f(0.f, 1.f, -1.f); //G
+		glVertex3f(0.f, 1.f, 0.f); //C
+		glVertex3f(1.f, 1.f, 0.f); //D
+
+		glVertex3f(0.f, 1.f, -1.f); //G
+		glVertex3f(1.f, 1.f, 0.f); //D
+		glVertex3f(1.f, 1.f, -1.f); //H
+
+		glVertex3f(1.f, 1.f, -1.f); //H
+		glVertex3f(1.f, 0.f, -1.f); //F
+		glVertex3f(0.f, 0.f, -1.f); //E
+
+		glVertex3f(0.f, 1.f, -1.f); //G
+		glVertex3f(1.f, 1.f, -1.f); //H
+		glVertex3f(0.f, 0.f, -1.f); //E
+
+		glVertex3f(0.f, 0.f, 0.f); //A
+		glVertex3f(0.f, 0.f, -1.f); //E
+		glVertex3f(1.f, 0.f, 0.f); //B
+		
+		glVertex3f(0.f, 0.f, -1.f); //E
+		glVertex3f(1.f, 0.f, -1.f); //F
+		glVertex3f(1.f, 0.f, 0.f); //B
+
+		glVertex3f(0.f, 1.f, 0.f); //C
+		glVertex3f(0.f, 0.f, -1.f); //E
+		glVertex3f(0.f, 0.f, 0.f); //A
+
+		glVertex3f(0.f, 1.f, 0.f); //C
+		glVertex3f(0.f, 1.f, -1.f); //G
+		glVertex3f(0.f, 0.f, -1.f); //E
+	glEnd();
+	*/
+
+	/*  Coordinates cube
+		glVertex3f(0.f, 0.f, 0.f); //A
+		glVertex3f(1.f, 0.f, 0.f); //B
+		glVertex3f(0.f, 1.f, 0.f); //C
+		glVertex3f(1.f, 1.f, 0.f); //D
+		glVertex3f(0.f, 0.f, -1.f); //E
+		glVertex3f(1.f, 0.f, -1.f); //F
+		glVertex3f(0.f, 1.f, -1.f); //G
+		glVertex3f(1.f, 1.f, -1.f); //H
+	
+	glLineWidth(1.0f);*/
+
+	/*
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	// … draw other buffers
+	glDrawArrays(GL_TRIANGLES, 0, 3 * 3);
+	glDisableClientState(GL_VERTEX_ARRAY);
+	*/
 
 	return UPDATE_CONTINUE;
 }
