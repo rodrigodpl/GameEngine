@@ -24,11 +24,11 @@ bool ModuleSceneIntro::Start()
 
 	srand(time(NULL));
 	
-	//App->audio->PlayMusic("F-Zero_-_Mute_City.ogg");
-	
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
+	AddCube(1, 1, 1);
+	AddSphere(3);
 	return ret;
 
 }
@@ -51,4 +51,23 @@ update_status ModuleSceneIntro::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-void ModuleSceneIntro::Draw() {}
+void ModuleSceneIntro::Draw() 
+{
+	for (std::list<Primitive*>::iterator it = primitives.begin(); it != primitives.end(); it++) {
+
+		if((*it)->visible)
+			(*it)->Render();
+	}
+		
+}
+
+void ModuleSceneIntro::AddCube(float size_x, float size_y, float size_z) 
+{
+	primitives.push_back(new Cube(size_x, size_y, size_z));
+}
+
+
+void ModuleSceneIntro::AddSphere(float radius, uint rings, uint sectors) 
+{
+	primitives.push_back(new Sphere(radius, rings, sectors));
+}

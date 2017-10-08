@@ -1,15 +1,19 @@
 
 #include "Globals.h"
+#include "glew-2.1.0\include\GL\glew.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include "Primitive.h"
 #include "glut/glut.h"
+#include "ModuleSceneIntro.h"
 
 #pragma comment (lib, "glut/glut32.lib")
 
 // ------------------------------------------------------------
-Primitive::Primitive() : transform(IdentityMatrix), color(White), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)
-{}
+Primitive::Primitive() : transform(IdentityMatrix), color(White), wire(false), axis(false), visible(true), alpha(1.0f), type(PrimitiveTypes::Primitive_Point)
+{
+	
+}
 
 // ------------------------------------------------------------
 PrimitiveTypes Primitive::GetType() const
@@ -99,80 +103,158 @@ void Primitive::Scale(float x, float y, float z)
 	transform.scale(x, y, z);
 }
 
+void Primitive::BuildVert() {}
+
+void Primitive::BindBuffer() {
+
+	glGenBuffers(1, (GLuint*) &(vert_buff_id));
+	glBindBuffer(GL_ARRAY_BUFFER, vert_buff_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size() * 3, &vertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, (GLuint*) &(index_buff_id));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buff_id);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * indices.size(), &indices[0], GL_STATIC_DRAW);
+}
+
 // CUBE ============================================
 Cube::Cube() : Primitive(), size(1.0f, 1.0f, 1.0f)
 {
 	type = PrimitiveTypes::Primitive_Cube;
+	BuildVert();
+	color = { (float)(rand() % 100) / 100, (float)(rand() % 100) / 100, (float)(rand() % 100) / 100 };
 }
 
 Cube::Cube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, sizeY, sizeZ)
 {
 	type = PrimitiveTypes::Primitive_Cube;
+	BuildVert();
+	color = { (float)(rand() % 100) / 100, (float)(rand() % 100) / 100, (float)(rand() % 100) / 100 };
 }
 
-void Cube::InnerRender() const
-{	
+void Cube::BuildVert() {
+
 	float sx = size.x * 0.5f;
 	float sy = size.y * 0.5f;
 	float sz = size.z * 0.5f;
 
-	glBegin(GL_QUADS);
+	vertices.resize(8);
+	std::vector<Vertex>::iterator v = vertices.begin();
 
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(-sx, -sy, sz);
-	glVertex3f( sx, -sy, sz);
-	glVertex3f( sx,  sy, sz);
-	glVertex3f(-sx,  sy, sz);
+	*v++ = { -sx, -sy, -sz }; *v++ = { -sx,  sy, -sz }; 
+	*v++ = {  sx, -sy, -sz }; *v++ = {  sx,  sy, -sz };
+	*v++ = { -sx, -sy, sz  }; *v++ = { -sx,  sy, sz  };
+	*v++ = {  sx, -sy, sz  }; *v++ = {  sx,  sy, sz  };
 
-	glNormal3f(0.0f, 0.0f, -1.0f);
-	glVertex3f( sx, -sy, -sz);
-	glVertex3f(-sx, -sy, -sz);
-	glVertex3f(-sx,  sy, -sz);
-	glVertex3f( sx,  sy, -sz);
+	indices.resize(36);
+	std::vector<GLushort>::iterator i = indices.begin();
+	
+	*i++ = 0; *i++ = 1; *i++ = 2;      *i++ = 3; *i++ = 2; *i++ = 1;      //front
+	*i++ = 6; *i++ = 5; *i++ = 4;      *i++ = 5; *i++ = 6; *i++ = 7;      //back
+	*i++ = 5; *i++ = 3; *i++ = 1;      *i++ = 3; *i++ = 5; *i++ = 7;      //up
+	*i++ = 0; *i++ = 2; *i++ = 4;      *i++ = 6; *i++ = 4; *i++ = 2;      //down	
+	*i++ = 4; *i++ = 1; *i++ = 0;      *i++ = 1; *i++ = 4; *i++ = 5;      //left	
+	*i++ = 2; *i++ = 3; *i++ = 6;      *i++ = 7; *i++ = 6; *i++ = 3;      //right
 
-	glNormal3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(sx, -sy,  sz);
-	glVertex3f(sx, -sy, -sz);
-	glVertex3f(sx,  sy, -sz);
-	glVertex3f(sx,  sy,  sz);
+	BindBuffer();
+}
 
-	glNormal3f(-1.0f, 0.0f, 0.0f);
-	glVertex3f(-sx, -sy, -sz);
-	glVertex3f(-sx, -sy,  sz);
-	glVertex3f(-sx,  sy,  sz);
-	glVertex3f(-sx,  sy, -sz);
+void Cube::InnerRender() const
+{	
+	glBindBuffer(GL_ARRAY_BUFFER, vert_buff_id);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buff_id);
 
-	glNormal3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(-sx, sy,  sz);
-	glVertex3f( sx, sy,  sz);
-	glVertex3f( sx, sy, -sz);
-	glVertex3f(-sx, sy, -sz);
+	glColor4f(color.r, color.g, color.b, alpha);
 
-	glNormal3f(0.0f, -1.0f, 0.0f);
-	glVertex3f(-sx, -sy, -sz);
-	glVertex3f( sx, -sy, -sz);
-	glVertex3f( sx, -sy,  sz);
-	glVertex3f(-sx, -sy,  sz);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	glEnd();
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	//glNormalPointer(GL_FLOAT, 0, &normals[0]);
+	//glTexCoordPointer(2, GL_FLOAT, 0, &texcoords[0]);
+	glDrawElements(GL_QUADS, indices.size(), GL_UNSIGNED_SHORT, NULL);
+
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 // SPHERE ============================================
 Sphere::Sphere() : Primitive(), radius(1.0f)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
+	BuildVert();
+	color = { (float)(rand() % 100) / 100, (float)(rand() % 100) / 100, (float)(rand() % 100) / 100 };
 }
 
-Sphere::Sphere(float radius) : Primitive(), radius(radius)
+Sphere::Sphere(float radius, uint rings, uint sectors) : Primitive(), radius(radius), rings(rings), sectors(sectors)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
+	BuildVert();
+	color = { (float)(rand() % 100) / 100, (float)(rand() % 100) / 100, (float)(rand() % 100) / 100 };
+}
+
+void Sphere::BuildVert() {
+
+	float const R = 1. / (float)(rings - 1);
+	float const S = 1. / (float)(sectors - 1);
+	int r, s;
+
+	vertices.resize(rings * sectors * 3);
+	normals.resize(rings * sectors * 3);
+	texcoords.resize(rings * sectors * 2);
+
+	std::vector<Vertex>::iterator v = vertices.begin();
+	std::vector<GLfloat>::iterator n = normals.begin();
+	std::vector<GLfloat>::iterator t = texcoords.begin();
+
+	for (r = 0; r < rings; r++) for (s = 0; s < sectors; s++) {
+
+		float const y = sin(-M_PI_2 + M_PI * r * R);
+		float const x = cos(2 * M_PI * s * S) * sin(M_PI * r * R);
+		float const z = sin(2 * M_PI * s * S) * sin(M_PI * r * R);
+
+		*t++ = s*S;
+		*t++ = r*R;
+
+		*v++ = { x * radius,y * radius, z * radius };
+
+		*n++ = x; *n++ = y; *n++ = z;
+	}
+
+	indices.resize(rings * sectors * 4);
+	std::vector<GLushort>::iterator i = indices.begin();
+	for (r = 0; r < rings - 1; r++) for (s = 0; s < sectors - 1; s++) {
+		*i++ = r * sectors + s;
+		*i++ = r * sectors + (s + 1);
+		*i++ = (r + 1) * sectors + (s + 1);
+		*i++ = (r + 1) * sectors + s;
+	}
+
+	BindBuffer();
+
 }
 
 void Sphere::InnerRender() const
 {
-	glutSolidSphere(radius, 25, 25);
-}
+	glBindBuffer(GL_ARRAY_BUFFER, vert_buff_id);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buff_id);
 
+	glColor4f(color.r, color.g, color.b, alpha);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glNormalPointer(GL_FLOAT, 0, &normals[0]);
+	glTexCoordPointer(2, GL_FLOAT, 0, &texcoords[0]);
+	glDrawElements(GL_QUADS, indices.size(), GL_UNSIGNED_SHORT, NULL);
+
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
+}
 
 // CYLINDER ============================================
 Cylinder::Cylinder() : Primitive(), radius(1.0f), height(1.0f)

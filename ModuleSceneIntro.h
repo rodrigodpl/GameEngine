@@ -3,8 +3,7 @@
 #include "p2DynArray.h"
 #include "Globals.h"
 #include "Primitive.h"
-
-#define MAX_SNAKE 2
+#include <list>
 
 struct PhysBody3D;
 struct PhysMotor3D;
@@ -20,5 +19,9 @@ public:
 	bool CleanUp();
 
 	void Draw();
+	void AddCube(float size_x, float size_y, float size_z);
+	void AddSphere(float radius, uint rings = 25, uint sectors = 25);
+
+	std::list<Primitive*> primitives;
 
 };

@@ -2,6 +2,12 @@
 #pragma once
 #include "glmath.h"
 #include "Color.h"
+#include "glew-2.1.0\include\GL\glew.h"
+#include <gl/GL.h>
+#include <gl/GLU.h>
+
+#include <vector>
+
 
 enum PrimitiveTypes
 {
@@ -13,6 +19,11 @@ enum PrimitiveTypes
 	Primitive_Cylinder
 };
 
+struct Vertex {
+	GLfloat x, y, z;
+};
+
+
 class Primitive
 {
 public:
@@ -21,16 +32,24 @@ public:
 
 	virtual void	Render() const;
 	virtual void	InnerRender() const;
+	virtual void    BuildVert();
 	void			SetPos(float x, float y, float z);
 	void			SetRotation(float angle, const vec3 &u);
 	void			Scale(float x, float y, float z);
+	void			BindBuffer();
 	PrimitiveTypes	GetType() const;
 
 public:
 	
-	Color color;
-	mat4x4 transform;
-	bool axis,wire;
+	Color	color;
+	float	alpha;
+	mat4x4	transform;
+	bool	axis,wire, visible;
+
+	std::vector<Vertex>		vertices;	uint vert_buff_id;
+	std::vector<GLfloat>	normals;	uint normal_buff_id;
+	std::vector<GLfloat>	texcoords;	uint texcoord_buff_id;
+	std::vector<GLushort>	indices;	uint index_buff_id;
 
 protected:
 	PrimitiveTypes type;
@@ -43,6 +62,7 @@ public :
 	Cube();
 	Cube(float sizeX, float sizeY, float sizeZ);
 	void InnerRender() const;
+	void BuildVert();
 public:
 	vec3 size;
 };
@@ -52,10 +72,12 @@ class Sphere : public Primitive
 {
 public:
 	Sphere();
-	Sphere(float radius);
+	Sphere(float radius, uint rings, uint sectors);
 	void InnerRender() const;
+	void BuildVert();
 public:
 	float radius;
+	uint rings, sectors;
 };
 
 // ============================================

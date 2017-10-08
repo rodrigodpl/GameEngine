@@ -6,13 +6,6 @@
 
 #define MAX_LIGHTS 8
 
-struct Vertex {
-	float x, y, z;
-};
-
-struct Tri {
-	uint v1, v2, v3;
-};
 
 class ModuleRenderer3D : public Module
 {
