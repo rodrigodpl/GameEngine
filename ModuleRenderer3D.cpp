@@ -13,6 +13,9 @@
 #pragma comment( lib, "glew-2.1.0/lib/Release/Win32/glew32.lib")
 #pragma comment( lib, "glew-2.1.0/lib/Release/Win32/glew32s.lib")
 
+#define VERT_NUM 8
+#define IND_NUM 36
+
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -112,26 +115,43 @@ bool ModuleRenderer3D::Init()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	/*
-	uint my_id = 0;
-	struct TRI {
-		float x, y, z;
-	};
-	TRI* vertices = new TRI[3];
-	vertices[0].x = 0.f;
-	vertices[0].y = 1.f;
-	vertices[0].z = 0.f;
-	vertices[1].x = 0.f;
-	vertices[1].y = 0.f;
-	vertices[1].z = 0.f;
-	vertices[2].x = 1.f;
-	vertices[2].y = 0.f;
-	vertices[2].z = 0.f;
+	vertices[0].x = 0.f, vertices[0].y = 0.f, vertices[0].z = 0.f;
+	vertices[1].x = 0.f, vertices[1].y = 1.f, vertices[1].z = 0.f;
+	vertices[2].x = 1.f, vertices[2].y = 0.f, vertices[2].z = 0.f;
+	vertices[3].x = 1.f, vertices[3].y = 1.f, vertices[3].z = 0.f;
+	vertices[4].x = 0.f, vertices[4].y = 0.f, vertices[4].z = 1.f;
+	vertices[5].x = 0.f, vertices[5].y = 1.f, vertices[5].z = 1.f;
+	vertices[6].x = 1.f, vertices[6].y = 0.f, vertices[6].z = 1.f;
+	vertices[7].x = 1.f, vertices[7].y = 1.f, vertices[7].z = 1.f;
+
+	//front
+	indices[0] = 0, indices[1] = 1, indices[2] = 2;
+	indices[3] = 3, indices[4] = 2, indices[5] = 1;
+	//back
+	indices[6] = 6, indices[7] = 5, indices[8] = 4;
+	indices[9] = 5, indices[10] = 6, indices[11] = 7;
+	//up
+	indices[12] = 5, indices[13] = 3, indices[14] = 1;
+	indices[15] = 3, indices[16] = 5, indices[17] = 7;
+	//down
+	indices[18] = 0, indices[19] = 2, indices[20] = 4;
+	indices[21] = 6, indices[22] = 4, indices[23] = 2;
+	//left
+	indices[24] = 4, indices[25] = 1, indices[26] = 0;
+	indices[27] = 1, indices[28] = 4, indices[29] = 5;
+	//right
+	indices[30] = 2, indices[31] = 3, indices[32] = 6;
+	indices[33] = 7, indices[34] = 6, indices[35] = 3;
+
 
 	glGenBuffers(1, (GLuint*) &(my_id));
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*3* 3, vertices, GL_STATIC_DRAW);
-	*/
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)* VERT_NUM* 3, vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, (GLuint*) &(my_indices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)*IND_NUM, indices, GL_STATIC_DRAW);
+	
 	return ret;
 }
 
@@ -215,14 +235,19 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	
 	glLineWidth(1.0f);*/
 
-	/*
+	
+	//glEnableClientState(GL_VERTEX_ARRAY);
+	//glVertexPointer(3, GL_FLOAT, 0, NULL);
+	//// … draw other buffers
+	//glDrawArrays(GL_TRIANGLES, 0, VERT_NUM * 3);
+	//glDisableClientState(GL_VERTEX_ARRAY);
+
+	
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	// … draw other buffers
-	glDrawArrays(GL_TRIANGLES, 0, 3 * 3);
+	glDrawElements(GL_TRIANGLES, IND_NUM, GL_UNSIGNED_INT, NULL);
 	glDisableClientState(GL_VERTEX_ARRAY);
-	*/
+
 
 	return UPDATE_CONTINUE;
 }
