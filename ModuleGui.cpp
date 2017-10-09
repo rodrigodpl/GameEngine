@@ -50,6 +50,7 @@ update_status ModuleGui::PreUpdate(float dt) {
 		}
 		ImGui::EndMainMenuBar();
 	}
+
 	// ------------------
 
 
@@ -78,6 +79,7 @@ void ModuleGui::HandleEvent(SDL_Event* sdl_event)
 }
 
 void ModuleGui::Draw() {
+
 
 	if (draw_demo)
 		ImGui::ShowTestWindow(&draw_demo);

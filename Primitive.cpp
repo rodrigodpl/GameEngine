@@ -300,18 +300,22 @@ void Cylinder::InnerRender() const
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_SHORT, NULL);
 	glDisableClientState(GL_VERTEX_ARRAY);
+
 }
 
 // LINE ==================================================
-Line::Line() : Primitive(), origin(0, 0, 0), destination(1, 1, 1)
+Line::Line() : Primitive(), origin({ 0, 0, 0 }), destination({ 1, 1, 1 })
 {
 	type = PrimitiveTypes::Primitive_Line;
+	color = { (float)(rand() % 100) / 100, (float)(rand() % 100) / 100, (float)(rand() % 100) / 100 };
 }
 
-Line::Line(float x, float y, float z) : Primitive(), origin(0, 0, 0), destination(x, y, z)
+Line::Line(Vertex origin, Vertex dest) : Primitive(), origin(origin), destination(dest)
 {
 	type = PrimitiveTypes::Primitive_Line;
+	color = { (float)(rand() % 100) / 100, (float)(rand() % 100) / 100, (float)(rand() % 100) / 100 };
 }
+
 
 void Line::InnerRender() const
 {

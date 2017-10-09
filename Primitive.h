@@ -99,11 +99,11 @@ class Line : public Primitive
 {
 public:
 	Line();
-	Line(float x, float y, float z);
+	Line(Vertex origin, Vertex dest);
 	void InnerRender() const;
 public:
-	vec3 origin;
-	vec3 destination;
+	Vertex origin;
+	Vertex destination;
 };
 
 // ============================================

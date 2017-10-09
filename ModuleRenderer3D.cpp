@@ -13,8 +13,6 @@
 #pragma comment( lib, "glew-2.1.0/lib/Release/Win32/glew32.lib")
 #pragma comment( lib, "glew-2.1.0/lib/Release/Win32/glew32s.lib")
 
-#define VERT_NUM 8
-#define IND_NUM 36
 
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {

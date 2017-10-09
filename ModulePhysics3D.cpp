@@ -340,8 +340,8 @@ void ModulePhysics3D::AddConstraintHinge(PhysBody3D& bodyA, PhysBody3D& bodyB, c
 // =============================================
 void DebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
 {
-	line.origin.Set(from.getX(), from.getY(), from.getZ());
-	line.destination.Set(to.getX(), to.getY(), to.getZ());
+	line.origin = { from.getX(), from.getY(), from.getZ() };
+	line.destination = { to.getX(), to.getY(), to.getZ() };
 	line.color.Set(color.getX(), color.getY(), color.getZ());
 	line.Render();
 }

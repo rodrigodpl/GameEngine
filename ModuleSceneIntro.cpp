@@ -27,7 +27,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
-	AddCylinder(1, 2);
+	AddLine({ 0, 0, 0 }, { 2, 2, 2 });
 	return ret;
 
 }
@@ -36,6 +36,7 @@ bool ModuleSceneIntro::Start()
 bool ModuleSceneIntro::CleanUp()
 {
 	App->gui->app_log.AddLog("Unloading Intro scene\n");
+	primitives.clear();
 
 	return true;
 }
@@ -74,4 +75,9 @@ void ModuleSceneIntro::AddSphere(float radius, uint rings, uint sectors)
 void ModuleSceneIntro::AddCylinder(float radius, float height, uint sides) 
 {
 	primitives.push_back(new Cylinder(radius, height, sides));
+}
+
+void ModuleSceneIntro::AddLine(Vertex origin, Vertex dest) 
+{
+	primitives.push_back(new Line(origin, dest));
 }
