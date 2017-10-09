@@ -85,11 +85,13 @@ class Cylinder : public Primitive
 {
 public:
 	Cylinder();
-	Cylinder(float radius, float height);
+	Cylinder(float radius, float height, uint sides);
 	void InnerRender() const;
+	void BuildVert();
 public:
 	float radius;
 	float height;
+	uint sides;
 };
 
 // ============================================

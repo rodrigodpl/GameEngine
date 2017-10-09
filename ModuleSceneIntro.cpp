@@ -27,8 +27,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
-	AddCube(1, 1, 1);
-	AddSphere(3);
+	AddCylinder(1, 2);
 	return ret;
 
 }
@@ -70,4 +69,9 @@ void ModuleSceneIntro::AddCube(float size_x, float size_y, float size_z)
 void ModuleSceneIntro::AddSphere(float radius, uint rings, uint sectors) 
 {
 	primitives.push_back(new Sphere(radius, rings, sectors));
+}
+
+void ModuleSceneIntro::AddCylinder(float radius, float height, uint sides) 
+{
+	primitives.push_back(new Cylinder(radius, height, sides));
 }

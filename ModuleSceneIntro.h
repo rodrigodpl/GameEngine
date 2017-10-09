@@ -21,6 +21,7 @@ public:
 	void Draw();
 	void AddCube(float size_x, float size_y, float size_z);
 	void AddSphere(float radius, uint rings = 25, uint sectors = 25);
+	void AddCylinder(float radius, float height, uint sides = 30);
 
 	std::list<Primitive*> primitives;
 

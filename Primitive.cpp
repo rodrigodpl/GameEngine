@@ -166,16 +166,8 @@ void Cube::InnerRender() const
 	glColor4f(color.r, color.g, color.b, alpha);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	//glNormalPointer(GL_FLOAT, 0, &normals[0]);
-	//glTexCoordPointer(2, GL_FLOAT, 0, &texcoords[0]);
-	glDrawElements(GL_QUADS, indices.size(), GL_UNSIGNED_SHORT, NULL);
-
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisableClientState(GL_NORMAL_ARRAY);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_SHORT, NULL);
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
@@ -260,47 +252,54 @@ void Sphere::InnerRender() const
 Cylinder::Cylinder() : Primitive(), radius(1.0f), height(1.0f)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
+	BuildVert();
+	color = { (float)(rand() % 100) / 100, (float)(rand() % 100) / 100, (float)(rand() % 100) / 100 };
 }
 
-Cylinder::Cylinder(float radius, float height) : Primitive(), radius(radius), height(height)
+Cylinder::Cylinder(float radius, float height, uint sides) : Primitive(), radius(radius), height(height), sides(sides)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
+	BuildVert();
+	color = { (float)(rand() % 100) / 100, (float)(rand() % 100) / 100, (float)(rand() % 100) / 100 };
+}
+
+void Cylinder::BuildVert() {
+
+	vertices.resize(((360 / (360 / sides)) * 2) + 4);    //sides  (vertex per circumference) * 2 (circumferences) + 2 (circumference center)
+	std::vector<Vertex>::iterator v = vertices.begin();
+
+	*v++ = { height*0.5f,  0, 0 };     //vertices[0] is top center vertex
+	*v++ = { -height*0.5f,  0, 0 };    //vertices[1] is top bottom vertex
+
+	for (int a = 360; a >= 0; a -= (360 / sides))
+	{
+		float b = a * M_PI / 180; // degrees to radians
+		*v++ = { radius * cos(b),height * 0.5f, radius * sin(b) };    //vertices[2] is first vertex in top circumference
+		*v++ = { radius * cos(b),-height*0.5f,  radius * sin(b) };    //vertices[3] is first vertex in bottom circumference
+	} 
+
+	indices.resize(vertices.size() * 6 - 4);
+	std::vector<GLushort>::iterator i = indices.begin();
+	for (int a = 2; (a + 2) < vertices.size(); a++)
+	{
+		*i++ = a + ((a + 1) % 2 ? 2 : 0); *i++ = a % 2; *i++ = a + (a % 2 ? 2 : 0);	// top and bottom circ
+		*i++ = a + ((a + 1) % 2 ? 0 : 2); *i++ = a + 1; *i++ = a + (a % 2 ? 0 : 2);   // side
+	}
+
+	BindBuffer();
 }
 
 void Cylinder::InnerRender() const
 {
-	int n = 30;
+	glBindBuffer(GL_ARRAY_BUFFER, vert_buff_id);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buff_id);
 
-	// Cylinder Bottom
-	glBegin(GL_POLYGON);
-	
-	for(int i = 360; i >= 0; i -= (360 / n))
-	{
-		float a = i * M_PI / 180; // degrees to radians
-		glVertex3f(-height*0.5f, radius * cos(a), radius * sin(a));
-	}
-	glEnd();
+	glColor4f(color.r, color.g, color.b, alpha);
 
-	// Cylinder Top
-	glBegin(GL_POLYGON);
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	for(int i = 0; i <= 360; i += (360 / n))
-	{
-		float a = i * M_PI / 180; // degrees to radians
-		glVertex3f(height * 0.5f, radius * cos(a), radius * sin(a));
-	}
-	glEnd();
-
-	// Cylinder "Cover"
-	glBegin(GL_QUAD_STRIP);
-	for(int i = 0; i < 480; i += (360 / n))
-	{
-		float a = i * M_PI / 180; // degrees to radians
-
-		glVertex3f(height*0.5f,  radius * cos(a), radius * sin(a) );
-		glVertex3f(-height*0.5f, radius * cos(a), radius * sin(a) );
-	}
-	glEnd();
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_SHORT, NULL);
+	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 // LINE ==================================================
