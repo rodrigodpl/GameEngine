@@ -38,6 +38,8 @@ update_status ModuleGui::PreUpdate(float dt) {
 		{
 			if (ImGui::MenuItem("Hardware"))
 				draw_hardware = !draw_hardware;
+			if (ImGui::MenuItem("Console"))
+				draw_log = !draw_log;
 
 			ImGui::EndMenu();
 		}
@@ -57,11 +59,6 @@ update_status ModuleGui::PreUpdate(float dt) {
 	// Test window ------
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 		draw_demo = !draw_demo;
-
-	// Log Window -----
-	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
-		draw_log = !draw_log;
-
 
 	return UPDATE_CONTINUE;
 }
