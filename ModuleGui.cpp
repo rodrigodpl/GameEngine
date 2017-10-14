@@ -116,7 +116,12 @@ void ModuleGui::Draw() {
 		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Performance", &draw_performance, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders);
 		ImGui::Text("Application");
-		ImGui::PlotHistogram("", &fps[0], fps.size(), 0, "test", 0.0f, 100.0f, ImVec2(200,100)); //Test text needs to be changed for something related to the FPS segment
+		Calc_avg(fps);
+		fps_text = std::to_string(avg) + " FPS";
+		char *cptr = new char[fps_text.size()];
+		std::strncpy(cptr, fps_text.c_str(), fps_text.size());
+		ImGui::PlotHistogram("", &fps[0], fps.size(), 0, cptr, 0.0f, 100.0f, ImVec2(200,100)); //Test text needs to be changed for something related to the FPS segment
+		delete[] cptr;
 		ImGui::End();
 	}
 
@@ -193,4 +198,16 @@ void ModuleGui::Fps_Data(float aux)
 		}
 		fps[fps.size()-1] = 1/aux;
 	}
+}
+
+void ModuleGui::Calc_avg(std::vector<float> aux) {
+	float num_values = 0;
+	avg = 0;
+
+	for (int counter = 0; counter < aux.size(); counter++) {
+		avg += aux[counter];
+		num_values++;
+	}
+
+	avg = avg / num_values;
 }

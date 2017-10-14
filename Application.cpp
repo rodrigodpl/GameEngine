@@ -25,9 +25,9 @@ Application::Application()
 	AddModule(input);
 	AddModule(audio);
 	AddModule(physics);
-	AddModule(gui);
 	AddModule(importer);
-	
+	AddModule(gui);
+
 	// Scenes
 	AddModule(scene_intro);
 

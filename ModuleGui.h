@@ -45,8 +45,10 @@ private:
 	bool draw_hardware = false;
 	bool draw_performance = false;
 
-	int avg;
+	float avg;
 	std::vector<float> fps;
-	std::string val;
+	std::string fps_text;
+
+	void Calc_avg(std::vector<float> aux);
 };
 
