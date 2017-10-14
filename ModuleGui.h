@@ -33,7 +33,8 @@ public:
 	void HandleEvent(SDL_Event* sdl_event);
 	bool CleanUp();
 	void Draw();
-	void Fps_Data(float aux);
+	void Fps_app_data(float aux);
+	void Fps_renderer_data(float aux);
 
 	AppLog app_log;
 
@@ -46,9 +47,10 @@ private:
 	bool draw_performance = false;
 
 	float avg;
-	std::vector<float> fps;
 	std::string fps_text;
+	std::vector<float> fps_app;
+	std::vector<float> fps_renderer;	
 
-	void Calc_avg(std::vector<float> aux);
+	void Calc_avg(std::vector<float> vector);
 };
 

@@ -119,6 +119,10 @@ bool ModuleRenderer3D::Init()
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
+	dt = (float)ms_timer.Read() / 1000.0f;
+	App->gui->Fps_renderer_data(dt);
+	ms_timer.Start();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
