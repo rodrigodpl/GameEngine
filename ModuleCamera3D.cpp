@@ -216,21 +216,11 @@ void ModuleCamera3D::FBXRescalePosition(Mesh& mesh) {
 	for (int i = 0; i < mesh.num_vertices * 3; i += 3) {
 
 		max_x = (max_x < mesh.vertices[i] ? mesh.vertices[i] : max_x); 
-		min_x = (min_x > mesh.vertices[i] ? mesh.vertices[i] : min_x);
-
 		max_y = (max_y < mesh.vertices[i + 1] ? mesh.vertices[i + 1] : max_y); 
-		min_y = (min_y > mesh.vertices[i + 1] ? mesh.vertices[i + 1] : min_y);
-
 		max_z = (max_z < mesh.vertices[i + 2] ? mesh.vertices[i + 2] : max_z); 
-		min_x = (min_z > mesh.vertices[i + 2] ? mesh.vertices[i + 2] : min_z);
 	}
 
-	max_x = (max_x > abs(min_x) ? max_x : min_x);
-	max_y = (max_y > abs(min_y) ? max_y : min_y);
-	max_z = (max_z > abs(min_z) ? max_z : min_z);
-
-	vec3 target_pos(max_x * rescale_value, max_y * rescale_value, max_z * rescale_value);
-	Move(target_pos - Position);
+	Move((vec3(max_x, max_y, max_z) * rescale_value) - Position);
 	LookAt({ 0,0,0 });
 }
 
