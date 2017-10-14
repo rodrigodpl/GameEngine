@@ -5,6 +5,11 @@
 #include "imgui.h"
 #include "SDL\include\SDL.h"
 
+#include <vector>
+#include <string>
+
+#define GRAPH_SIZE 100
+
 struct AppLog
 {
 	ImGuiTextBuffer     Buf;
@@ -28,6 +33,7 @@ public:
 	void HandleEvent(SDL_Event* sdl_event);
 	bool CleanUp();
 	void Draw();
+	void Fps_Data(float aux);
 
 	AppLog app_log;
 
@@ -37,7 +43,10 @@ private:
 	bool draw_about = false;
 	bool draw_log = false;
 	bool draw_hardware = false;
+	bool draw_performance = false;
 
-
+	int avg;
+	std::vector<float> fps;
+	std::string val;
 };
 

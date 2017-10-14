@@ -51,7 +51,7 @@ update_status ModuleCamera3D::Update(float dt)
 		LookAt(vec3(0, 0, 0));
 
 
-	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT) {
 		// look around
 
 		btVector3 VecPostoRef(Reference.x - Position.x, Reference.y - Position.y, Reference.z - Position.z);
@@ -80,7 +80,7 @@ update_status ModuleCamera3D::Update(float dt)
 		LookAt(Reference);
 
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+	else if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT) {
 		// orbit around reference
 
 		int dx = -App->input->GetMouseXMotion();

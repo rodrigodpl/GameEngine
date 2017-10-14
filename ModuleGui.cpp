@@ -14,6 +14,7 @@ ModuleGui::~ModuleGui() {}
 bool ModuleGui::Start() {
 
 	ImGui_ImplSdl_Init(App->window->window);
+	fps.resize(GRAPH_SIZE);
 
 	return true;
 
@@ -40,7 +41,8 @@ update_status ModuleGui::PreUpdate(float dt) {
 				draw_hardware = !draw_hardware;
 			if (ImGui::MenuItem("Console"))
 				draw_log = !draw_log;
-
+			if (ImGui::MenuItem("Performance"))
+				draw_performance = !draw_performance;
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Help"))
@@ -110,6 +112,14 @@ void ModuleGui::Draw() {
 		ImGui::End();
 	}
 
+	if (draw_performance) {
+		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin("Performance", &draw_performance, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders);
+		ImGui::Text("Application");
+		ImGui::PlotHistogram("", &fps[0], fps.size(), 0, "test", 0.0f, 100.0f, ImVec2(200,100)); //Test text needs to be changed for something related to the FPS segment
+		ImGui::End();
+	}
+
 	ImGui::Render();
 }
 
@@ -167,4 +177,20 @@ void AppLog::Draw(const char* title, bool* p_opened)
 	ImGui::PopStyleVar();
 	ImGui::EndChild();
 	ImGui::End();
+}
+
+void ModuleGui::Fps_Data(float aux) 
+{
+	if (fps.capacity() != fps.size())
+	{
+		fps.push_back(1/aux);
+	} 
+	else
+	{
+		for (int val = 0; val < (GRAPH_SIZE - 1); val++)
+		{
+			fps[val] = fps[val + 1];
+		}
+		fps[fps.size()-1] = 1/aux;
+	}
 }
