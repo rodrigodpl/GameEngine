@@ -58,6 +58,10 @@ void ModuleSceneIntro::Draw()
 		if((*it)->visible)
 			(*it)->Render();
 	}
+
+	for (std::list<Mesh>::iterator it = meshes.begin(); it != meshes.end(); it++) 
+		App->renderer3D->DrawMesh(*it);
+	
 		
 }
 

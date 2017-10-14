@@ -20,17 +20,15 @@ public:
 	void DebugDraw();
 
 	void OnResize(int width, int height);
+	void DrawMesh(Mesh mesh);
 
 public:
 
-	bool debug_draw;
+	bool debug_draw = false;
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
-	uint my_id = 0;
-	uint my_indices = 0;
-	Vertex* vertices = new Vertex[8];
-	uint* indices = new uint[36];
+
 };

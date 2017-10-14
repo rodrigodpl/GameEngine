@@ -3,6 +3,7 @@
 #include "p2DynArray.h"
 #include "Globals.h"
 #include "Primitive.h"
+#include "ModuleImporter.h"
 #include <list>
 
 struct PhysBody3D;
@@ -25,5 +26,6 @@ public:
 	void AddLine(Vertex origin, Vertex dest);
 
 	std::list<Primitive*> primitives;
+	std::list<Mesh> meshes;
 
 };

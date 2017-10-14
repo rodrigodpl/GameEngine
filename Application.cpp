@@ -12,6 +12,7 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
 	physics = new ModulePhysics3D(this);
 	gui = new ModuleGui(this);
+	importer = new ModuleImporter(this);
 
 
 	// The order of calls is very important!
@@ -25,6 +26,7 @@ Application::Application()
 	AddModule(audio);
 	AddModule(physics);
 	AddModule(gui);
+	AddModule(importer);
 	
 	// Scenes
 	AddModule(scene_intro);
