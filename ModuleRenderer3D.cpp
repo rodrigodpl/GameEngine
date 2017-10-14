@@ -255,19 +255,19 @@ void ModuleRenderer3D::DebugDraw() {}
 
 void ModuleRenderer3D::DrawMesh(Mesh mesh) {
 
-	//glEnable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_2D);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertices);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	//glBindTexture(GL_TEXTURE_2D, App->importer->image_id);
+	glBindTexture(GL_TEXTURE_2D, App->importer->image_id);
 	glDrawElements(GL_TRIANGLES, mesh.num_indices, GL_UNSIGNED_INT, NULL);
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 
-	//glDisable(GL_TEXTURE_2D);
+	glDisable(GL_TEXTURE_2D);
 
 
 }

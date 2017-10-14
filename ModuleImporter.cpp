@@ -137,7 +137,7 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 			}
 
 			// load colors
-			
+			App->camera->FBXRescalePosition(mesh);
 			App->scene_intro->meshes.push_back(mesh);
 
 		}

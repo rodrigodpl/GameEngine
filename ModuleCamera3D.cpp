@@ -4,6 +4,10 @@
 #include "ModuleCamera3D.h"
 #include "glmath.h"
 
+#include "MathGeoLib-1.5\src\MathGeoLib.h"
+#include "MathGeoLib-1.5\src\Geometry\AABB.h"
+
+
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	CalculateViewMatrix();
@@ -14,6 +18,8 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 
 	Position = vec3(0.0f, 0.0f, 5.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
+
+	rescale_value = 1.4f;
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -200,3 +206,31 @@ void ModuleCamera3D::CalculateViewMatrix()
 	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
 	ViewMatrixInverse = inverse(ViewMatrix);
 }
+
+
+void ModuleCamera3D::FBXRescalePosition(Mesh& mesh) {
+
+	float max_x, min_x, max_y, min_y, max_z, min_z;
+	max_x = min_x = max_y = min_y = max_z = min_z = 0.0f;
+
+	for (int i = 0; i < mesh.num_vertices * 3; i += 3) {
+
+		max_x = (max_x < mesh.vertices[i] ? mesh.vertices[i] : max_x); 
+		min_x = (min_x > mesh.vertices[i] ? mesh.vertices[i] : min_x);
+
+		max_y = (max_y < mesh.vertices[i + 1] ? mesh.vertices[i + 1] : max_y); 
+		min_y = (min_y > mesh.vertices[i + 1] ? mesh.vertices[i + 1] : min_y);
+
+		max_z = (max_z < mesh.vertices[i + 2] ? mesh.vertices[i + 2] : max_z); 
+		min_x = (min_z > mesh.vertices[i + 2] ? mesh.vertices[i + 2] : min_z);
+	}
+
+	max_x = (max_x > abs(min_x) ? max_x : min_x);
+	max_y = (max_y > abs(min_y) ? max_y : min_y);
+	max_z = (max_z > abs(min_z) ? max_z : min_z);
+
+	vec3 target_pos(max_x * rescale_value, max_y * rescale_value, max_z * rescale_value);
+	Move(target_pos - Position);
+	LookAt({ 0,0,0 });
+}
+
