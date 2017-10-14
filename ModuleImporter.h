@@ -1,11 +1,9 @@
 #pragma once
 
 #include "Module.h"
-#include "Assimp/include/cimport.h"
-#include "Assimp/include/scene.h"
-#include "Assimp/include/postprocess.h"
-#include "Assimp/include/cfileio.h"
-#pragma comment (lib, "Assimp/libx86/assimp.lib")
+
+#define CHECKERS_HEIGHT 100
+#define CHECKERS_WIDTH 100
 
 struct Mesh {
 
@@ -39,5 +37,7 @@ public:
 	bool Start();
 	bool CleanUp();
 	void LoadFBX(const char* full_path);
+	void LoadTex(const char* full_path);
 
+	//GLubyte checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
 };
