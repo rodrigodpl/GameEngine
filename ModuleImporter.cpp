@@ -32,14 +32,46 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 	{
 		for (int i = 0; i < scene->mNumMeshes; i++) {
 
-			aiMesh* imp_mesh = scene->mMeshes[i];
 			Mesh mesh;
+			aiMesh* imp_mesh = scene->mMeshes[i];
 
-			mesh.num_vertices = imp_mesh->mNumVertices;
-			mesh.vertices = new float[mesh.num_vertices * 3];
-			memcpy(mesh.vertices, imp_mesh->mVertices, sizeof(float) * mesh.num_vertices * 3);
-			App->gui->app_log.AddLog("New mesh with %d vertices", mesh.num_vertices);
+			if (imp_mesh->HasPositions()) {
+				mesh.num_vertices = imp_mesh->mNumVertices;
+				mesh.vertices = new float[mesh.num_vertices * 3];
+				memcpy(mesh.vertices, imp_mesh->mVertices, sizeof(float) * mesh.num_vertices * 3);
 
+				glGenBuffers(1, (GLuint*) &(mesh.id_vertices));
+				glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertices);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.num_vertices * 3, &mesh.vertices[0], GL_STATIC_DRAW);
+
+				App->gui->app_log.AddLog("New mesh with %d vertices", mesh.num_vertices);
+			}
+
+			if (imp_mesh->HasNormals()) {
+
+				mesh.num_normals = mesh.num_vertices;
+				mesh.normals = new float[mesh.num_normals * 3];
+				memcpy(mesh.normals, imp_mesh->mNormals, sizeof(float) * mesh.num_normals * 3);
+
+				glGenBuffers(1, (GLuint*) &(mesh.id_normals));
+				glBindBuffer(GL_NORMAL_ARRAY, mesh.id_normals);
+				glBufferData(GL_NORMAL_ARRAY, sizeof(float) * mesh.num_normals, &mesh.normals[0], GL_STATIC_DRAW);
+
+				App->gui->app_log.AddLog("New mesh with %d normals", mesh.num_normals);
+			}
+
+			if (imp_mesh->HasTextureCoords(0)) {
+
+				mesh.num_texcoords = mesh.num_vertices;
+				mesh.texcoords = new float[mesh.num_texcoords * 2];
+				memcpy(mesh.texcoords, imp_mesh->mTextureCoords, sizeof(float) * mesh.num_texcoords * 2);
+
+				glGenBuffers(1, (GLuint*) &(mesh.id_texcoords));
+				glBindBuffer(GL_NORMAL_ARRAY, mesh.id_texcoords);
+				glBufferData(GL_NORMAL_ARRAY, sizeof(float) * mesh.num_texcoords * 2, &mesh.texcoords[0], GL_STATIC_DRAW);
+
+				App->gui->app_log.AddLog("New mesh with %d texcoords", mesh.num_texcoords);
+			}
 
 			if (imp_mesh->HasFaces())
 			{
@@ -52,15 +84,15 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 					else
 						memcpy(&mesh.indices[i * 3], imp_mesh->mFaces[i].mIndices, 3 * sizeof(uint));
 				}
+
+				glGenBuffers(1, (GLuint*) &(mesh.id_indices));
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh.num_indices, &mesh.indices[0], GL_STATIC_DRAW);
+
+				App->gui->app_log.AddLog("New mesh with %d indices", mesh.num_indices);
 			}
 
-			glGenBuffers(1, (GLuint*) &(mesh.id_vertices));
-			glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertices);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.num_vertices * 3, &mesh.vertices[0], GL_STATIC_DRAW);
-
-			glGenBuffers(1, (GLuint*) &(mesh.id_indices));
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh.num_indices, &mesh.indices[0], GL_STATIC_DRAW);
+			// load colors
 
 			App->scene_intro->meshes.push_back(mesh);
 
