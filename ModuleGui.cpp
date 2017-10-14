@@ -14,10 +14,10 @@ ModuleGui::~ModuleGui() {}
 bool ModuleGui::Start() {
 
 	ImGui_ImplSdl_Init(App->window->window);
-	fps.resize(GRAPH_SIZE);
+	fps_app.resize(GRAPH_SIZE);
+	fps_renderer.resize(GRAPH_SIZE);
 
 	return true;
-
 }
 
 update_status ModuleGui::PreUpdate(float dt) {
@@ -116,7 +116,19 @@ void ModuleGui::Draw() {
 		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Performance", &draw_performance, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders);
 		ImGui::Text("Application");
-		ImGui::PlotHistogram("", &fps[0], fps.size(), 0, "test", 0.0f, 100.0f, ImVec2(200,100)); //Test text needs to be changed for something related to the FPS segment
+		Calc_avg(fps_app);
+		fps_text = std::to_string(avg) + " FPS";
+		char *cptr = new char[fps_text.size()];
+		std::strncpy(cptr, fps_text.c_str(), fps_text.size());
+		ImGui::PlotHistogram("", &fps_app[0], fps_app.size(), 0, cptr, 0.0f, 100.0f, ImVec2(200,100));
+		ImGui::Separator();
+		ImGui::Text("Renderer");
+		Calc_avg(fps_renderer);
+		fps_text = std::to_string(avg) + " FPS";
+		cptr = new char[fps_text.size()];
+		std::strncpy(cptr, fps_text.c_str(), fps_text.size());
+		ImGui::PlotHistogram("", &fps_renderer[0], fps_renderer.size(), 0, cptr, 0.0f, 100.0f, ImVec2(200, 100));
+		delete[] cptr;
 		ImGui::End();
 	}
 
@@ -179,18 +191,46 @@ void AppLog::Draw(const char* title, bool* p_opened)
 	ImGui::End();
 }
 
-void ModuleGui::Fps_Data(float aux) 
+void ModuleGui::Fps_app_data(float aux)
 {
-	if (fps.capacity() != fps.size())
+	if (fps_app.capacity() != fps_app.size())
 	{
-		fps.push_back(1/aux);
+		fps_app.push_back(1/aux);
 	} 
 	else
 	{
 		for (int val = 0; val < (GRAPH_SIZE - 1); val++)
 		{
-			fps[val] = fps[val + 1];
+			fps_app[val] = fps_app[val + 1];
 		}
-		fps[fps.size()-1] = 1/aux;
+		fps_app[fps_app.size()-1] = 1/aux;
 	}
+}
+
+void ModuleGui::Fps_renderer_data(float aux)
+{
+	if (fps_renderer.capacity() != fps_renderer.size())
+	{
+		fps_renderer.push_back(1 / aux);
+	}
+	else
+	{
+		for (int val = 0; val < (GRAPH_SIZE - 1); val++)
+		{
+			fps_renderer[val] = fps_renderer[val + 1];
+		}
+		fps_renderer[fps_renderer.size() - 1] = 1 / aux;
+	}
+}
+
+void ModuleGui::Calc_avg(std::vector<float> aux) {
+	float num_values = 0;
+	avg = 0;
+
+	for (int counter = 0; counter < aux.size(); counter++) {
+		avg += aux[counter];
+		num_values++;
+	}
+
+	avg = avg / num_values;
 }
