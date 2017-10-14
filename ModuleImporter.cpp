@@ -138,6 +138,12 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 
 			// load colors
 			App->camera->FBXRescalePosition(mesh);
+
+			if (App->scene_intro->meshes.size() > 1) {
+
+				for (std::list<Mesh>::iterator it = App->scene_intro->meshes.begin(); it != App->scene_intro->meshes.end(); it++)
+					(*it).visible = false;
+			}
 			App->scene_intro->meshes.push_back(mesh);
 
 		}

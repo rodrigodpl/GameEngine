@@ -28,6 +28,8 @@ struct Mesh {
 	uint num_texcoords = 0;
 	float* texcoords = nullptr;
 
+	bool visible = true;
+
 };
 
 class ModuleImporter : public Module
