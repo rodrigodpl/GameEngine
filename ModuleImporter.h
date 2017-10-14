@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Module.h"
+#include "glew-2.1.0\include\GL\glew.h"
 
-#define CHECKERS_HEIGHT 100
-#define CHECKERS_WIDTH 100
+#define CHECKERS_HEIGHT 64
+#define CHECKERS_WIDTH 64
 
 struct Mesh {
 
@@ -26,6 +27,7 @@ struct Mesh {
 	uint id_texcoords = 0;
 	uint num_texcoords = 0;
 	float* texcoords = nullptr;
+
 };
 
 class ModuleImporter : public Module
@@ -39,5 +41,6 @@ public:
 	void LoadFBX(const char* full_path);
 	void LoadTex(const char* full_path);
 
-	//GLubyte checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
+	GLubyte checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
+	uint image_id;
 };

@@ -29,7 +29,7 @@ bool ModuleImporter::Start() {
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 
-	/*for (int i = 0; i < CHECKERS_HEIGHT; i++) {
+	for (int i = 0; i < CHECKERS_HEIGHT; i++) {
 		for (int j = 0; j < CHECKERS_WIDTH; j++) {
 			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
 			checkImage[i][j][0] = (GLubyte)c;
@@ -38,7 +38,9 @@ bool ModuleImporter::Start() {
 			checkImage[i][j][3] = (GLubyte)255;
 		}
 	}
-*/
+
+	LoadTex("test");
+
 	return true;
 }
 
@@ -52,14 +54,15 @@ bool ModuleImporter::CleanUp() {
 void ModuleImporter::LoadTex(const char* full_path) {
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	//glGenTextures(1, &ImageName);
-	//glBindTexture(GL_TEXTURE_2D, ImageName);
+	glGenTextures(1, &image_id);
+	glBindTexture(GL_TEXTURE_2D, image_id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
-		//0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
+		0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+
 
 }
 
@@ -93,22 +96,25 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 
 				glGenBuffers(1, (GLuint*) &(mesh.id_normals));
 				glBindBuffer(GL_NORMAL_ARRAY, mesh.id_normals);
-				glBufferData(GL_NORMAL_ARRAY, sizeof(float) * mesh.num_normals, &mesh.normals[0], GL_STATIC_DRAW);
+				glBufferData(GL_NORMAL_ARRAY, sizeof(float) * mesh.num_normals * 3, &mesh.normals[0], GL_STATIC_DRAW);
 
 				App->gui->app_log.AddLog("New mesh with %d normals", mesh.num_normals);
 			}
+
+			int a = imp_mesh->GetNumUVChannels();
 
 			if (imp_mesh->HasTextureCoords(0)) {
 
 				mesh.num_texcoords = mesh.num_vertices;
 				mesh.texcoords = new float[mesh.num_texcoords * 2];
-				memcpy(mesh.texcoords, imp_mesh->mTextureCoords, sizeof(float) * mesh.num_texcoords * 2);
+				memcpy(mesh.texcoords, imp_mesh->mTextureCoords[0], sizeof(float) * mesh.num_texcoords * 2);
 
 				glGenBuffers(1, (GLuint*) &(mesh.id_texcoords));
-				glBindBuffer(GL_NORMAL_ARRAY, mesh.id_texcoords);
-				glBufferData(GL_NORMAL_ARRAY, sizeof(float) * mesh.num_texcoords * 2, &mesh.texcoords[0], GL_STATIC_DRAW);
+				glBindBuffer(GL_TEXTURE_COORD_ARRAY, mesh.id_texcoords);
+				glBufferData(GL_TEXTURE_COORD_ARRAY, sizeof(float) * mesh.num_texcoords * 2, &mesh.texcoords[0], GL_STATIC_DRAW);
 
 				App->gui->app_log.AddLog("New mesh with %d texcoords", mesh.num_texcoords);
+
 			}
 
 			if (imp_mesh->HasFaces())
@@ -131,7 +137,7 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 			}
 
 			// load colors
-
+			
 			App->scene_intro->meshes.push_back(mesh);
 
 		}
