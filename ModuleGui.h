@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "imgui.h"
 #include "SDL\include\SDL.h"
+#include "Color.h"
 
 #include <vector>
 #include <string>
@@ -60,10 +61,14 @@ private:
 
 	void Calc_avg(std::vector<float> vector);
 
+	float* rgb_data;
+
 public:
 	void Fps_app_data(float aux);
 	void Fps_renderer_data(float aux);
 	void Fps_physics_data(float aux);
 	void Fps_input_data(float aux);
+
+	void Get_colour(Color aux);
 };
 

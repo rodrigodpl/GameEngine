@@ -128,6 +128,7 @@ Cube::Cube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, siz
 {
 	type = PrimitiveTypes::Primitive_Cube;
 	BuildVert();
+	//ModuleGui::Get_colour(color);
 	color = { (float)(rand() % 100) / 100, (float)(rand() % 100) / 100, (float)(rand() % 100) / 100 };
 }
 

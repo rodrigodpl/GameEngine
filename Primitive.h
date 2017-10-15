@@ -5,6 +5,7 @@
 #include "glew-2.1.0\include\GL\glew.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
+#include "ModuleGui.h"
 
 #include <vector>
 
