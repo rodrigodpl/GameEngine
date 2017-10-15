@@ -48,6 +48,7 @@ private:
 	bool draw_properties = false;
 
 	float avg;
+	int prev;
 	std::string fps_text;
 	std::string n_indices;
 	std::string n_vertices;
