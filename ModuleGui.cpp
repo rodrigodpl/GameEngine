@@ -109,6 +109,8 @@ void ModuleGui::Draw() {
 		ImGui::Text("Bullet        v.2.84");
 		ImGui::Text("Imgui         v.1.51");
 		ImGui::Text("MathGeoLib    v.1.51");
+		ImGui::Text("Assimp        v.3.1.1");
+		ImGui::Text("DevIL         v.1.7.8");
 		ImGui::End();
 	}
 
@@ -127,7 +129,7 @@ void ModuleGui::Draw() {
 		if (ImGui::CollapsingHeader("Renderer")) {
 			Calc_avg(fps_renderer);
 			fps_text = std::to_string(avg) + " MS";
-			char *crend = new char[fps_text.size() - 3];
+			char *crend = new char[fps_text.size()];
 			std::strncpy(cptr, fps_text.c_str(), fps_text.size());
 			ImGui::PlotHistogram("", &fps_renderer[0], fps_renderer.size(), 0, cptr, 0.0f, 0.05f, ImVec2(200, 100));
 			delete[] crend;
@@ -135,7 +137,7 @@ void ModuleGui::Draw() {
 		if (ImGui::CollapsingHeader("Physics")) {
 			Calc_avg(fps_physics);
 			fps_text = std::to_string(avg) + " MS";
-			char *cphys = new char[fps_text.size() - 3];
+			char *cphys = new char[fps_text.size()];
 			std::strncpy(cptr, fps_text.c_str(), fps_text.size());
 			ImGui::PlotHistogram("", &fps_physics[0], fps_physics.size(), 0, cptr, 0.0f, 0.05f, ImVec2(200, 100));
 			delete[] cphys;
@@ -143,7 +145,7 @@ void ModuleGui::Draw() {
 		if (ImGui::CollapsingHeader("Input")) {
 			Calc_avg(fps_input);
 			fps_text = std::to_string(avg) + " MS";
-			char *cinp = new char[fps_text.size() - 3];
+			char *cinp = new char[fps_text.size()];
 			std::strncpy(cptr, fps_text.c_str(), fps_text.size());
 			ImGui::PlotHistogram("", &fps_input[0], fps_input.size(), 0, cptr, 0.0f, 0.05f, ImVec2(200, 100));
 			delete[] cinp;
