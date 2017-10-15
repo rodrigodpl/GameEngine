@@ -40,8 +40,6 @@ public:
 	bool CleanUp();
 
 	JSON_file* LoadFile(const char* path);
-
-private:
-
+	
 	JSON_file* config;
 };
