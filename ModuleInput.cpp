@@ -127,9 +127,9 @@ update_status ModuleInput::PreUpdate(float dt)
 				std::string dropped_file_str(e.drop.file);
 				dropped_file_str = dropped_file_str.substr(dropped_file_str.find_last_of(".") + 1);
 
-				if (dropped_file_str == "fbx")
+				if (dropped_file_str == "fbx" || dropped_file_str == "FBX")
 					App->importer->LoadFBX(e.drop.file);
-				else if (dropped_file_str == "png")
+				else if (dropped_file_str == "png"|| dropped_file_str == "PNG")
 					App->importer->LoadImg(e.drop.file);
 				else
 					App->gui->app_log.AddLog("Unexpected extension in dropped file!\n");

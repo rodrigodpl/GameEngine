@@ -43,8 +43,7 @@ public:
 	bool Start();
 	bool CleanUp();
 	void LoadFBX(const char* full_path);
-	void LoadTexFromCurrentImg();
-	void LoadImg(const char* full_path);
+	void LoadImg(char* full_path);
 
 	void CheckeredTex();
 	uint checkered_tex_id;
