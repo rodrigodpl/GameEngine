@@ -82,12 +82,12 @@ void ModuleImporter::LoadImg(const char* full_path) {
 	ilGenImages(1, &image_id);
 	ilBindImage(image_id);
 
-	ilLoad(IL_JPG,full_path);
+	ilLoad(IL_PNG,full_path);
 
 	ILinfo ImageInfo;
 	iluGetImageInfo(&ImageInfo);
 
-	ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE);
+	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 
 	LoadTexFromCurrentImg();
 
