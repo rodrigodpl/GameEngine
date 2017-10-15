@@ -52,7 +52,6 @@ public:
 	std::vector<GLfloat>	texcoords;	uint texcoord_buff_id;
 	std::vector<GLushort>	indices;	uint index_buff_id;
 
-protected:
 	PrimitiveTypes type;
 };
 

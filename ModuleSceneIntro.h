@@ -25,6 +25,9 @@ public:
 	void AddCylinder(float radius, float height, uint sides = 30);
 	void AddLine(Vertex origin, Vertex dest);
 
+	void ShowPrimitives(PrimitiveTypes type);
+	void ShowNextMesh();
+
 	std::list<Primitive*> primitives;
 	std::list<Mesh> meshes;
 
