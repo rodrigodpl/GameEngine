@@ -45,9 +45,13 @@ private:
 	bool draw_hardware = false;
 	bool draw_performance = false;
 	bool draw_options = false;
+	bool draw_properties = false;
 
 	float avg;
 	std::string fps_text;
+	std::string n_indices;
+	std::string n_vertices;
+
 	std::vector<float> fps_app;
 	std::vector<float> fps_renderer;
 	std::vector<float> fps_physics;

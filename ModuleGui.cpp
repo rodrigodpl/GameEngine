@@ -44,6 +44,8 @@ update_status ModuleGui::PreUpdate(float dt) {
 		{
 			if (ImGui::MenuItem("Hardware"))
 				draw_hardware = !draw_hardware;
+			if (ImGui::MenuItem("Properties"))
+				draw_properties = !draw_properties;
 			if (ImGui::MenuItem("Console"))
 				draw_log = !draw_log;
 			if (ImGui::MenuItem("Performance"))
@@ -179,12 +181,28 @@ void ModuleGui::Draw() {
 			
 		}
 		if (ImGui::CollapsingHeader("Renderer")) {
-
+			static bool wireframe = false;
+			ImGui::Checkbox("Wireframe", &wireframe);
 		}
 		if (ImGui::CollapsingHeader("Textures")) {
 			static int shader = 0;
 			ImGui::Text("Shader"); ImGui::SameLine();
 			ImGui::Combo("", &shader, "Basic\0Checker\0\0");
+		}
+	}
+
+	if (draw_properties) {
+		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
+		if (ImGui::CollapsingHeader("Transformation")) {
+
+		}
+		if (ImGui::CollapsingHeader("Geometry")) {
+			ImGui::Text("# Indices: "); ImGui::SameLine();
+			//ImGui::Text(App->scene_intro->meshes.back().num_indices);
+			ImGui::Text("# Vertices: " + App->scene_intro->meshes.back().num_vertices);
+		}
+		if (ImGui::CollapsingHeader("Texture")) {
+
 		}
 	}
 
