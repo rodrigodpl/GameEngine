@@ -16,6 +16,8 @@
 #include "Devil/include/ilut.h"
 
 #pragma comment (lib, "Devil/libx86/DevIL.lib")
+#pragma comment (lib, "Devil/libx86/ILU.lib")
+#pragma comment (lib, "Devil/libx86/ILUT.lib")
 
 
 ModuleImporter::ModuleImporter(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -29,17 +31,13 @@ bool ModuleImporter::Start() {
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 
-	for (int i = 0; i < CHECKERS_HEIGHT; i++) {
-		for (int j = 0; j < CHECKERS_WIDTH; j++) {
-			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
-			checkImage[i][j][0] = (GLubyte)c;
-			checkImage[i][j][1] = (GLubyte)c;
-			checkImage[i][j][2] = (GLubyte)c;
-			checkImage[i][j][3] = (GLubyte)255;
-		}
-	}
+	ilutRenderer(ILUT_OPENGL);
+	ilInit();
+	iluInit();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);
 
-	LoadTex("test");
+	checkered_tex_id = 0;
 
 	return true;
 }
@@ -51,18 +49,49 @@ bool ModuleImporter::CleanUp() {
 	return true;  
 }
 
-void ModuleImporter::LoadTex(const char* full_path) {
+void ModuleImporter::LoadTexFromCurrentImg() {
 
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(1, &image_id);
-	glBindTexture(GL_TEXTURE_2D, image_id);
+	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	GLuint tex_id;
+
+	glGenTextures(1, &tex_id);
+	glBindTexture(GL_TEXTURE_2D, tex_id);
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
-		0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
 
+	glTexImage2D(GL_TEXTURE_2D, 0, IL_IMAGE_FORMAT, IL_IMAGE_WIDTH, IL_IMAGE_HEIGHT,
+				 0, IL_IMAGE_FORMAT, GL_UNSIGNED_BYTE, ilGetData());
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	loaded_texs_ids.push_back(tex_id);
+
+	if(!loaded_texs_ids.empty())
+		current_tex_id = tex_id;
+
+}
+
+void ModuleImporter::LoadImg(const char* full_path) {
+
+	ILuint image_id;
+
+	ilGenImages(1, &image_id);
+	ilBindImage(image_id);
+
+	ilLoad(IL_JPG,full_path);
+
+	ILinfo ImageInfo;
+	iluGetImageInfo(&ImageInfo);
+
+	ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE);
+
+	LoadTexFromCurrentImg();
+
+	ilDeleteImages(1, &image_id);
 
 }
 
@@ -152,10 +181,49 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 			App->scene_intro->meshes.push_back(mesh);
 
 		}
-
+		CheckeredTex();
 		aiReleaseImport(scene);
 	}
 	else
 		App->gui->app_log.AddLog("Error loading scene %s", full_path);
+
+}
+
+
+void ModuleImporter::CheckeredTex() {
+
+	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	if (checkered_tex_id == 0) {
+
+		for (int i = 0; i < CHECKERS_HEIGHT; i++) {
+			for (int j = 0; j < CHECKERS_WIDTH; j++) {
+
+				int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+				checkImage[i][j][0] = (GLubyte)c;
+				checkImage[i][j][1] = (GLubyte)c;
+				checkImage[i][j][2] = (GLubyte)c;
+				checkImage[i][j][3] = (GLubyte)255;
+			}
+		}
+		GLuint tex_id;
+
+		glGenTextures(1, &tex_id);
+		glBindTexture(GL_TEXTURE_2D, tex_id);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
+			0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		checkered_tex_id = tex_id;
+	}
+
+	current_tex_id = checkered_tex_id;
 
 }

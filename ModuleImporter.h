@@ -3,6 +3,8 @@
 #include "Module.h"
 #include "glew-2.1.0\include\GL\glew.h"
 
+#include <list>
+
 #define CHECKERS_HEIGHT 64
 #define CHECKERS_WIDTH 64
 
@@ -41,8 +43,13 @@ public:
 	bool Start();
 	bool CleanUp();
 	void LoadFBX(const char* full_path);
-	void LoadTex(const char* full_path);
+	void LoadTexFromCurrentImg();
+	void LoadImg(const char* full_path);
 
+	void CheckeredTex();
+	uint checkered_tex_id;
 	GLubyte checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
-	uint image_id;
+
+	std::list<int> loaded_texs_ids;
+	uint current_tex_id;
 };

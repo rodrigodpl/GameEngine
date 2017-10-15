@@ -23,6 +23,8 @@ public:
 	update_status PreUpdate(float dt);
 	bool CleanUp();
 
+	char* GetExtension(char* filename);
+
 	KEY_STATE GetKey(int id) const
 	{
 		return keyboard[id];
