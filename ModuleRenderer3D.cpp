@@ -255,7 +255,6 @@ void ModuleRenderer3D::DebugDraw() {}
 
 void ModuleRenderer3D::DrawMesh(Mesh mesh) {
 
-
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertices);
 	glBindBuffer(GL_TEXTURE_COORD_ARRAY, mesh.id_texcoords);
@@ -266,7 +265,7 @@ void ModuleRenderer3D::DrawMesh(Mesh mesh) {
 	glEnable(GL_TEXTURE_2D);
 
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+	glTexCoordPointer(3, GL_FLOAT, 0, NULL);
 	glBindTexture(GL_TEXTURE_2D, App->importer->current_tex_id);
 	glDrawElements(GL_TRIANGLES, mesh.num_indices, GL_UNSIGNED_INT, NULL);
 
@@ -280,7 +279,5 @@ void ModuleRenderer3D::DrawMesh(Mesh mesh) {
 	glBindBuffer(GL_TEXTURE_COORD_ARRAY, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
 
 }

@@ -49,49 +49,16 @@ bool ModuleImporter::CleanUp() {
 	return true;  
 }
 
-void ModuleImporter::LoadTexFromCurrentImg() {
 
-	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+void ModuleImporter::LoadImg(char* full_path) {
 
-	GLuint tex_id;
+	uint tex_id = ilutGLLoadImage(full_path);
 
-	glGenTextures(1, &tex_id);
-	glBindTexture(GL_TEXTURE_2D, tex_id);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, IL_IMAGE_FORMAT, IL_IMAGE_WIDTH, IL_IMAGE_HEIGHT,
-				 0, IL_IMAGE_FORMAT, GL_UNSIGNED_BYTE, ilGetData());
-
-	glBindTexture(GL_TEXTURE_2D, 0);
 
 	loaded_texs_ids.push_back(tex_id);
 
-	if(!loaded_texs_ids.empty())
+	if (!loaded_texs_ids.empty())
 		current_tex_id = tex_id;
-
-}
-
-void ModuleImporter::LoadImg(const char* full_path) {
-
-	ILuint image_id;
-
-	ilGenImages(1, &image_id);
-	ilBindImage(image_id);
-
-	ilLoad(IL_PNG,full_path);
-
-	ILinfo ImageInfo;
-	iluGetImageInfo(&ImageInfo);
-
-	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-
-	LoadTexFromCurrentImg();
-
-	ilDeleteImages(1, &image_id);
 
 }
 
@@ -123,6 +90,7 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 
 				mesh.num_normals = mesh.num_vertices;
 				mesh.normals = new float[mesh.num_normals * 3];
+
 				memcpy(mesh.normals, imp_mesh->mNormals, sizeof(float) * mesh.num_normals * 3);
 
 				glGenBuffers(1, (GLuint*) &(mesh.id_normals));
@@ -133,18 +101,16 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 				App->gui->app_log.AddLog("New mesh with %d normals", mesh.num_normals);
 			}
 
-			int a = imp_mesh->GetNumUVChannels();
-
 			if (imp_mesh->HasTextureCoords(0)) {
 
 				mesh.num_texcoords = mesh.num_vertices;
-				mesh.texcoords = new float[mesh.num_texcoords * 2];
-				memcpy(mesh.texcoords, imp_mesh->mTextureCoords[0], sizeof(float) * mesh.num_texcoords * 2);
+				mesh.texcoords = new float[mesh.num_texcoords * 3];
+				memcpy(mesh.texcoords, imp_mesh->mTextureCoords[0], sizeof(float) * mesh.num_texcoords * 3);
 
 				glGenBuffers(1, (GLuint*) &(mesh.id_texcoords));
 				glBindBuffer(GL_TEXTURE_COORD_ARRAY, mesh.id_texcoords);
-				glBufferData(GL_TEXTURE_COORD_ARRAY, sizeof(float) * mesh.num_texcoords * 2, &mesh.texcoords[0], GL_STATIC_DRAW);
-				glBindBuffer(GL_TEXTURE_COORD_ARRAY,0);
+				glBufferData(GL_TEXTURE_COORD_ARRAY, sizeof(float) * mesh.num_texcoords * 3, &mesh.texcoords[0], GL_STATIC_DRAW);
+				glBindBuffer(GL_TEXTURE_COORD_ARRAY, 0);
 
 				App->gui->app_log.AddLog("New mesh with %d texcoords", mesh.num_texcoords);
 
@@ -192,7 +158,7 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 
 void ModuleImporter::CheckeredTex() {
 
-	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 	if (checkered_tex_id == 0) {
 
