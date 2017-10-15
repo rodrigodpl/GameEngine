@@ -1,6 +1,9 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "ModuleGui.h"
+
+#include <string>
 
 #define MAX_KEYS 300
 
@@ -29,7 +32,7 @@ bool ModuleInput::Init()
 		App->gui->app_log.AddLog("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
-
+	
 	return ret;
 }
 
@@ -120,9 +123,18 @@ update_status ModuleInput::PreUpdate(float dt)
 
 			case SDL_DROPFILE:     
 				
-				char* dropped_filedir = e.drop.file;
-				App->importer->LoadFBX(dropped_filedir);
-				SDL_free(dropped_filedir);    
+
+				std::string dropped_file_str(e.drop.file);
+				dropped_file_str = dropped_file_str.substr(dropped_file_str.find_last_of(".") + 1);
+
+				if (dropped_file_str == "fbx")
+					App->importer->LoadFBX(e.drop.file);
+				else if (dropped_file_str == "png")
+					App->importer->LoadImg(e.drop.file);
+				else
+					App->gui->app_log.AddLog("Unexpected extension in dropped file!\n");
+				
+				SDL_free(e.drop.file);
 				break;
 		}
 	}
@@ -140,3 +152,4 @@ bool ModuleInput::CleanUp()
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
 }
+
