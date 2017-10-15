@@ -9,6 +9,7 @@
 #include <string>
 
 #define GRAPH_SIZE 100
+#define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
 struct AppLog
 {
@@ -43,6 +44,7 @@ private:
 	bool draw_log = false;
 	bool draw_hardware = false;
 	bool draw_performance = false;
+	bool draw_options = false;
 
 	float avg;
 	std::string fps_text;

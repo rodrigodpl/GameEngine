@@ -30,7 +30,12 @@ update_status ModuleGui::PreUpdate(float dt) {
 	{
 		if (ImGui::BeginMenu("File", &draw_menu))
 		{
-			if (ImGui::MenuItem("Exit")) {
+			if (ImGui::MenuItem("Options"))
+			{
+				draw_options = !draw_options;
+			}
+			if (ImGui::MenuItem("Exit"))
+			{
 				return UPDATE_STOP;
 			}
 			ImGui::EndMenu();
@@ -78,8 +83,6 @@ void ModuleGui::HandleEvent(SDL_Event* sdl_event)
 }
 
 void ModuleGui::Draw() {
-
-
 	if (draw_demo)
 		ImGui::ShowTestWindow(&draw_demo);
 
@@ -111,6 +114,8 @@ void ModuleGui::Draw() {
 		ImGui::Text("MathGeoLib    v.1.51");
 		ImGui::Text("Assimp        v.3.1.1");
 		ImGui::Text("DevIL         v.1.7.8");
+		ImGui::Separator();
+		if (ImGui::Button("Github")) ShellExecute(0, 0, "https://github.com/rodrigodpl/GameEngine", 0, 0, SW_SHOW);
 		ImGui::End();
 	}
 
@@ -151,6 +156,36 @@ void ModuleGui::Draw() {
 			delete[] cinp;
 		}
 		ImGui::End();
+	}
+
+	if (draw_options)
+	{
+		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
+		if (ImGui::CollapsingHeader("Display")) {
+			static int win_size = 1;
+			const char* sizes[] = { "640x480", "800x600", "960x720", "1024x576", "1024x768", "1152x648", "1280x720", "1280x800", "1280x960", "1366x768", "1440x900", "1400x1050", "1440x1080", "1600x900", "1600x1200", "1680x1050", "1856x1392", "1920x1440", "1920x1080", "1920x1200", "2048x1536", "2560x1440", "2560x1600", "3840x2160" };
+			ImGui::Text("Window Size"); ImGui::SameLine();
+			ImGui::Combo("", &win_size, sizes, IM_ARRAYSIZE(sizes));
+			ImGui::Separator();
+			static bool vsync = true;
+			ImGui::Checkbox("Vsync", &vsync);
+			ImGui::Separator();
+			static int e = 1;
+			ImGui::RadioButton("Fullscreen", &e, 0);
+			ImGui::RadioButton("Windowed", &e, 1); 
+			ImGui::RadioButton("Borderless", &e, 2);
+		}
+		if (ImGui::CollapsingHeader("Input")) {
+			
+		}
+		if (ImGui::CollapsingHeader("Renderer")) {
+
+		}
+		if (ImGui::CollapsingHeader("Textures")) {
+			static int shader = 0;
+			ImGui::Text("Shader"); ImGui::SameLine();
+			ImGui::Combo("", &shader, "Basic\0Checker\0\0");
+		}
 	}
 
 	ImGui::Render();
