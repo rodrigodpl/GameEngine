@@ -42,5 +42,6 @@ public:
 	JSON_file* LoadFile(const char* path);
 
 private:
-	std::list<JSON_file*> files;
+
+	JSON_file* config;
 };

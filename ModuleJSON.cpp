@@ -9,15 +9,14 @@ ModuleJSON::~ModuleJSON() {}
 
 bool ModuleJSON::Start() {
 
-	JSON_file* config = LoadFile("config.json");
-
-	config->WriteString("test", "retest");
-	config->Save();
+	config = LoadFile("config.json");
 
 	return true;
 }
 
 bool ModuleJSON::CleanUp() {
+
+	config->Save();
 
 	return true;
 }
@@ -25,21 +24,11 @@ bool ModuleJSON::CleanUp() {
 JSON_file* ModuleJSON::LoadFile(const char * path)
 {
 
-	for (std::list<JSON_file*>::iterator it = files.begin(); it != files.end(); it++)
-	{
-		if ((*it)->path == path)
-			return (*it);        // break loop if file is already loaded
-	}
-
 	JSON_Value *user_data = json_parse_file(path);
 	JSON_Object *root_object = json_value_get_object(user_data);
 
 	if (user_data && root_object)
-	{
-		JSON_file* new_file = new JSON_file(user_data, root_object, path);
-		files.push_back(new_file);
-		return new_file;
-	}
+		return config = new JSON_file(user_data, root_object, path);
 	else
 		App->gui->app_log.AddLog("Error loading %s file!", path);
 
