@@ -71,7 +71,10 @@ bool ModulePhysics3D::Start()
 // ---------------------------------------------------------
 update_status ModulePhysics3D::PreUpdate(float dt)
 {
-	
+	dt = (float)ms_timer.Read() / 1000.0f;
+	App->gui->Fps_physics_data(dt);
+	ms_timer.Start();
+
 	world->stepSimulation(dt, 15);
 
 	int numManifolds = world->getDispatcher()->getNumManifolds();

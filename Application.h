@@ -14,8 +14,6 @@
 #include "ModuleGui.h"
 #include "ModuleImporter.h"
 
-#include <vector>
-
 class Application
 {
 public:
@@ -34,7 +32,6 @@ private:
 	Timer	ms_timer;
 	float	dt;
 	p2List<Module*> list_modules;
-	std::vector<float> fps_app;
 
 public:
 

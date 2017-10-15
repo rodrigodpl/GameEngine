@@ -16,13 +16,13 @@ bool ModuleGui::Start() {
 	ImGui_ImplSdl_Init(App->window->window);
 	fps_app.resize(GRAPH_SIZE);
 	fps_renderer.resize(GRAPH_SIZE);
+	fps_input.resize(GRAPH_SIZE);
+	fps_physics.resize(GRAPH_SIZE);
 
 	return true;
 }
 
 update_status ModuleGui::PreUpdate(float dt) {
-
-
 	//  Main Menu -------
 	ImGui_ImplSdl_NewFrame(App->window->window);
 
@@ -122,13 +122,32 @@ void ModuleGui::Draw() {
 		std::strncpy(cptr, fps_text.c_str(), fps_text.size());
 		ImGui::PlotHistogram("", &fps_app[0], fps_app.size(), 0, cptr, 0.0f, 100.0f, ImVec2(200,100));
 		ImGui::Separator();
-		ImGui::Text("Renderer");
-		Calc_avg(fps_renderer);
-		fps_text = std::to_string(avg) + " FPS";
-		cptr = new char[fps_text.size()];
-		std::strncpy(cptr, fps_text.c_str(), fps_text.size());
-		ImGui::PlotHistogram("", &fps_renderer[0], fps_renderer.size(), 0, cptr, 0.0f, 100.0f, ImVec2(200, 100));
 		delete[] cptr;
+		// -------------------  
+		if (ImGui::CollapsingHeader("Renderer")) {
+			Calc_avg(fps_renderer);
+			fps_text = std::to_string(avg) + " MS";
+			char *crend = new char[fps_text.size() - 3];
+			std::strncpy(cptr, fps_text.c_str(), fps_text.size());
+			ImGui::PlotHistogram("", &fps_renderer[0], fps_renderer.size(), 0, cptr, 0.0f, 0.05f, ImVec2(200, 100));
+			delete[] crend;
+		}
+		if (ImGui::CollapsingHeader("Physics")) {
+			Calc_avg(fps_physics);
+			fps_text = std::to_string(avg) + " MS";
+			char *cphys = new char[fps_text.size() - 3];
+			std::strncpy(cptr, fps_text.c_str(), fps_text.size());
+			ImGui::PlotHistogram("", &fps_physics[0], fps_physics.size(), 0, cptr, 0.0f, 0.05f, ImVec2(200, 100));
+			delete[] cphys;
+		}
+		if (ImGui::CollapsingHeader("Input")) {
+			Calc_avg(fps_input);
+			fps_text = std::to_string(avg) + " MS";
+			char *cinp = new char[fps_text.size() - 3];
+			std::strncpy(cptr, fps_text.c_str(), fps_text.size());
+			ImGui::PlotHistogram("", &fps_input[0], fps_input.size(), 0, cptr, 0.0f, 0.05f, ImVec2(200, 100));
+			delete[] cinp;
+		}
 		ImGui::End();
 	}
 
@@ -191,38 +210,6 @@ void AppLog::Draw(const char* title, bool* p_opened)
 	ImGui::End();
 }
 
-void ModuleGui::Fps_app_data(float aux)
-{
-	if (fps_app.capacity() != fps_app.size())
-	{
-		fps_app.push_back(1/aux);
-	} 
-	else
-	{
-		for (int val = 0; val < (GRAPH_SIZE - 1); val++)
-		{
-			fps_app[val] = fps_app[val + 1];
-		}
-		fps_app[fps_app.size()-1] = 1/aux;
-	}
-}
-
-void ModuleGui::Fps_renderer_data(float aux)
-{
-	if (fps_renderer.capacity() != fps_renderer.size())
-	{
-		fps_renderer.push_back(1 / aux);
-	}
-	else
-	{
-		for (int val = 0; val < (GRAPH_SIZE - 1); val++)
-		{
-			fps_renderer[val] = fps_renderer[val + 1];
-		}
-		fps_renderer[fps_renderer.size() - 1] = 1 / aux;
-	}
-}
-
 void ModuleGui::Calc_avg(std::vector<float> aux) {
 	float num_values = 0;
 	avg = 0;
@@ -233,4 +220,70 @@ void ModuleGui::Calc_avg(std::vector<float> aux) {
 	}
 
 	avg = avg / num_values;
+}
+
+// All the data for each graph
+
+void ModuleGui::Fps_app_data(float aux)
+{
+	if (fps_app.capacity() != fps_app.size())
+	{
+		fps_app.push_back(1 / aux);
+	}
+	else
+	{
+		for (int val = 0; val < (GRAPH_SIZE - 1); val++)
+		{
+			fps_app[val] = fps_app[val + 1];
+		}
+		fps_app[fps_app.size() - 1] = 1 / aux;
+	}
+}
+
+void ModuleGui::Fps_renderer_data(float aux)
+{
+	if (fps_renderer.capacity() != fps_renderer.size())
+	{
+		fps_renderer.push_back(aux);
+	}
+	else
+	{
+		for (int val = 0; val < (GRAPH_SIZE - 1); val++)
+		{
+			fps_renderer[val] = fps_renderer[val + 1];
+		}
+		fps_renderer[fps_renderer.size() - 1] = aux;
+	}
+}
+
+void ModuleGui::Fps_input_data(float aux)
+{
+	if (fps_input.capacity() != fps_input.size())
+	{
+		fps_input.push_back(aux);
+	}
+	else
+	{
+		for (int val = 0; val < (GRAPH_SIZE - 1); val++)
+		{
+			fps_input[val] = fps_input[val + 1];
+		}
+		fps_input[fps_input.size() - 1] = aux;
+	}
+}
+
+void ModuleGui::Fps_physics_data(float aux)
+{
+	if (fps_physics.capacity() != fps_physics.size())
+	{
+		fps_physics.push_back(aux);
+	}
+	else
+	{
+		for (int val = 0; val < (GRAPH_SIZE - 1); val++)
+		{
+			fps_physics[val] = fps_physics[val + 1];
+		}
+		fps_physics[fps_physics.size() - 1] = aux;
+	}
 }

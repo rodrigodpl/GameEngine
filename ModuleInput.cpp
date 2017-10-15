@@ -36,6 +36,10 @@ bool ModuleInput::Init()
 // Called every draw update
 update_status ModuleInput::PreUpdate(float dt)
 {
+	dt = (float)ms_timer.Read() / 1000.0f;
+	App->gui->Fps_input_data(dt);
+	ms_timer.Start();
+
 	SDL_PumpEvents();
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
