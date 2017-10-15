@@ -19,6 +19,8 @@ bool ModuleGui::Start() {
 	fps_input.resize(GRAPH_SIZE);
 	fps_physics.resize(GRAPH_SIZE);
 
+	prev = 0;
+
 	return true;
 }
 
@@ -163,6 +165,7 @@ void ModuleGui::Draw() {
 	if (draw_options)
 	{
 		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin("Options", &draw_options, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders);
 		if (ImGui::CollapsingHeader("Display")) {
 			static int win_size = 1;
 			const char* sizes[] = { "640x480", "800x600", "960x720", "1024x576", "1024x768", "1152x648", "1280x720", "1280x800", "1280x960", "1366x768", "1440x900", "1400x1050", "1440x1080", "1600x900", "1600x1200", "1680x1050", "1856x1392", "1920x1440", "1920x1080", "1920x1200", "2048x1536", "2560x1440", "2560x1600", "3840x2160" };
@@ -183,27 +186,47 @@ void ModuleGui::Draw() {
 		if (ImGui::CollapsingHeader("Renderer")) {
 			static bool wireframe = false;
 			ImGui::Checkbox("Wireframe", &wireframe);
+			ImGui::Separator();
+			static int draw_stuff = 0;
+			const char* prim[] = { "", "Cube", "Cylinder", "Sphere" };
+			ImGui::Combo("", &draw_stuff, prim, IM_ARRAYSIZE(prim));
+			if (draw_stuff != 0 && prev != draw_stuff) {
+				switch (draw_stuff) {
+				case 1:
+					App->scene_intro->AddCube(1, 1, 1);
+					break;
+				case 2:
+					App->scene_intro->AddCylinder(1, 1, 30);
+					break;
+				case 3:
+					App->scene_intro->AddSphere(1, 16, 16);
+				}
+				prev = draw_stuff;
+			}
 		}
 		if (ImGui::CollapsingHeader("Textures")) {
 			static int shader = 0;
 			ImGui::Text("Shader"); ImGui::SameLine();
 			ImGui::Combo("", &shader, "Basic\0Checker\0\0");
 		}
+		ImGui::End();
 	}
 
 	if (draw_properties) {
 		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin("Properties", &draw_properties, ImGuiWindowFlags_ShowBorders);
 		if (ImGui::CollapsingHeader("Transformation")) {
 
 		}
 		if (ImGui::CollapsingHeader("Geometry")) {
-			ImGui::Text("# Indices: "); ImGui::SameLine();
+			//ImGui::Text("# Indices: "); ImGui::SameLine();
 			//ImGui::Text(App->scene_intro->meshes.back().num_indices);
-			ImGui::Text("# Vertices: " + App->scene_intro->meshes.back().num_vertices);
+			//ImGui::Text("# Vertices: " + App->scene_intro->meshes.back().num_vertices);
 		}
 		if (ImGui::CollapsingHeader("Texture")) {
 
 		}
+		ImGui::End();
 	}
 
 	ImGui::Render();
