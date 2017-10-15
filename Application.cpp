@@ -13,6 +13,7 @@ Application::Application()
 	physics = new ModulePhysics3D(this);
 	gui = new ModuleGui(this);
 	importer = new ModuleImporter(this);
+	json = new ModuleJSON(this);
 
 
 	// The order of calls is very important!
@@ -26,6 +27,7 @@ Application::Application()
 	AddModule(audio);
 	AddModule(physics);
 	AddModule(importer);
+	AddModule(json);
 	AddModule(gui);
 
 	// Scenes

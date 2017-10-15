@@ -80,7 +80,7 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 
 				glGenBuffers(1, (GLuint*) &(mesh.id_vertices));
 				glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertices);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.num_vertices * 3, &mesh.vertices[0], GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.num_vertices * 3, mesh.vertices, GL_STATIC_DRAW);
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 				App->gui->app_log.AddLog("New mesh with %d vertices", mesh.num_vertices);
@@ -95,7 +95,7 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 
 				glGenBuffers(1, (GLuint*) &(mesh.id_normals));
 				glBindBuffer(GL_NORMAL_ARRAY, mesh.id_normals);
-				glBufferData(GL_NORMAL_ARRAY, sizeof(float) * mesh.num_normals * 3, &mesh.normals[0], GL_STATIC_DRAW);
+				glBufferData(GL_NORMAL_ARRAY, sizeof(float) * mesh.num_normals * 3, mesh.normals, GL_STATIC_DRAW);
 				glBindBuffer(GL_NORMAL_ARRAY, 0);
 
 				App->gui->app_log.AddLog("New mesh with %d normals", mesh.num_normals);
@@ -109,7 +109,7 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 
 				glGenBuffers(1, (GLuint*) &(mesh.id_texcoords));
 				glBindBuffer(GL_TEXTURE_COORD_ARRAY, mesh.id_texcoords);
-				glBufferData(GL_TEXTURE_COORD_ARRAY, sizeof(float) * mesh.num_texcoords * 3, &mesh.texcoords[0], GL_STATIC_DRAW);
+				glBufferData(GL_TEXTURE_COORD_ARRAY, sizeof(float) * mesh.num_texcoords * 3, mesh.texcoords, GL_STATIC_DRAW);
 				glBindBuffer(GL_TEXTURE_COORD_ARRAY, 0);
 
 				App->gui->app_log.AddLog("New mesh with %d texcoords", mesh.num_texcoords);
@@ -130,7 +130,7 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 
 				glGenBuffers(1, (GLuint*) &(mesh.id_indices));
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh.num_indices, &mesh.indices[0], GL_STATIC_DRAW);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh.num_indices, mesh.indices, GL_STATIC_DRAW);
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 				App->gui->app_log.AddLog("New mesh with %d indices", mesh.num_indices);

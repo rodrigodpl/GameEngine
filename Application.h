@@ -13,6 +13,7 @@
 #include "ModulePhysics3D.h"
 #include "ModuleGui.h"
 #include "ModuleImporter.h"
+#include "ModuleJSON.h"
 
 class Application
 {
@@ -26,6 +27,7 @@ public:
 	ModulePhysics3D* physics;
 	ModuleGui* gui;
 	ModuleImporter* importer;
+	ModuleJSON* json;
 
 private:
 
