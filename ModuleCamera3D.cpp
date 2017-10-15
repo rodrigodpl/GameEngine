@@ -122,29 +122,24 @@ update_status ModuleCamera3D::Update(float dt)
 		Position = Reference + Z * length(Position);
 
 	}
-	else if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-	{
 
-		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-			speed = 8.0f * dt;
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+		speed = 8.0f * dt;
 
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
 
 
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
 
-		Position += newPos;
-		Reference += newPos;
-	}
-	else {
+	Position += newPos;
+	Reference += newPos;
 
-		if (App->input->GetMouseZ() > 0)                // zoom in
-			Position += (Reference - Position) * 0.1f;
-		else if (App->input->GetMouseZ() < 0)           // zoom out
-			Position += (Position - Reference) * 0.1f;
-	}
+	if (App->input->GetMouseZ() > 0)                // zoom in
+		Position += (Reference - Position) * 0.1f;
+	else if (App->input->GetMouseZ() < 0)           // zoom out
+		Position += (Position - Reference) * 0.1f;
 
 
 	// Recalculate matrix -------------
