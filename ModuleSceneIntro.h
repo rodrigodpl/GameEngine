@@ -31,4 +31,6 @@ public:
 	std::list<Primitive*> primitives;
 	std::list<Mesh> meshes;
 
+	uint current_mesh;
+
 };

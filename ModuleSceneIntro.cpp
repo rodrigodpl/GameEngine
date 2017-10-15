@@ -27,10 +27,16 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
+
 	AddCube(2, 2, 2);
-	AddSphere(2);
+	//AddSphere(2);
 	AddCylinder(2, 2);
 	AddLine({ 0,0,0 }, { 2,2,2 });
+
+	App->importer->LoadFBX("Test_files/Spaceship.fbx");
+	App->importer->LoadFBX("Test_files/BakerHouse.fbx");
+
+	current_mesh = meshes.size() - 1;
 
 	return ret;
 
@@ -52,7 +58,9 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.axis = true;
 	p.Render();
 
-	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
+		ShowNextMesh();
+	else if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
 		ShowPrimitives(PrimitiveTypes::Primitive_Cube);
 	else if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN)
 		ShowPrimitives(PrimitiveTypes::Primitive_Sphere);
@@ -81,12 +89,26 @@ void ModuleSceneIntro::ShowPrimitives(PrimitiveTypes type) {
 
 void ModuleSceneIntro::ShowNextMesh() {
 
-	for (std::list<Primitive*>::iterator it = primitives.begin(); it != primitives.end(); it++) 
-			(*it)->visible = false;
-	
+	if (!meshes.empty()) {
 
-	for (std::list<Mesh>::iterator it = meshes.begin(); it != meshes.end(); it++)
-		(*it).visible = false;
+		for (std::list<Primitive*>::iterator it = primitives.begin(); it != primitives.end(); it++)
+			(*it)->visible = false;
+
+		if (current_mesh + 1 > meshes.size())
+			current_mesh = 0;
+		else
+			current_mesh++;
+
+		int i = 0;
+		for (std::list<Mesh>::iterator it = meshes.begin(); it != meshes.end(); it++) {
+			if (i == current_mesh)
+				(*it).visible = true;
+			else
+				(*it).visible = false;
+
+			i++;
+		}
+	}
 
 }
 
