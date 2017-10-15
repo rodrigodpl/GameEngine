@@ -20,6 +20,7 @@ bool ModuleGui::Start() {
 	fps_physics.resize(GRAPH_SIZE);
 
 	prev = 0;
+	rgb_data = new float[3];
 
 	return true;
 }
@@ -186,6 +187,8 @@ void ModuleGui::Draw() {
 		if (ImGui::CollapsingHeader("Renderer")) {
 			static bool wireframe = false;
 			ImGui::Checkbox("Wireframe", &wireframe);
+			ImGui::Text("Object colour");
+			ImGui::ColorPicker3("", rgb_data);
 			ImGui::Separator();
 			static int draw_stuff = 0;
 			const char* prim[] = { "", "Cube", "Cylinder", "Sphere" };
@@ -364,4 +367,8 @@ void ModuleGui::Fps_physics_data(float aux)
 		}
 		fps_physics[fps_physics.size() - 1] = aux;
 	}
+}
+
+void ModuleGui::Get_colour(Color aux) {
+	aux.Set(rgb_data[0], rgb_data[1], rgb_data[2], 1.0f);
 }
