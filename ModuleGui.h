@@ -53,6 +53,8 @@ private:
 	std::string fps_text;
 	std::string n_indices;
 	std::string n_vertices;
+	std::string screen_X;
+	std::string screen_Y;
 
 	std::vector<float> fps_app;
 	std::vector<float> fps_renderer;

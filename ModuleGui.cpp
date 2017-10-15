@@ -170,11 +170,13 @@ void ModuleGui::Draw() {
 		if (ImGui::CollapsingHeader("Display")) {
 			static int win_size = 1;
 			const char* sizes[] = { "640x480", "800x600", "960x720", "1024x576", "1024x768", "1152x648", "1280x720", "1280x800", "1280x960", "1366x768", "1440x900", "1400x1050", "1440x1080", "1600x900", "1600x1200", "1680x1050", "1856x1392", "1920x1440", "1920x1080", "1920x1200", "2048x1536", "2560x1440", "2560x1600", "3840x2160" };
+			
 			ImGui::Text("Window Size"); ImGui::SameLine();
 			ImGui::Combo("", &win_size, sizes, IM_ARRAYSIZE(sizes));
 			ImGui::Separator();
 			static bool vsync = true;
 			ImGui::Checkbox("Vsync", &vsync);
+			App->json->config->WriteBool("Vsync", vsync);
 			ImGui::Separator();
 			static int e = 1;
 			ImGui::RadioButton("Fullscreen", &e, 0);
