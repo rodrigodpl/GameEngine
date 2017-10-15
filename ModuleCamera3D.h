@@ -31,4 +31,8 @@ public:
 private:
 
 	mat4x4 ViewMatrix, ViewMatrixInverse;
+
+private:
+	Timer	ms_timer;
+	float	dt;
 };
