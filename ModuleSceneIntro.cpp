@@ -33,8 +33,8 @@ bool ModuleSceneIntro::Start()
 	AddCylinder(2, 2);
 	AddLine({ 0,0,0 }, { 2,2,2 });
 
-	App->importer->LoadFBX("Test_files/Spaceship.fbx");
 	App->importer->LoadFBX("Test_files/BakerHouse.fbx");
+	//App->importer->LoadFBX("Test_files/Spaceship.fbx");
 
 	current_mesh = meshes.size() - 1;
 

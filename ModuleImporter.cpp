@@ -54,7 +54,6 @@ void ModuleImporter::LoadImg(char* full_path) {
 
 	uint tex_id = ilutGLLoadImage(full_path);
 
-
 	loaded_texs_ids.push_back(tex_id);
 
 	if (!loaded_texs_ids.empty())
@@ -72,6 +71,25 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 			Mesh mesh;
 			aiMesh* imp_mesh = scene->mMeshes[i];
 
+			if (imp_mesh->HasFaces())
+			{
+				mesh.num_indices = imp_mesh->mNumFaces * 3;
+				mesh.indices = new uint[mesh.num_indices]; // assume each face is a triangle
+				for (uint i = 0; i < imp_mesh->mNumFaces; ++i)
+				{
+					if (imp_mesh->mFaces[i].mNumIndices != 3)
+						App->gui->app_log.AddLog("WARNING, geometry face with != 3 indices!");
+					else
+						memcpy(&mesh.indices[i * 3], imp_mesh->mFaces[i].mIndices, 3 * sizeof(uint));
+				}
+
+				glGenBuffers(1, (GLuint*) &(mesh.id_indices));
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh.num_indices, mesh.indices, GL_STATIC_DRAW);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+				App->gui->app_log.AddLog("New mesh with %d indices", mesh.num_indices);
+			}
 			
 			if (imp_mesh->HasPositions()) {
 				mesh.num_vertices = imp_mesh->mNumVertices;
@@ -94,9 +112,9 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 				memcpy(mesh.normals, imp_mesh->mNormals, sizeof(float) * mesh.num_normals * 3);
 
 				glGenBuffers(1, (GLuint*) &(mesh.id_normals));
-				glBindBuffer(GL_NORMAL_ARRAY, mesh.id_normals);
-				glBufferData(GL_NORMAL_ARRAY, sizeof(float) * mesh.num_normals * 3, mesh.normals, GL_STATIC_DRAW);
-				glBindBuffer(GL_NORMAL_ARRAY, 0);
+				glBindBuffer(GL_ARRAY_BUFFER, mesh.id_normals);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.num_normals * 3, mesh.normals, GL_STATIC_DRAW);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 				App->gui->app_log.AddLog("New mesh with %d normals", mesh.num_normals);
 			}
@@ -108,32 +126,11 @@ void ModuleImporter::LoadFBX(const char* full_path) {
 				memcpy(mesh.texcoords, imp_mesh->mTextureCoords[0], sizeof(float) * mesh.num_texcoords * 3);
 
 				glGenBuffers(1, (GLuint*) &(mesh.id_texcoords));
-				glBindBuffer(GL_TEXTURE_COORD_ARRAY, mesh.id_texcoords);
-				glBufferData(GL_TEXTURE_COORD_ARRAY, sizeof(float) * mesh.num_texcoords * 3, mesh.texcoords, GL_STATIC_DRAW);
-				glBindBuffer(GL_TEXTURE_COORD_ARRAY, 0);
+				glBindBuffer(GL_ARRAY_BUFFER, mesh.id_texcoords);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.num_texcoords * 3, mesh.texcoords, GL_STATIC_DRAW);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 				App->gui->app_log.AddLog("New mesh with %d texcoords", mesh.num_texcoords);
-
-			}
-
-			if (imp_mesh->HasFaces())
-			{
-				mesh.num_indices = imp_mesh->mNumFaces * 3;
-				mesh.indices = new uint[mesh.num_indices]; // assume each face is a triangle
-				for (uint i = 0; i < imp_mesh->mNumFaces; ++i)
-				{
-					if (imp_mesh->mFaces[i].mNumIndices != 3)
-						App->gui->app_log.AddLog("WARNING, geometry face with != 3 indices!");
-					else
-						memcpy(&mesh.indices[i * 3], imp_mesh->mFaces[i].mIndices, 3 * sizeof(uint));
-				}
-
-				glGenBuffers(1, (GLuint*) &(mesh.id_indices));
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh.num_indices, mesh.indices, GL_STATIC_DRAW);
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-				App->gui->app_log.AddLog("New mesh with %d indices", mesh.num_indices);
 			}
 
 			// load colors
@@ -177,8 +174,8 @@ void ModuleImporter::CheckeredTex() {
 		glGenTextures(1, &tex_id);
 		glBindTexture(GL_TEXTURE_2D, tex_id);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
