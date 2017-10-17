@@ -5,6 +5,8 @@
 #include "Primitive.h"
 #include "Brofiler.h"
 
+#pragma comment (lib, "Brofiler-1.1.1/ProfilerCore32.lib")
+
 #ifdef _DEBUG
 	#pragma comment (lib, "Bullet/libx86/BulletDynamics_debug.lib")
 	#pragma comment (lib, "Bullet/libx86/BulletCollision_debug.lib")

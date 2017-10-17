@@ -47,6 +47,7 @@ bool ModuleSceneIntro::CleanUp()
 {
 	App->gui->app_log.AddLog("Unloading Intro scene\n");
 	primitives.clear();
+	meshes.clear();
 
 	return true;
 }

@@ -43,7 +43,7 @@ bool ModuleImporter::Start() {
 }
 
 bool ModuleImporter::CleanUp() {
-
+	
 	aiDetachAllLogStreams();
 
 	return true;  
