@@ -14,7 +14,7 @@ public:
 
 	~GameObject();
 
-	void Update(float dt);
+	void UpdateRecursive(float dt);
 	Component* FindComponent(Component_type type);
 	GameObject* FindChild(const char* name);
 
