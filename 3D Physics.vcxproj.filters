@@ -60,9 +60,6 @@
     <ClInclude Include="Globals.h">
       <Filter>Sources</Filter>
     </ClInclude>
-    <ClInclude Include="Primitive.h">
-      <Filter>Sources\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="Color.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
@@ -102,13 +99,22 @@
     <ClInclude Include="parson-master\parson.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="GameObj.h">
-      <Filter>Sources\GameObject/Components</Filter>
-    </ClInclude>
     <ClInclude Include="Component.h">
       <Filter>Sources\GameObject/Components</Filter>
     </ClInclude>
     <ClInclude Include="ComponentMesh.h">
+      <Filter>Sources\GameObject/Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentTransform.h">
+      <Filter>Sources\GameObject/Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMaterial.h">
+      <Filter>Sources\GameObject/Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Sources\GameObject/Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive.h">
       <Filter>Sources\GameObject/Components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -139,9 +145,6 @@
     </ClCompile>
     <ClCompile Include="glmath.cpp">
       <Filter>Sources\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="Primitive.cpp">
-      <Filter>Sources\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Color.cpp">
       <Filter>Sources\Containers</Filter>
@@ -182,10 +185,19 @@
     <ClCompile Include="parson-master\parson.c">
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="GameObj.cpp">
+    <ClCompile Include="ComponentMesh.cpp">
       <Filter>Sources\GameObject/Components</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentMesh.cpp">
+    <ClCompile Include="ComponentTransform.cpp">
+      <Filter>Sources\GameObject/Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Sources\GameObject/Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentMaterial.cpp">
+      <Filter>Sources\GameObject/Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive.cpp">
       <Filter>Sources\GameObject/Components</Filter>
     </ClCompile>
   </ItemGroup>

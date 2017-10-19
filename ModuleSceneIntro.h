@@ -3,8 +3,11 @@
 #include "p2DynArray.h"
 #include "Globals.h"
 #include "Primitive.h"
-#include "ModuleImporter.h"
+#include "ComponentMesh.h"
+#include "GameObject.h"
+
 #include <list>
+#include <vector>
 
 struct PhysBody3D;
 struct PhysMotor3D;
@@ -19,18 +22,12 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-	void Draw();
-	void AddCube(float size_x, float size_y, float size_z);
-	void AddSphere(float radius, uint rings = 25, uint sectors = 25);
-	void AddCylinder(float radius, float height, uint sides = 30);
-	void AddLine(Vertex origin, Vertex dest);
+	void DrawScene();
 
-	void ShowPrimitives(PrimitiveTypes type);
-	void ShowNextMesh();
+public:
 
-	std::list<Primitive*> primitives;
-	std::list<Mesh> meshes;
+	std::list<GameObject*> game_objects;
 
-	uint current_mesh;
+	std::vector<ComponentMaterial*> materials;
 
 };

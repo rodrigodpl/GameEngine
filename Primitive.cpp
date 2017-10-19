@@ -1,13 +1,15 @@
 
 #include "Globals.h"
-#include "glew-2.1.0\include\GL\glew.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
 #include "Primitive.h"
 #include "glut/glut.h"
 #include "ModuleSceneIntro.h"
 
 #pragma comment (lib, "glut/glut32.lib")
+
+#include "glew-2.1.0\include\GL\glew.h"
+
+#include <gl/GL.h>
+#include <gl/GLU.h>
 
 // ------------------------------------------------------------
 Primitive::Primitive() : transform(IdentityMatrix), color(White), wire(false), axis(false), visible(false), alpha(1.0f), type(PrimitiveTypes::Primitive_Point)

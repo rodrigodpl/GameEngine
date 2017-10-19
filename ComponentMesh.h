@@ -1,35 +1,30 @@
 #pragma once
 #include "Globals.h"
 #include "Component.h"
-
-#include "glew-2.1.0\include\GL\glew.h"
+#include "ComponentMaterial.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
 
-#define CHECKERS_HEIGHT 64
-#define CHECKERS_WIDTH 64
+#include "glew-2.1.0\include\GL\glew.h"
 
 class ComponentMesh : Component {
 public:
 
 	ComponentMesh();
-	ComponentMesh(aiMesh& mesh, char* tex_path = "");
+	ComponentMesh(aiMesh& mesh);
 	ComponentMesh(ComponentMesh& mesh);
 
 	~ComponentMesh();
 
 	bool LoadDataFromAssimp(aiMesh& mesh);
 	void LoadDataToVRAM();
-	void LoadTex(char* tex_path);
-	void CheckeredTexture();
 
 	void Draw();
 
 	Component* Duplicate();
-	void Update();
 
 public:
 	uint id_vertices = 0;
@@ -52,6 +47,5 @@ public:
 	uint num_texcoords = 0;
 	float* texcoords = nullptr;
 
-	bool visible = true;
-	GLuint bound_tex = 0;
+	ComponentMaterial* mat = nullptr;
 };

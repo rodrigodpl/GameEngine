@@ -2,36 +2,28 @@
 
 #include "glew-2.1.0\include\GL\glew.h"
 
-#include "Devil/include/il.h"
-#include "Devil/include/ilu.h"
-#include "Devil/include/ilut.h"
-
 ComponentMesh::ComponentMesh() {}
 
-ComponentMesh::ComponentMesh(aiMesh& mesh, char* tex_path) {
+ComponentMesh::ComponentMesh(aiMesh& mesh) {
+
+	type = Component_type::COMPONENT_MESH;
 
 	LoadDataFromAssimp(mesh);
 	LoadDataToVRAM();
 	
-	if (tex_path != "")
-		LoadTex(tex_path);
-	else
-		CheckeredTexture();
-
 }
 
 ComponentMesh::ComponentMesh(ComponentMesh& mesh) {
 
-	num_indices = mesh.num_indices;		indices = mesh.indices;
+	type = Component_type::COMPONENT_MESH;
+
+	num_indices = mesh.num_indices;		indices = mesh.indices;    // should be (new) + memcpy()
 	num_vertices = mesh.num_vertices;	vertices = mesh.vertices;
 	num_normals = mesh.num_normals;		normals = mesh.normals;
 	num_colors = mesh.num_colors;		colors = mesh.colors;
 	num_texcoords = mesh.num_texcoords;	texcoords = mesh.texcoords;
 
-	visible = mesh.visible; bound_tex = mesh.bound_tex;
-
-	if (!bound_tex)
-		CheckeredTexture();
+	mat = (ComponentMaterial*) mesh.mat->Duplicate();
 
 	LoadDataToVRAM();
 
@@ -50,56 +42,11 @@ ComponentMesh::~ComponentMesh() {
 	if (texcoords)
 		delete texcoords;
 
-	if (bound_tex)
-		glDeleteTextures(1, &bound_tex);
 }
 
 Component* ComponentMesh::Duplicate()
 {
 	return (Component*) new ComponentMesh(*(this));
-}
-
-void ComponentMesh::Update() 
-{
-	Draw();
-}
-
-void ComponentMesh::LoadTex(char* tex_path) 
-{
-	bound_tex = ilutGLLoadImage(tex_path);
-}
-
-void ComponentMesh::CheckeredTexture() {
-
-	GLubyte checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
-
-	for (int i = 0; i < CHECKERS_HEIGHT; i++) {
-		for (int j = 0; j < CHECKERS_WIDTH; j++) {
-
-			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
-			checkImage[i][j][0] = (GLubyte)c;
-			checkImage[i][j][1] = (GLubyte)c;
-			checkImage[i][j][2] = (GLubyte)c;
-			checkImage[i][j][3] = (GLubyte)255;
-		}
-	}
-	
-
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-	glGenTextures(1, &bound_tex);
-	glBindTexture(GL_TEXTURE_2D, bound_tex);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
-		0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-
 }
 
 bool ComponentMesh::LoadDataFromAssimp(aiMesh& imp_mesh) {
@@ -147,7 +94,6 @@ bool ComponentMesh::LoadDataFromAssimp(aiMesh& imp_mesh) {
 
 void ComponentMesh::LoadDataToVRAM() {
 
-
 	if (num_indices > 0)
 	{
 		glGenBuffers(1, (GLuint*) &(id_indices));
@@ -188,7 +134,7 @@ void ComponentMesh::LoadDataToVRAM() {
 
 void ComponentMesh::Draw() {
 
-	if(bound_tex)
+	if(mat)
 		glEnable(GL_TEXTURE_2D);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -200,15 +146,15 @@ void ComponentMesh::Draw() {
 	glBindBuffer(GL_TEXTURE_COORD_ARRAY, id_texcoords);
 	glBindBuffer(GL_NORMAL_ARRAY, id_normals);
 
-	if (bound_tex)
-		glBindTexture(GL_TEXTURE_2D, bound_tex);
+	if (mat)
+		glBindTexture(GL_TEXTURE_2D, mat->textures.back()->gl_binding);
 
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 	glTexCoordPointer(3, GL_FLOAT, 0, NULL);
 	glNormalPointer(GL_FLOAT, 0, NULL);
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 
-	if (bound_tex)
+	if (mat)
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 	glBindBuffer(GL_NORMAL_ARRAY, 0);
@@ -220,7 +166,7 @@ void ComponentMesh::Draw() {
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
 
-	if (bound_tex)
+	if (mat)
 		glDisable(GL_TEXTURE_2D);
 
 }

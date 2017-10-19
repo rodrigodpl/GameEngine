@@ -197,7 +197,7 @@ void ModuleGui::Draw() {
 			const char* prim[] = { "", "Cube", "Cylinder", "Sphere" };
 			ImGui::Combo("", &draw_stuff, prim, IM_ARRAYSIZE(prim));
 			if (draw_stuff != 0 && prev != draw_stuff) {
-				switch (draw_stuff) {
+				/*switch (draw_stuff) {
 				case 1:
 					App->scene_intro->AddCube(1, 1, 1);
 					break;
@@ -206,7 +206,7 @@ void ModuleGui::Draw() {
 					break;
 				case 3:
 					App->scene_intro->AddSphere(1, 16, 16);
-				}
+				}*/
 				prev = draw_stuff;
 			}
 		}

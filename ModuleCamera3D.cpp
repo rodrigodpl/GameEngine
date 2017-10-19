@@ -203,7 +203,7 @@ void ModuleCamera3D::CalculateViewMatrix()
 }
 
 
-void ModuleCamera3D::FBXRescalePosition(Mesh& mesh) {
+void ModuleCamera3D::FBXRescalePosition(ComponentMesh& mesh) {
 
 	float max_x, min_x, max_y, min_y, max_z, min_z;
 	max_x = min_x = max_y = min_y = max_z = min_z = 0.0f;

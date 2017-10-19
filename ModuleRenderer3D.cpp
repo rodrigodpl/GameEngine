@@ -214,7 +214,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	//first draw scene
-	App->scene_intro->Draw();
+	App->scene_intro->DrawScene();
 
 	//then debug features
 	if (debug_draw)
@@ -252,38 +252,3 @@ void ModuleRenderer3D::OnResize(int width, int height)
 }
 
 void ModuleRenderer3D::DebugDraw() {}
-
-void ModuleRenderer3D::DrawMesh(Mesh mesh) {
-
-	glEnable(GL_TEXTURE_2D);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertices);
-	glBindBuffer(GL_TEXTURE_COORD_ARRAY, mesh.id_texcoords);
-	glBindBuffer(GL_NORMAL_ARRAY, mesh.id_normals);
-
-	glBindTexture(GL_TEXTURE_2D, App->importer->current_tex_id);
-
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glTexCoordPointer(3, GL_FLOAT, 0, NULL);
-	glNormalPointer(GL_FLOAT, 0, NULL);
-	glDrawElements(GL_TRIANGLES, mesh.num_indices, GL_UNSIGNED_INT, NULL);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	glBindBuffer(GL_NORMAL_ARRAY, 0);
-	glBindBuffer(GL_TEXTURE_COORD_ARRAY, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glDisableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisableClientState(GL_VERTEX_ARRAY);
-
-	glDisable(GL_TEXTURE_2D);
-
-}

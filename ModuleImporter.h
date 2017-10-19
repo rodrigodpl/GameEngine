@@ -1,38 +1,14 @@
 #pragma once
 
 #include "Module.h"
-#include "glew-2.1.0\include\GL\glew.h"
+#include "GameObject.h"
+
+#include "Assimp/include/cimport.h"
+#include "Assimp/include/scene.h"
+#include "Assimp/include/postprocess.h"
+#include "Assimp/include/cfileio.h"
 
 #include <list>
-
-#define CHECKERS_HEIGHT 64
-#define CHECKERS_WIDTH 64
-
-struct Mesh {
-
-	uint id_vertices = 0; 
-	uint num_indices = 0;
-	uint* indices = nullptr;
-
-	uint id_indices = 0; 
-	uint num_vertices = 0;
-	float* vertices = nullptr;
-
-	uint id_normals = 0;
-	uint num_normals = 0;
-	float* normals = nullptr;
-
-	uint id_colors = 0;
-	uint num_colors = 0;
-	float* colors = nullptr;
-
-	uint id_texcoords = 0;
-	uint num_texcoords = 0;
-	float* texcoords = nullptr;
-
-	bool visible = true;
-
-};
 
 class ModuleImporter : public Module
 {
@@ -42,13 +18,10 @@ public:
 
 	bool Start();
 	bool CleanUp();
-	void LoadFBX(const char* full_path);
-	void LoadImg(char* full_path);
 
-	void CheckeredTex();
-	uint checkered_tex_id;
-	GLubyte checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
+	GameObject* LoadFBX(const char* full_path);
+	GameObject* LoadNodeRecursive(aiNode* node, const aiScene* scene, GameObject* parent = nullptr);
 
-	std::list<int> loaded_texs_ids;
-	uint current_tex_id;
+	uint LoadImg(const char* full_path);
+
 };

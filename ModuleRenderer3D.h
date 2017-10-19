@@ -20,7 +20,6 @@ public:
 	void DebugDraw();
 
 	void OnResize(int width, int height);
-	void DrawMesh(Mesh mesh);
 
 public:
 

@@ -3,17 +3,15 @@
 #include "Application.h"
 #include "ModuleGui.h"
 #include "ModuleSceneIntro.h"
-
-#include "Assimp/include/cimport.h"
-#include "Assimp/include/scene.h"
-#include "Assimp/include/postprocess.h"
-#include "Assimp/include/cfileio.h"
-
-#pragma comment (lib, "Assimp/libx86/assimp.lib")
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
+#include "ComponentTransform.h"
 
 #include "Devil/include/il.h"
 #include "Devil/include/ilu.h"
 #include "Devil/include/ilut.h"
+
+#pragma comment (lib, "Assimp/libx86/assimp.lib")
 
 #pragma comment (lib, "Devil/libx86/DevIL.lib")
 #pragma comment (lib, "Devil/libx86/ILU.lib")
@@ -37,8 +35,6 @@ bool ModuleImporter::Start() {
 	ilutInit();
 	ilutRenderer(ILUT_OPENGL);
 
-	checkered_tex_id = 0;
-
 	return true;
 }
 
@@ -50,143 +46,74 @@ bool ModuleImporter::CleanUp() {
 }
 
 
-void ModuleImporter::LoadImg(char* full_path) {
-
-	uint tex_id = ilutGLLoadImage(full_path);
-
-	loaded_texs_ids.push_back(tex_id);
-
-	if (!loaded_texs_ids.empty())
-		current_tex_id = tex_id;
-
-}
-
-void ModuleImporter::LoadFBX(const char* full_path) {
+GameObject* ModuleImporter::LoadFBX(const char* full_path) {
 
 	const aiScene* scene = aiImportFile(full_path, aiProcessPreset_TargetRealtime_MaxQuality);
-	if (scene != nullptr && scene->HasMeshes())
-	{
-		for (int i = 0; i < scene->mNumMeshes; i++) {
+	GameObject* root_obj = nullptr;
 
-			Mesh mesh;
-			aiMesh* imp_mesh = scene->mMeshes[i];
+	if (scene != nullptr) {
 
-			if (imp_mesh->HasFaces())
-			{
-				mesh.num_indices = imp_mesh->mNumFaces * 3;
-				mesh.indices = new uint[mesh.num_indices]; // assume each face is a triangle
-				for (uint i = 0; i < imp_mesh->mNumFaces; ++i)
-				{
-					if (imp_mesh->mFaces[i].mNumIndices != 3)
-						App->gui->app_log.AddLog("WARNING, geometry face with != 3 indices!");
-					else
-						memcpy(&mesh.indices[i * 3], imp_mesh->mFaces[i].mIndices, 3 * sizeof(uint));
-				}
+		aiNode* root_node = scene->mRootNode;
 
-				glGenBuffers(1, (GLuint*) &(mesh.id_indices));
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh.num_indices, mesh.indices, GL_STATIC_DRAW);
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		for (int i = 0; i < scene->mNumMaterials; i++)
+			App->scene_intro->materials.push_back(new ComponentMaterial(*scene->mMaterials[i]));
+		
+		root_obj = LoadNodeRecursive(root_node, scene);
 
-				App->gui->app_log.AddLog("New mesh with %d indices", mesh.num_indices);
-			}
-			
-			if (imp_mesh->HasPositions()) {
-				mesh.num_vertices = imp_mesh->mNumVertices;
-				mesh.vertices = new float[mesh.num_vertices * 3];
-				memcpy(mesh.vertices, imp_mesh->mVertices, sizeof(float) * mesh.num_vertices * 3);
-
-				glGenBuffers(1, (GLuint*) &(mesh.id_vertices));
-				glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertices);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.num_vertices * 3, mesh.vertices, GL_STATIC_DRAW);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-				App->gui->app_log.AddLog("New mesh with %d vertices", mesh.num_vertices);
-			}
-
-			if (imp_mesh->HasNormals()) {
-
-				mesh.num_normals = mesh.num_vertices;
-				mesh.normals = new float[mesh.num_normals * 3];
-
-				memcpy(mesh.normals, imp_mesh->mNormals, sizeof(float) * mesh.num_normals * 3);
-
-				glGenBuffers(1, (GLuint*) &(mesh.id_normals));
-				glBindBuffer(GL_ARRAY_BUFFER, mesh.id_normals);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.num_normals * 3, mesh.normals, GL_STATIC_DRAW);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-				App->gui->app_log.AddLog("New mesh with %d normals", mesh.num_normals);
-			}
-
-			if (imp_mesh->HasTextureCoords(0)) {
-
-				mesh.num_texcoords = mesh.num_vertices;
-				mesh.texcoords = new float[mesh.num_texcoords * 3];
-				memcpy(mesh.texcoords, imp_mesh->mTextureCoords[0], sizeof(float) * mesh.num_texcoords * 3);
-
-				glGenBuffers(1, (GLuint*) &(mesh.id_texcoords));
-				glBindBuffer(GL_ARRAY_BUFFER, mesh.id_texcoords);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.num_texcoords * 3, mesh.texcoords, GL_STATIC_DRAW);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-				App->gui->app_log.AddLog("New mesh with %d texcoords", mesh.num_texcoords);
-			}
-
-			// load colors
-			App->camera->FBXRescalePosition(mesh);
-
-			if (App->scene_intro->meshes.size() > 1) {
-
-				for (std::list<Mesh>::iterator it = App->scene_intro->meshes.begin(); it != App->scene_intro->meshes.end(); it++)
-					(*it).visible = false;
-			}
-			App->scene_intro->meshes.push_back(mesh);
-
-		}
-		CheckeredTex();
 		aiReleaseImport(scene);
 	}
 	else
 		App->gui->app_log.AddLog("Error loading scene %s", full_path);
 
+	return root_obj;
+
 }
 
+GameObject* ModuleImporter::LoadNodeRecursive(aiNode* node, const aiScene* scene, GameObject* parent) {
 
-void ModuleImporter::CheckeredTex() {
+	GameObject* game_object = nullptr;
 
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	//name and parent
+	if (node->mName.length > 0)
+		game_object = new GameObject(node->mName.C_Str(), parent);
+	else
+		game_object = new GameObject((game_object->name + "_child").c_str(), parent);
 
-	if (checkered_tex_id == 0) {
 
-		for (int i = 0; i < CHECKERS_HEIGHT; i++) {
-			for (int j = 0; j < CHECKERS_WIDTH; j++) {
+	//transformation
+	aiVector3D scl, pos;
+	aiQuaternion rot;
+	node->mTransformation.Decompose(scl, rot, pos);
 
-				int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
-				checkImage[i][j][0] = (GLubyte)c;
-				checkImage[i][j][1] = (GLubyte)c;
-				checkImage[i][j][2] = (GLubyte)c;
-				checkImage[i][j][3] = (GLubyte)255;
-			}
-		}
-		GLuint tex_id;
+	ComponentTransform*	transform = new ComponentTransform(pos, scl, rot);
+	game_object->components.push_back((Component*)transform);
 
-		glGenTextures(1, &tex_id);
-		glBindTexture(GL_TEXTURE_2D, tex_id);
+	//meshes and materials
+	for (int i = 0; i < node->mNumMeshes; i++) {
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		aiMesh* imp_mesh = scene->mMeshes[node->mMeshes[i]];
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
-			0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+		ComponentMesh* mesh = new ComponentMesh(*imp_mesh);
+		mesh->mat = App->scene_intro->materials.at(imp_mesh->mMaterialIndex);
 
-		glBindTexture(GL_TEXTURE_2D, 0);
+		game_object->components.push_back((Component*)mesh);
+		game_object->components.push_back((Component*)mesh->mat);
 
-		checkered_tex_id = tex_id;
 	}
 
-	current_tex_id = checkered_tex_id;
+	//children
+	for (int i = 0; i < node->mNumChildren; i++) {
 
+		aiNode* child_node = node->mChildren[i];
+		game_object->children.push_back(LoadNodeRecursive(child_node, scene, game_object));
+	}
+
+	return game_object;
 }
+
+uint ModuleImporter::LoadImg(const char* full_path) 
+{
+	App->scene_intro->materials.push_back(new ComponentMaterial(full_path));
+	return (App->scene_intro->materials.size() - 1);
+}
+
