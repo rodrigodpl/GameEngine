@@ -39,10 +39,14 @@ ComponentMaterial::ComponentMaterial(aiMaterial& mat) {
 	
 		tex->gl_binding = ilutGLLoadImage((char*)tex->path.C_Str());
 
-		tex->width = ilGetInteger(IL_IMAGE_WIDTH);
-		tex->height = ilGetInteger(IL_IMAGE_HEIGHT);
+		if (tex->gl_binding != 0) {
+			tex->width = ilGetInteger(IL_IMAGE_WIDTH);
+			tex->height = ilGetInteger(IL_IMAGE_HEIGHT);
 
-		textures.push_back(tex);
+			textures.push_back(tex);
+		}
+		else
+			CheckeredTexture();
 	}
 
 	if (textures.empty())
@@ -59,10 +63,14 @@ ComponentMaterial::ComponentMaterial(ComponentMaterial& component) {
 		Texture* tex = new Texture();
 		tex->gl_binding = ilutGLLoadImage((char*) (*it)->path.C_Str());
 
-		tex->width = ilGetInteger(IL_IMAGE_WIDTH);
-		tex->height = ilGetInteger(IL_IMAGE_HEIGHT);
+		if (tex->gl_binding != 0) {
+			tex->width = ilGetInteger(IL_IMAGE_WIDTH);
+			tex->height = ilGetInteger(IL_IMAGE_HEIGHT);
 
-		textures.push_back(tex);
+			textures.push_back(tex);
+		}
+		else
+			CheckeredTexture();
 	}
 }
 

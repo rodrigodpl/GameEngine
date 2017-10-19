@@ -146,6 +146,8 @@ void ComponentMesh::Draw() {
 	glBindBuffer(GL_TEXTURE_COORD_ARRAY, id_texcoords);
 	glBindBuffer(GL_NORMAL_ARRAY, id_normals);
 
+	glColor3f(1.0f, 1.0f, 1.0f);
+
 	if (mat)
 		glBindTexture(GL_TEXTURE_2D, mat->textures.back()->gl_binding);
 

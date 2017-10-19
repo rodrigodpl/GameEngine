@@ -48,7 +48,7 @@ GameObject* GameObject::FindChild(const char* obj_name) {
 	return nullptr;
 }
 
-void GameObject::Update(float dt) {
+void GameObject::UpdateRecursive(float dt) {
 
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++) {
 		if ((*it)->enabled)
@@ -56,7 +56,7 @@ void GameObject::Update(float dt) {
 	}
 	
 	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
-		(*it)->Update(dt);
+		(*it)->UpdateRecursive(dt);
 }
 
 
