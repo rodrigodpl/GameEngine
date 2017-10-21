@@ -1,6 +1,9 @@
 #include "ModuleJSON.h"
 #include "Application.h"
 
+#include <fstream>
+#include <iostream>
+
 ModuleJSON::ModuleJSON(Application* app, bool start_enabled) : Module(app, start_enabled)
 {}
 
@@ -8,6 +11,27 @@ ModuleJSON::~ModuleJSON() {}
 
 
 bool ModuleJSON::Start() {
+	std::fstream appendFileToWorkWith;
+
+	appendFileToWorkWith.open("config.json", std::fstream::in | std::fstream::out | std::fstream::app);
+
+	if (!appendFileToWorkWith)
+	{
+		App->gui->app_log.AddLog("Config file not found\n Creating config file\n");
+
+		appendFileToWorkWith.open("config.json", std::fstream::in | std::fstream::out | std::fstream::trunc);
+		appendFileToWorkWith << "\n";
+		appendFileToWorkWith.close();
+
+	}
+	else
+	{
+		App->gui->app_log.AddLog("Config file found\n");
+
+		appendFileToWorkWith.close();
+	}
+
+	App->gui->app_log.AddLog("Loading config file\n");
 
 	config = LoadFile("config.json");
 
