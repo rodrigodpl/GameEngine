@@ -13,6 +13,7 @@
 #include "ModuleGui.h"
 #include "ModuleImporter.h"
 #include "ModuleJSON.h"
+#include "ModuleFS.h"
 
 class Application
 {
@@ -26,6 +27,7 @@ public:
 	ModuleGui* gui;
 	ModuleImporter* importer;
 	ModuleJSON* json;
+	ModuleFS* fs;
 
 private:
 

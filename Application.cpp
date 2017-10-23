@@ -13,6 +13,7 @@ Application::Application()
 	gui = new ModuleGui(this);
 	importer = new ModuleImporter(this);
 	json = new ModuleJSON(this);
+	fs = new ModuleFS(this);
 
 
 	// The order of calls is very important!
@@ -27,6 +28,7 @@ Application::Application()
 	AddModule(importer);
 	AddModule(json);
 	AddModule(gui);
+	AddModule(fs);
 
 	// Scenes
 	AddModule(scene_intro);
