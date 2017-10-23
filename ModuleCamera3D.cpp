@@ -7,6 +7,18 @@
 #include "MathGeoLib-1.5\src\MathGeoLib.h"
 #include "MathGeoLib-1.5\src\Geometry\AABB.h"
 
+#include "Bullet/include/btBulletDynamicsCommon.h"
+
+#ifdef _DEBUG
+#pragma comment (lib, "Bullet/libx86/BulletDynamics_debug.lib")
+#pragma comment (lib, "Bullet/libx86/BulletCollision_debug.lib")
+#pragma comment (lib, "Bullet/libx86/LinearMath_debug.lib")
+#else
+#pragma comment (lib, "Bullet/libx86/BulletDynamics.lib")
+#pragma comment (lib, "Bullet/libx86/BulletCollision.lib")
+#pragma comment (lib, "Bullet/libx86/LinearMath.lib")
+#endif
+
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {

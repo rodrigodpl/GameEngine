@@ -2,7 +2,7 @@
 
 #include "glew-2.1.0\include\GL\glew.h"
 
-ComponentMesh::ComponentMesh() {}
+ComponentMesh::ComponentMesh() { type = Component_type::COMPONENT_MESH; }
 
 ComponentMesh::ComponentMesh(aiMesh& mesh) {
 
@@ -12,6 +12,7 @@ ComponentMesh::ComponentMesh(aiMesh& mesh) {
 	LoadDataToVRAM();
 	
 }
+
 
 ComponentMesh::ComponentMesh(ComponentMesh& mesh) {
 

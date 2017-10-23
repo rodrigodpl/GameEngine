@@ -22,7 +22,7 @@ public:
 	bool LoadDataFromAssimp(aiMesh& mesh);
 	void LoadDataToVRAM();
 
-	void Draw();
+	virtual void Draw();
 
 	Component* Duplicate();
 

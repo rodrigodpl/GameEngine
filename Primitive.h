@@ -7,6 +7,8 @@
 #include <gl/GLU.h>
 #include "ModuleGui.h"
 
+#include "ComponentMesh.h"
+
 #include <vector>
 
 
@@ -25,34 +27,25 @@ struct Vertex {
 };
 
 
-class Primitive
+class Primitive : public ComponentMesh
 {
 public:
 
 	Primitive();
 
-	virtual void	Render() const;
+	virtual void	Draw();
 	virtual void	InnerRender() const;
 	virtual void    BuildVert();
-	void			SetPos(float x, float y, float z);
-	void			SetRotation(float angle, const vec3 &u);
-	void			Scale(float x, float y, float z);
-	void			BindBuffer();
-	PrimitiveTypes	GetType() const;
+	void			DrawAxis();
+	PrimitiveTypes	GetPrimitiveType() const;
 
 public:
 	
 	Color	color;
 	float	alpha;
-	mat4x4	transform;
-	bool	axis,wire, visible;
+	bool	axis, wire;
 
-	std::vector<Vertex>		vertices;	uint vert_buff_id;
-	std::vector<GLfloat>	normals;	uint normal_buff_id;
-	std::vector<GLfloat>	texcoords;	uint texcoord_buff_id;
-	std::vector<GLushort>	indices;	uint index_buff_id;
-
-	PrimitiveTypes type;
+	PrimitiveTypes primitive_type;
 };
 
 // ============================================
@@ -68,17 +61,17 @@ public:
 };
 
 // ============================================
-class Sphere : public Primitive
-{
-public:
-	Sphere();
-	Sphere(float radius, uint rings, uint sectors);
-	void InnerRender() const;
-	void BuildVert();
-public:
-	float radius;
-	uint rings, sectors;
-};
+//class Sphere : public Primitive
+//{
+//public:
+//	Sphere();
+//	Sphere(float radius, uint rings, uint sectors);
+//	void InnerRender() const;
+//	void BuildVert();
+//public:
+//	float radius;
+//	uint rings, sectors;
+//};
 
 // ============================================
 class Cylinder : public Primitive
