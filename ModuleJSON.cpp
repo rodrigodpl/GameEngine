@@ -20,7 +20,8 @@ bool ModuleJSON::Start() {
 		App->gui->app_log.AddLog("Config file not found\n Creating config file\n");
 
 		appendFileToWorkWith.open("config.json", std::fstream::in | std::fstream::out | std::fstream::trunc);
-		appendFileToWorkWith << "\n";
+		appendFileToWorkWith << "{\n";
+		appendFileToWorkWith << "}\n";
 		appendFileToWorkWith.close();
 
 	}
