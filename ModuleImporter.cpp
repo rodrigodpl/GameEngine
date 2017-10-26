@@ -63,7 +63,7 @@ GameObject* ModuleImporter::LoadFBX(const char* full_path) {
 		aiReleaseImport(scene);
 	}
 	else
-		App->gui->app_log.AddLog("Error loading scene %s", full_path);
+		App->gui->app_log.AddLog("Error loading scene %s\n", full_path);
 
 	return root_obj;
 

@@ -18,7 +18,7 @@ ModuleSceneIntro::~ModuleSceneIntro()
 // Load assets
 bool ModuleSceneIntro::Start()
 {
-	App->gui->app_log.AddLog("Loading Intro assets");
+	App->gui->app_log.AddLog("Loading Intro assets\n");
 	bool ret = true;
 
 	srand(time(NULL));

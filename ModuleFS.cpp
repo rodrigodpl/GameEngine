@@ -19,7 +19,7 @@ ModuleFS::~ModuleFS()
 
 bool ModuleFS::Start()
 {
-	App->gui->app_log.AddLog("Loading File System");
+	App->gui->app_log.AddLog("Loading File System\n");
 	bool ret = true;
 
 	write_path = SDL_GetPrefPath("UPC DDV", "SpaceEngine");
@@ -37,7 +37,7 @@ bool ModuleFS::Start()
 
 bool ModuleFS::CleanUp()
 {
-	App->gui->app_log.AddLog("Freeing File System subsystem");
+	App->gui->app_log.AddLog("Freeing File System subsystem\n");
 	return true;
 }
 
