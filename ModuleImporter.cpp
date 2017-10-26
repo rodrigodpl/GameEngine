@@ -61,6 +61,8 @@ GameObject* ModuleImporter::LoadFBX(const char* full_path) {
 		root_obj = LoadNodeRecursive(root_node, scene);
 
 		aiReleaseImport(scene);
+		App->gui->app_log.AddLog("Succesfully loaded %s\n", full_path);
+		App->gui->app_log.AddLog("Number of materials %d\n", scene->mNumMaterials);		
 	}
 	else
 		App->gui->app_log.AddLog("Error loading scene %s\n", full_path);
@@ -89,6 +91,7 @@ GameObject* ModuleImporter::LoadNodeRecursive(aiNode* node, const aiScene* scene
 	game_object->components.push_back((Component*)transform);
 
 	//meshes and materials
+	App->gui->app_log.AddLog("Number of meshes %d\n", node->mNumMeshes);
 	for (int i = 0; i < node->mNumMeshes; i++) {
 
 		aiMesh* imp_mesh = scene->mMeshes[node->mMeshes[i]];

@@ -53,7 +53,10 @@ JSON_file* ModuleJSON::LoadFile(const char * path)
 	JSON_Object *root_object = json_value_get_object(user_data);
 
 	if (user_data && root_object)
+	{
 		return config = new JSON_file(user_data, root_object, path);
+		App->gui->app_log.AddLog("Succesfully loaded %s file\n", path);
+	}
 	else
 		App->gui->app_log.AddLog("Error loading %s file!\n", path);
 

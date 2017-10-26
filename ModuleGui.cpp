@@ -35,11 +35,11 @@ update_status ModuleGui::PreUpdate(float dt) {
 		{
 			if (ImGui::MenuItem("Save")) 
 			{
-
+				//Should save the scene in the assets folder
 			}
 			if (ImGui::MenuItem("Load"))
 			{
-
+				//Should load the scene from the assets folder
 			}
 			if (ImGui::MenuItem("Options"))
 			{
