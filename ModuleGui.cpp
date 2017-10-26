@@ -33,6 +33,14 @@ update_status ModuleGui::PreUpdate(float dt) {
 	{
 		if (ImGui::BeginMenu("File", &draw_menu))
 		{
+			if (ImGui::MenuItem("Save")) 
+			{
+
+			}
+			if (ImGui::MenuItem("Load"))
+			{
+
+			}
 			if (ImGui::MenuItem("Options"))
 			{
 				draw_options = !draw_options;

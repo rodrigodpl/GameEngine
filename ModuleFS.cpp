@@ -28,7 +28,7 @@ bool ModuleFS::Start()
 		App->gui->app_log.AddLog("File System error while creating write dir: %s\n", PHYSFS_getLastError());
 	else
 	{
-		App->gui->app_log.AddLog("Writing directory is %s\n", write_path);
+		App->gui->app_log.AddLog("Writing directory:\n %s\n", write_path);
 		AddPath(write_path, GetSaveDirectory());
 	}
 
