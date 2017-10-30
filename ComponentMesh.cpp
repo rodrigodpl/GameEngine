@@ -86,7 +86,7 @@ bool ComponentMesh::LoadDataFromAssimp(aiMesh& imp_mesh) {
 		num_texcoords = num_vertices;
 		texcoords = new float[num_texcoords * 3];
 
-		memcpy(texcoords, imp_mesh.mTextureCoords[0], sizeof(float) * num_texcoords * 2);
+		memcpy(texcoords, imp_mesh.mTextureCoords[0], sizeof(float) * num_texcoords * 3);
 	}
 
 	return true;
@@ -125,7 +125,7 @@ void ComponentMesh::LoadDataToVRAM() {
 	if (num_texcoords > 0) {
 		glGenBuffers(1, (GLuint*) &(id_texcoords));
 		glBindBuffer(GL_ARRAY_BUFFER, id_texcoords);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_texcoords * 2, texcoords, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_texcoords * 3, texcoords, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	}
