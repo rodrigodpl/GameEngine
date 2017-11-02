@@ -47,6 +47,7 @@ private:
 	bool draw_performance = false;
 	bool draw_options = false;
 	bool draw_properties = false;
+	bool draw_play = true;
 
 	float avg;
 	int prev;

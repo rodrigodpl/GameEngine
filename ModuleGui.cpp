@@ -243,6 +243,24 @@ void ModuleGui::Draw() {
 		ImGui::End();
 	}
 
+	if (draw_play) {
+		ImGui::SetNextWindowPos(ImVec2(100, 100), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin("Play", &draw_play, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
+		if (ImGui::Button(">", ImVec2(50, 25))) {
+
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("||", ImVec2(50, 25))) {
+
+		}
+		ImGui::SameLine();
+		if (ImGui::Button(">|", ImVec2(50, 25))) {
+
+		}
+
+		ImGui::End();
+	}
+
 	ImGui::Render();
 }
 
