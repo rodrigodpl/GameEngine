@@ -130,6 +130,64 @@ void ComponentAABB::InitFromSeveralMeshes(std::vector<Component*> meshes) {
 	Init(total_vert, vert_count);
 }
 
+void ComponentAABB::Draw() {
+
+	glLineWidth(2.0f);
+
+	glColor3f(0.0f, 1.0f, 0.0f);
+
+	glBegin(GL_LINES);
+
+	glVertex3f(vertices[0], vertices[1], vertices[2]);
+	glVertex3f(vertices[3], vertices[4], vertices[5]);
+
+	glVertex3f(vertices[0], vertices[1], vertices[2]);
+	glVertex3f(vertices[6], vertices[7], vertices[8]);
+
+	glVertex3f(vertices[0], vertices[1], vertices[2]);
+	glVertex3f(vertices[12], vertices[13], vertices[14]);
+
+	glVertex3f(vertices[21], vertices[22], vertices[23]);
+	glVertex3f(vertices[9], vertices[10], vertices[11]);
+
+	glVertex3f(vertices[21], vertices[22], vertices[23]);
+	glVertex3f(vertices[18], vertices[19], vertices[20]);
+
+	glVertex3f(vertices[21], vertices[22], vertices[23]);
+	glVertex3f(vertices[15], vertices[16], vertices[17]);
+
+	glVertex3f(vertices[3], vertices[4], vertices[5]);
+	glVertex3f(vertices[9], vertices[10], vertices[11]);
+
+	glVertex3f(vertices[3], vertices[4], vertices[5]);
+	glVertex3f(vertices[15], vertices[16], vertices[17]);
+	
+	glVertex3f(vertices[6], vertices[7], vertices[8]);
+	glVertex3f(vertices[18], vertices[19], vertices[20]);
+
+	glVertex3f(vertices[6], vertices[7], vertices[8]);
+	glVertex3f(vertices[9], vertices[10], vertices[11]);
+
+	glVertex3f(vertices[9], vertices[10], vertices[11]);
+	glVertex3f(vertices[21], vertices[22], vertices[23]);
+
+	glVertex3f(vertices[9], vertices[10], vertices[11]);
+	glVertex3f(vertices[3], vertices[4], vertices[5]);
+
+	glVertex3f(vertices[12], vertices[13], vertices[14]);
+	glVertex3f(vertices[18], vertices[19], vertices[20]);
+
+	glVertex3f(vertices[18], vertices[19], vertices[20]);
+	glVertex3f(vertices[21], vertices[22], vertices[23]);
+
+	glEnd();
+
+	glColor3f(1.0f, 1.0f, 1.0f);
+
+	glLineWidth(1.0f);
+
+}
+
 float ComponentAABB::GetMinX() {
 
 	float min_x = vertices[0];

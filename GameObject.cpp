@@ -74,10 +74,11 @@ void GameObject::UpdateRecursive(float dt) {
 
 void GameObject::DrawRecursive() {
 	
-	ComponentMesh* mesh = (ComponentMesh*)FindComponent(COMPONENT_MESH);   //should draw all meshes
+
+	std::vector<Component*> meshes = FindComponents(COMPONENT_MESH);   //should draw all meshes
 	
-	if(mesh)
-		mesh->Draw();
+	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
+		(*it)->Draw();
 
 	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
 		(*it)->DrawRecursive();

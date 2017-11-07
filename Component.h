@@ -23,6 +23,7 @@ public:
 	virtual void Update(float dt) {};
 	virtual void Enable() { enabled = true; };
 	virtual void Disable() { enabled = false; };
+	virtual void Draw() {};
 
 public:
 	Component_type type = COMPONENT_NONE;

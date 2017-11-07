@@ -27,6 +27,9 @@ public:
 	float GetMinX(); float GetMaxX();
 	float GetMinY(); float GetMaxY();
 	float GetMinZ(); float GetMaxZ();
+
+	void Draw();
+
 };
 
 class OBB {
