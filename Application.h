@@ -49,4 +49,8 @@ private:
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+
+public:
+	float Getdt();
+	void Changedt(float newdt);
 };

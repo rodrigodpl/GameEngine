@@ -61,6 +61,8 @@ update_status ModuleGui::PreUpdate(float dt) {
 				draw_log = !draw_log;
 			if (ImGui::MenuItem("Performance"))
 				draw_performance = !draw_performance;
+			if (ImGui::MenuItem("Transform"))
+				draw_transform = !draw_transform;
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Help"))
@@ -244,21 +246,33 @@ void ModuleGui::Draw() {
 	}
 
 	if (draw_play) {
+		float dt = App->Getdt();
 		ImGui::SetNextWindowPos(ImVec2(100, 100), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Play", &draw_play, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
 		if (ImGui::Button(">", ImVec2(50, 25))) {
-
+			dt = 1.0f;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("||", ImVec2(50, 25))) {
-
+			dt = 0.0f;
 		}
-		ImGui::SameLine();
+		/*ImGui::SameLine();
 		if (ImGui::Button(">|", ImVec2(50, 25))) {
 
-		}
-
+		}*/
+		/*ImGui::SameLine();
+		if (ImGui::Button("[]", ImVec2(50,25))) {
+		
+		}*/
+		ImGui::SliderFloat("", &dt, 0.0f, 1.0f, "%.2f");
+		App->Changedt(dt);
 		ImGui::End();
+	}
+
+	if (draw_transform) {
+		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin("Transform", &draw_transform, ImGuiWindowFlags_ShowBorders);
+		//ImGui::SliderFloat()
 	}
 
 	ImGui::Render();
