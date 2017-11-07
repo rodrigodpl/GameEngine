@@ -119,6 +119,7 @@ GameObject* ModuleImporter::LoadNodeRecursive(aiNode* node, const aiScene* scene
 uint ModuleImporter::LoadImg(const char* full_path) 
 {
 	App->scene_intro->materials.push_back(new ComponentMaterial(full_path));
+
 	return (App->scene_intro->materials.size() - 1);
 }
 

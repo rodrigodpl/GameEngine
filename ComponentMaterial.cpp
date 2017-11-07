@@ -37,7 +37,10 @@ ComponentMaterial::ComponentMaterial(aiMaterial& mat) {
 		Texture* tex = new Texture();
 		mat.GetTexture(aiTextureType_DIFFUSE, i, &tex->path);
 	
-		tex->gl_binding = ilutGLLoadImage((char*)tex->path.C_Str());
+		aiString tex_path("Test_files/");
+		tex_path.Append(tex->path.C_Str());
+
+		tex->gl_binding = ilutGLLoadImage((char*)tex_path.C_Str());
 
 		if (tex->gl_binding != 0) {
 			tex->width = ilGetInteger(IL_IMAGE_WIDTH);

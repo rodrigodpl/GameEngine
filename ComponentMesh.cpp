@@ -84,9 +84,21 @@ bool ComponentMesh::LoadDataFromAssimp(aiMesh& imp_mesh) {
 	if (imp_mesh.HasTextureCoords(0)) {
 
 		num_texcoords = num_vertices;
-		texcoords = new float[num_texcoords * 3];
+		float* temp_texcoords = new float[num_texcoords * 3];
 
-		memcpy(texcoords, imp_mesh.mTextureCoords[0], sizeof(float) * num_texcoords * 3);
+		memcpy(temp_texcoords, imp_mesh.mTextureCoords[0], sizeof(float) * num_texcoords * 3);
+
+		texcoords = new float[num_texcoords * 2];
+
+		for (int i = 0, j = 0; i < num_texcoords * 3; i++) {
+
+			if ((i + 1) % 3 != 0) {    // remove the 0 value from assimp
+				texcoords[j] = temp_texcoords[i];
+				j++;
+			}
+		}
+
+		delete[] temp_texcoords;
 	}
 
 	return true;
@@ -125,7 +137,7 @@ void ComponentMesh::LoadDataToVRAM() {
 	if (num_texcoords > 0) {
 		glGenBuffers(1, (GLuint*) &(id_texcoords));
 		glBindBuffer(GL_ARRAY_BUFFER, id_texcoords);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_texcoords * 3, texcoords, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_texcoords * 2, texcoords, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	}
@@ -153,7 +165,7 @@ void ComponentMesh::Draw() {
 		glBindTexture(GL_TEXTURE_2D, mat->textures.back()->gl_binding);
 
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glTexCoordPointer(3, GL_FLOAT, 0, NULL);
+	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 	glNormalPointer(GL_FLOAT, 0, NULL);
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 
