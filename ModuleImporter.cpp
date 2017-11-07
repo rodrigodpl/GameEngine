@@ -64,8 +64,10 @@ GameObject* ModuleImporter::LoadFBX(const char* full_path) {
 		App->gui->app_log.AddLog("Succesfully loaded %s\n", full_path);
 		App->gui->app_log.AddLog("Number of materials %d\n", scene->mNumMaterials);		
 	}
-	else
+	else {
 		App->gui->app_log.AddLog("Error loading scene %s\n", full_path);
+		root_obj = new GameObject("load error");        // on load failure, return empty game object
+	}
 
 	return root_obj;
 
