@@ -6,6 +6,7 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentTransform.h"
+#include "ComponentAABB.h"
 
 #include "Devil/include/il.h"
 #include "Devil/include/ilu.h"
@@ -61,7 +62,7 @@ GameObject* ModuleImporter::LoadFBX(const char* full_path) {
 		root_obj = LoadNodeRecursive(root_node, scene);
 
 		aiReleaseImport(scene);
-		App->gui->app_log.AddLog("Succesfully loaded %s\n", full_path);
+		App->gui->app_log.AddLog("Successfully loaded %s\n", full_path);
 		App->gui->app_log.AddLog("Number of materials %d\n", scene->mNumMaterials);		
 	}
 	else {
@@ -105,6 +106,9 @@ GameObject* ModuleImporter::LoadNodeRecursive(aiNode* node, const aiScene* scene
 		game_object->components.push_back((Component*)mesh->mat);
 
 	}
+
+	ComponentAABB* aabb = new ComponentAABB(*game_object);
+	game_object->components.push_back(aabb);
 
 	//children
 	for (int i = 0; i < node->mNumChildren; i++) {

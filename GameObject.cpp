@@ -38,6 +38,18 @@ Component* GameObject::FindComponent(Component_type type) {
 	return nullptr;
 }
 
+std::vector<Component*> GameObject::FindComponents(Component_type type) {
+
+	std::vector<Component*> ret;
+
+	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++) {
+		if ((*it)->type == type)
+			ret.push_back(*it);
+	}
+
+	return ret;
+}
+
 GameObject* GameObject::FindChild(const char* obj_name) {
 
 	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++) {

@@ -16,6 +16,7 @@ public:
 
 	void UpdateRecursive(float dt);
 	Component* FindComponent(Component_type type);
+	std::vector<Component*> FindComponents(Component_type type);
 	GameObject* FindChild(const char* name);
 
 	void DrawRecursive();

@@ -123,6 +123,9 @@
     <ClInclude Include="ModuleFS.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentAABB.h">
+      <Filter>Sources\GameObject/Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -208,6 +211,9 @@
     </ClCompile>
     <ClCompile Include="ModuleFS.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentAABB.cpp">
+      <Filter>Sources\GameObject/Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
