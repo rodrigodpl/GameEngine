@@ -140,3 +140,10 @@ void Application::AddModule(Module* mod)
 	list_modules.add(mod);
 }
 
+float Application::Getdt() {
+	return dt;
+}
+
+void Application::Changedt(float newdt) {
+	dt = newdt;
+}
