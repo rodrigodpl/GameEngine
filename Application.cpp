@@ -70,6 +70,8 @@ bool Application::Init()
 		ret = item->data->Start();
 		item = item->next;
 	}
+
+	Createdir("../Library");
 	
 	ms_timer.Start();
 	return ret;
@@ -146,4 +148,16 @@ float Application::Getdt() {
 
 void Application::Changedt(float newdt) {
 	dtmod = newdt;
+}
+
+void Application::Createdir(const std::string& path)
+{
+	DWORD ftyp = GetFileAttributesA(path.c_str());
+	LPCSTR file = path.c_str();
+	if (ftyp == INVALID_FILE_ATTRIBUTES) {
+		CreateDirectory(file, NULL);//Doesn't exist
+	}
+
+	if (ftyp & FILE_ATTRIBUTE_DIRECTORY);
+		//It exists
 }
