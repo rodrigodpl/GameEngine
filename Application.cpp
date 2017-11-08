@@ -9,7 +9,7 @@ Application::Application()
 	audio = new ModuleAudio(this, true);
 	scene_intro = new ModuleSceneIntro(this);
 	renderer3D = new ModuleRenderer3D(this);
-	camera = new ModuleCamera3D(this);
+	camera = new ModuleEditorCam(this);
 	gui = new ModuleGui(this);
 	importer = new ModuleImporter(this);
 	json = new ModuleJSON(this);

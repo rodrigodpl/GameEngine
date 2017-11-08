@@ -22,10 +22,6 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	srand(time(NULL));
-	
-	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
-	App->camera->LookAt(vec3(0, 0, 0));
-
 
 	game_objects.push_back(App->importer->LoadFBX("Test_files/BakerHouse.fbx"));
 	//App->importer->LoadFBX("Test_files/Spaceship.fbx");

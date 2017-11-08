@@ -9,7 +9,7 @@
 #include "ModuleAudio.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
+#include "ModuleEditorCam.h"
 #include "ModuleGui.h"
 #include "ModuleImporter.h"
 #include "ModuleJSON.h"
@@ -23,7 +23,7 @@ public:
 	ModuleAudio* audio;
 	ModuleSceneIntro* scene_intro;
 	ModuleRenderer3D* renderer3D;
-	ModuleCamera3D* camera;
+	ModuleEditorCam* camera;
 	ModuleGui* gui;
 	ModuleImporter* importer;
 	ModuleJSON* json;

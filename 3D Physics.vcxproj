@@ -79,6 +79,7 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentAABB.h" />
+    <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentMaterial.h" />
     <ClInclude Include="ComponentMesh.h" />
     <ClInclude Include="ComponentTransform.h" />
@@ -91,7 +92,7 @@
     <ClInclude Include="imgui_internal.h" />
     <ClInclude Include="Importer.h" />
     <ClInclude Include="Light.h" />
-    <ClInclude Include="ModuleCamera3D.h" />
+    <ClInclude Include="ModuleEditorCam.h" />
     <ClInclude Include="ModuleJSON.h" />
     <ClInclude Include="ModuleGui.h" />
     <ClInclude Include="ModuleImporter.h" />
@@ -113,6 +114,7 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="ComponentAABB.cpp" />
+    <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentMaterial.cpp" />
     <ClCompile Include="ComponentMesh.cpp" />
     <ClCompile Include="ComponentTransform.cpp" />
@@ -127,7 +129,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MaterialImporter.cpp" />
     <ClCompile Include="ModuleAudio.cpp" />
-    <ClCompile Include="ModuleCamera3D.cpp" />
+    <ClCompile Include="ModuleEditorCam.cpp" />
     <ClCompile Include="ModuleJSON.cpp" />
     <ClCompile Include="ModuleGui.cpp" />
     <ClCompile Include="ModuleImporter.cpp" />
