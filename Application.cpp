@@ -51,7 +51,7 @@ Application::~Application()
 bool Application::Init()
 {
 	bool ret = true;
-
+	dtmod = 1.0f;
 	// Call Init() in all modules
 	p2List_item<Module*>* item = list_modules.getFirst();
 
@@ -78,7 +78,7 @@ bool Application::Init()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	dt = (float)ms_timer.Read() / 1000.0f;
+	dt = ((float)ms_timer.Read() / 1000.0f) / dtmod;
 	gui->Fps_app_data(dt);
 	ms_timer.Start();
 }
@@ -141,9 +141,9 @@ void Application::AddModule(Module* mod)
 }
 
 float Application::Getdt() {
-	return dt;
+	return dtmod;
 }
 
 void Application::Changedt(float newdt) {
-	dt = newdt;
+	dtmod = newdt;
 }

@@ -33,6 +33,7 @@ private:
 
 	Timer	ms_timer;
 	float	dt;
+	float	dtmod;
 	p2List<Module*> list_modules;
 
 public:
