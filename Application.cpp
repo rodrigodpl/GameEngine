@@ -51,7 +51,7 @@ Application::~Application()
 bool Application::Init()
 {
 	bool ret = true;
-
+	dtmod = 1.0f;
 	// Call Init() in all modules
 	p2List_item<Module*>* item = list_modules.getFirst();
 
@@ -70,6 +70,8 @@ bool Application::Init()
 		ret = item->data->Start();
 		item = item->next;
 	}
+
+	Createdir("../Library");
 	
 	ms_timer.Start();
 	return ret;
@@ -78,7 +80,7 @@ bool Application::Init()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	dt = (float)ms_timer.Read() / 1000.0f;
+	dt = ((float)ms_timer.Read() / 1000.0f) / dtmod;
 	gui->Fps_app_data(dt);
 	ms_timer.Start();
 }
@@ -141,9 +143,21 @@ void Application::AddModule(Module* mod)
 }
 
 float Application::Getdt() {
-	return dt;
+	return dtmod;
 }
 
 void Application::Changedt(float newdt) {
-	dt = newdt;
+	dtmod = newdt;
+}
+
+void Application::Createdir(const std::string& path)
+{
+	DWORD ftyp = GetFileAttributesA(path.c_str());
+	LPCSTR file = path.c_str();
+	if (ftyp == INVALID_FILE_ATTRIBUTES) {
+		CreateDirectory(file, NULL);//Doesn't exist
+	}
+
+	if (ftyp & FILE_ATTRIBUTE_DIRECTORY);
+		//It exists
 }

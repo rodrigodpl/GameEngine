@@ -23,7 +23,7 @@ bool ModuleSceneIntro::Start()
 
 	srand(time(NULL));
 
-	game_objects.push_back(App->importer->LoadFBX("Test_files/BakerHouse.fbx"));
+	game_objects.push_back(App->importer->LoadFBX("../Assets/BakerHouse.fbx"));
 	//App->importer->LoadFBX("Test_files/Spaceship.fbx");
 
 	GameObject* floor = new GameObject("floor plane");

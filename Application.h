@@ -33,6 +33,7 @@ private:
 
 	Timer	ms_timer;
 	float	dt;
+	float	dtmod;
 	p2List<Module*> list_modules;
 
 public:
@@ -49,6 +50,7 @@ private:
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+	void Createdir(const std::string& path);
 
 public:
 	float Getdt();
