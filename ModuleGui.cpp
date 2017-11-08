@@ -247,7 +247,7 @@ void ModuleGui::Draw() {
 
 	if (draw_play) {
 		float dt = App->Getdt();
-		ImGui::SetNextWindowPos(ImVec2(100, 100), ImGuiSetCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(277, 19), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Play", &draw_play, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
 		if (ImGui::Button(">", ImVec2(50, 25))) {
 			dt = 1.0f;
