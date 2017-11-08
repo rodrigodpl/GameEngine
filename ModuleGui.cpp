@@ -272,7 +272,19 @@ void ModuleGui::Draw() {
 	if (draw_transform) {
 		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Transform", &draw_transform, ImGuiWindowFlags_ShowBorders);
-		//ImGui::SliderFloat()
+		//Position
+		//ImGui::InputInt("", &transX); ImGui::SameLine();
+		//ImGui::InputInt("", &transY); ImGui::SameLine();
+		//ImGui::InputInt("", &transZ);
+		//Rotation
+		//ImGui::SliderFloat("", &rotX, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
+		//ImGui::SliderFloat("", &rotY, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
+		//ImGui::SliderFloat("", &rotZ, -180.0f, 180.0f, "%.0f");
+		//Scale
+		//ImGui::InputInt("", &scaleX); ImGui::SameLine();
+		//ImGui::InputInt("", &scaleY); ImGui::SameLine();
+		//ImGui::InputInt("", &scaleZ);
+		ImGui::End();
 	}
 
 	ImGui::Render();
