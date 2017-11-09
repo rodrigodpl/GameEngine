@@ -83,3 +83,10 @@ void GameObject::DrawRecursive() {
 	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
 		(*it)->DrawRecursive();
 }
+
+/*void GameObject::CreateTree() {
+	for (int aux = 0; aux < children.size(); aux++) {
+		children[aux]->CreateTree();
+		
+	}
+}*/

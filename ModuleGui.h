@@ -49,6 +49,7 @@ private:
 	bool draw_properties = false;
 	bool draw_play = true;
 	bool draw_transform = false;
+	bool draw_hierarchy = false;
 
 	float avg;
 	int prev;
@@ -74,5 +75,8 @@ public:
 	void Fps_input_data(float aux);
 
 	void Get_colour(Color aux);
+
+private:
+	void CreateTree();
 };
 
