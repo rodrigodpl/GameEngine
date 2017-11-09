@@ -1,30 +1,35 @@
 #pragma once
 #include "Component.h"
 
-#include "Assimp/include/cimport.h"
-#include "Assimp/include/scene.h"
-#include "Assimp/include/postprocess.h"
-#include "Assimp/include/cfileio.h"
+#include "MathGeoLib.h"
+
 
 class ComponentTransform : Component {
 public:
 
-	ComponentTransform(aiVector3D pos = { 0,0,0 }, aiVector3D scl = { 0,0,0 }, aiQuaternion rot = { 0,0,0,0 });
+	ComponentTransform(float3 pos = { 0,0,0 }, float3 scl = { 0,0,0 }, Quat rot = { 0,0,0,0 });
+	ComponentTransform(float3 euler_axis, float3 pos = { 0,0,0 }, float3 scl = { 0,0,0 });
 	ComponentTransform(ComponentTransform& transform);
 
 	~ComponentTransform();
 
 
-	void SetPosition(aiVector3D pos);
-	void SetScale(aiVector3D scl);
-	void SetRotation(aiQuaternion rot);
+	void SetPosition(float3 pos);
+	void Translate(float3 dir);
+	void SetScale(float3 scl);
+	void Scale(float3 scl);
+	void SetRotation(Quat rot);
+	void SetRotationEuler(float3 euler_axis);
+	void RotateAroundAxis(float3 axis, float rot_in_degrees);
 
 	Component* Duplicate();
 	void Update();
 
 public:
 
-	aiVector3D position;
-	aiVector3D scale;
-	aiQuaternion rotation;
+	float3 position;
+	float3 scale;
+	Quat rotation;
+	
+	float4x4 mat;
 };

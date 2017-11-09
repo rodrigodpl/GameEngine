@@ -22,9 +22,9 @@
 #include <sys/time.h>
 #endif
 
-#ifdef WIN32
+#define WIN32
 #include <windows.h>
-#endif
+
 
 #ifdef EMSCRIPTEN
 #include <emscripten.h>

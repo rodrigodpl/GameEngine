@@ -1,7 +1,21 @@
 #include "ComponentCamera.h"
 
-ComponentCamera::ComponentCamera(vec3 position, vec3 reference_offset, float reposition_scale)
+ComponentCamera::ComponentCamera(vec3 position, vec3 reference_offset)
 {
+	frustum = new Frustum();
+
+	frustum->type = FrustumType::PerspectiveFrustum;
+	frustum->pos = {position.x, position.y, position.z};
+
+	frustum->front = { 0.0f, 0.0f, 1.0f};
+	frustum->up    = { 0.0f, 1.0f, 0.0f};
+
+	frustum->nearPlaneDistance = 1.0f;
+	frustum->farPlaneDistance = 100.0f;
+
+	frustum->horizontalFov = 90.0f * DEGTORAD;       //these angles provide an aspect ratio of 16:9
+	frustum->verticalFov = 59.0f * DEGTORAD;
+
 	CalculateViewMatrix();
 
 	X = vec3(1.0f, 0.0f, 0.0f);
@@ -11,7 +25,6 @@ ComponentCamera::ComponentCamera(vec3 position, vec3 reference_offset, float rep
 	Position = position;
 	Reference = position + reference_offset;
 
-	repos_scale = reposition_scale;
 }
 
 ComponentCamera::~ComponentCamera()
@@ -74,7 +87,7 @@ void ComponentCamera::CalculateViewMatrix()
 
 void ComponentCamera::RepositionToDisplay(ComponentAABB& aabb) {
 
-	Move((vec3(aabb.GetMaxX(), aabb.GetMaxY(), aabb.GetMaxZ()) * repos_scale) - Position);
+	Move((vec3(aabb.GetMaxX(), aabb.GetMaxY(), aabb.GetMaxZ()) * REPOSITION_SCALE - Position));
 	LookAt({ 0,0,0 });
 }
 

@@ -94,7 +94,7 @@ void ComponentAABB::Init(float* vert, int num_vert) {
 		// LOG: error loading AABB vertices
 	}
 
-	obb = new OBB(*this);
+	obb = new ObjectBB(*this);
 }
 
 void ComponentAABB::InitFromSeveralMeshes(std::vector<Component*> meshes) {
@@ -249,7 +249,7 @@ float ComponentAABB::GetMaxZ() {
 	return max_z;
 }
 
-OBB::OBB(ComponentAABB& parent_aabb) {
+ObjectBB::ObjectBB(ComponentAABB& parent_aabb) {
 
 	vertices = new float[BB_VERTNUM];
 

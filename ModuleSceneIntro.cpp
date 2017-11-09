@@ -23,15 +23,14 @@ bool ModuleSceneIntro::Start()
 
 	srand(time(NULL));
 
-	game_objects.push_back(App->importer->LoadFBX("../Assets/BakerHouse.fbx"));
+	game_objects.push_back(App->importer->LoadFBX("Assets/BakerHouse.fbx"));
 	//App->importer->LoadFBX("Test_files/Spaceship.fbx");
 
 	GameObject* floor = new GameObject("floor plane");
-	floor->components.push_back((Component*)new Plane(0, 1, 0, 10));
+	floor->components.push_back((Component*)new PrimPlane(0, 1, 0, 10));
 	game_objects.push_back(floor);
 
 	return ret;
-
 }
 
 // Load assets

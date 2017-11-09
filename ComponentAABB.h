@@ -5,13 +5,13 @@
 
 #define BB_VERTNUM 24
 
-class OBB;
+class ObjectBB;
 
 class ComponentAABB : public Component {
 
 public:
 	float* vertices = nullptr;
-	OBB* obb = nullptr;                     // obb is created in Init method
+	ObjectBB* obb = nullptr;                     // obb is created in Init method
 	ComponentTransform* transform;
 
 public:
@@ -32,12 +32,12 @@ public:
 
 };
 
-class OBB {
+class ObjectBB {
 
 public:
 	float* vertices = nullptr;
 
 public:
-	OBB(ComponentAABB& parent_aabb);
+	ObjectBB(ComponentAABB& parent_aabb);
 
 };

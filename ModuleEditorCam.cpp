@@ -4,8 +4,7 @@
 #include "ModuleEditorCam.h"
 #include "glmath.h"
 
-#include "MathGeoLib-1.5\src\MathGeoLib.h"
-#include "MathGeoLib-1.5\src\Geometry\AABB.h"
+#include "MathGeoLib.h"
 
 #include "Bullet/include/btBulletDynamicsCommon.h"
 
