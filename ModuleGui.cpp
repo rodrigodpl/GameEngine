@@ -187,7 +187,7 @@ void ModuleGui::Draw() {
 			ImGui::Separator();
 			static bool vsync = true;
 			ImGui::Checkbox("Vsync", &vsync);
-			App->json->config->WriteBool("Vsync", vsync);
+			//App->json->config->WriteBool("Vsync", vsync);
 			ImGui::Separator();
 			static int e = 1;
 			ImGui::RadioButton("Fullscreen", &e, 0);
@@ -273,17 +273,27 @@ void ModuleGui::Draw() {
 		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Transform", &draw_transform, ImGuiWindowFlags_ShowBorders);
 		//Position
+		//ImGui::Text("Transformation");
 		//ImGui::InputInt("", &transX); ImGui::SameLine();
 		//ImGui::InputInt("", &transY); ImGui::SameLine();
 		//ImGui::InputInt("", &transZ);
 		//Rotation
+		//ImGui::Text("Rotation");
 		//ImGui::SliderFloat("", &rotX, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
 		//ImGui::SliderFloat("", &rotY, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
 		//ImGui::SliderFloat("", &rotZ, -180.0f, 180.0f, "%.0f");
 		//Scale
+		//ImGui::Text("Scale");
 		//ImGui::InputInt("", &scaleX); ImGui::SameLine();
 		//ImGui::InputInt("", &scaleY); ImGui::SameLine();
 		//ImGui::InputInt("", &scaleZ);
+		ImGui::End();
+	}
+
+	if (draw_hierarchy) {
+		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin("Hierarchy", &draw_transform, ImGuiWindowFlags_ShowBorders);
+		//App->scene_intro->game_objects
 		ImGui::End();
 	}
 
@@ -426,4 +436,9 @@ void ModuleGui::Fps_physics_data(float aux)
 
 void ModuleGui::Get_colour(Color aux) {
 	aux.Set(rgb_data[0], rgb_data[1], rgb_data[2], 1.0f);
+}
+
+void ModuleGui::CreateTree() {
+	//App->scene_intro->game_objects
+	//ImGui::TreeNode()
 }

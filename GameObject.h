@@ -20,6 +20,7 @@ public:
 	GameObject* FindChild(const char* name);
 
 	void DrawRecursive();
+	//void CreateTree();
 
 public:
 
