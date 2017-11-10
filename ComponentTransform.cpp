@@ -1,6 +1,6 @@
 #include "ComponentTransform.h"
 
-ComponentTransform::ComponentTransform(float3 pos, float3 scl, Quat rot) : position(pos), scale(scl), rotation(rot)
+ComponentTransform::ComponentTransform(Quat rot , float3 pos, float3 scl) : position(pos), scale(scl), rotation(rot)
 {
 	type = Component_type::COMPONENT_TRANSFORM;
 	mat = mat.FromTRS(position, rotation, scale);
@@ -70,6 +70,11 @@ void ComponentTransform::Scale(float3 scl) {
 Component* ComponentTransform::Duplicate()
 {
 	return (Component*) new ComponentTransform(*this);
+}
+
+void ComponentTransform::LookAt(float3 position, float3 target, float3 forward, float3 up, float3 worldUp) 
+{
+	mat = mat.LookAt(position, target, forward, up, worldUp);
 }
 
 void ComponentTransform::Update() 

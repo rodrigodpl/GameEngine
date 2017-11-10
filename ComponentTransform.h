@@ -7,8 +7,8 @@
 class ComponentTransform : Component {
 public:
 
-	ComponentTransform(float3 pos = { 0,0,0 }, float3 scl = { 0,0,0 }, Quat rot = { 0,0,0,0 });
-	ComponentTransform(float3 euler_axis, float3 pos = { 0,0,0 }, float3 scl = { 0,0,0 });
+	ComponentTransform(Quat rot = { 0,0,0,0 },float3 pos = { 0,0,0 }, float3 scl = { 1,1,1 } );
+	ComponentTransform(float3 euler_axis, float3 pos = { 0,0,0 }, float3 scl = { 1,1,1 });
 	ComponentTransform(ComponentTransform& transform);
 
 	~ComponentTransform();
@@ -21,6 +21,8 @@ public:
 	void SetRotation(Quat rot);
 	void SetRotationEuler(float3 euler_axis);
 	void RotateAroundAxis(float3 axis, float rot_in_degrees);
+
+	void LookAt(float3 position, float3 target, float3 forward, float3 up, float3 worldUp);
 
 	Component* Duplicate();
 	void Update();

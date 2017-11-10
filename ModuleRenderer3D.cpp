@@ -52,7 +52,7 @@ bool ModuleRenderer3D::Init()
 
 		//Initialize Projection Matrix
 		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
+		glLoadMatrixf(App->camera->cam->ProjectionMatrix());
 
 		//Check for error
 		GLenum error = glGetError();
@@ -127,13 +127,60 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->cam->GetViewMatrix());
+	glLoadMatrixf(App->camera->cam->ViewMatrix());
 
 	// light 0 on cam pos
-	lights[0].SetPos(App->camera->cam->Position.x, App->camera->cam->Position.y, App->camera->cam->Position.z);
+	lights[0].SetPos(App->camera->cam->transform->position.x, App->camera->cam->transform->position.y, App->camera->cam->transform->position.z);
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
+
+	return UPDATE_CONTINUE;
+}
+
+// PostUpdate present buffer to screen
+update_status ModuleRenderer3D::PostUpdate(float dt)
+{
+	//first draw scene
+	App->scene_intro->DrawScene();
+
+	//then debug features
+	if (debug_draw)
+		DebugDraw();
+	
+	//and editor last
+	App->gui->Draw();
+
+	SDL_GL_SwapWindow(App->window->window);
+	return UPDATE_CONTINUE;
+}
+
+// Called before quitting
+bool ModuleRenderer3D::CleanUp()
+{
+	App->gui->app_log.AddLog("Destroying 3D Renderer\n");
+
+	SDL_GL_DeleteContext(context);
+
+	return true;
+}
+
+
+void ModuleRenderer3D::OnResize(int width, int height)
+{
+	glViewport(0, 0, width, height);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
+	glLoadMatrixf(&ProjectionMatrix);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
+void ModuleRenderer3D::DebugDraw() {}
+
 
 	//Direct draw of a cube using TRIS
 	/*glLineWidth(2.0f);
@@ -206,49 +253,3 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	//// … draw other buffers
 	//glDrawArrays(GL_TRIANGLES, 0, VERT_NUM * 3);
 	//glDisableClientState(GL_VERTEX_ARRAY);
-
-	return UPDATE_CONTINUE;
-}
-
-// PostUpdate present buffer to screen
-update_status ModuleRenderer3D::PostUpdate(float dt)
-{
-	//first draw scene
-	App->scene_intro->DrawScene();
-
-	//then debug features
-	if (debug_draw)
-		DebugDraw();
-	
-	//and editor last
-	App->gui->Draw();
-
-	SDL_GL_SwapWindow(App->window->window);
-	return UPDATE_CONTINUE;
-}
-
-// Called before quitting
-bool ModuleRenderer3D::CleanUp()
-{
-	App->gui->app_log.AddLog("Destroying 3D Renderer\n");
-
-	SDL_GL_DeleteContext(context);
-
-	return true;
-}
-
-
-void ModuleRenderer3D::OnResize(int width, int height)
-{
-	glViewport(0, 0, width, height);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
-	glLoadMatrixf(&ProjectionMatrix);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
-
-void ModuleRenderer3D::DebugDraw() {}

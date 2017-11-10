@@ -90,7 +90,7 @@ GameObject* ModuleImporter::LoadNodeRecursive(aiNode* node, const aiScene* scene
 	aiQuaternion rot;
 	node->mTransformation.Decompose(scl, rot, pos);
 
-	ComponentTransform*	transform = new ComponentTransform({ pos.x, pos.y, pos.z },{ scl.x, scl.y, scl.z },{ rot.x, rot.y, rot.x, rot.w });
+	ComponentTransform*	transform = new ComponentTransform({ rot.x, rot.y, rot.x, rot.w },{ pos.x, pos.y, pos.z },{ scl.x, scl.y, scl.z });
 	game_object->components.push_back((Component*)transform);
 
 	//meshes and materials
