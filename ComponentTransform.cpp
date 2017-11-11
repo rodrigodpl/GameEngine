@@ -45,6 +45,8 @@ void ComponentTransform::SetRotation(Quat rot)
 void ComponentTransform::RotateAroundAxis(float3 axis, float rot_in_degrees) 
 {
 	mat = mat.RotateAxisAngle(axis, DegToRad(rot_in_degrees));
+	float3 euler_axis = mat.ToEulerXYZ();
+	rotation = rotation.FromEulerXYZ(euler_axis.x, euler_axis.y, euler_axis.z);
 }
 
 void ComponentTransform::SetRotationEuler(float3 euler_axis) {
@@ -75,6 +77,9 @@ Component* ComponentTransform::Duplicate()
 void ComponentTransform::LookAt(float3 position, float3 target, float3 forward, float3 up, float3 worldUp) 
 {
 	mat = mat.LookAt(position, target, forward, up, worldUp);
+	this->position = position;
+	float3 euler_axis = mat.ToEulerXYZ();
+	rotation = rotation.FromEulerXYZ(euler_axis.x, euler_axis.y, euler_axis.z);
 }
 
 void ComponentTransform::Update() 

@@ -52,7 +52,7 @@ bool ModuleRenderer3D::Init()
 
 		//Initialize Projection Matrix
 		glMatrixMode(GL_PROJECTION);
-		glLoadMatrixf(App->camera->cam->ProjectionMatrix());
+		glLoadIdentity();
 
 		//Check for error
 		GLenum error = glGetError();
@@ -125,6 +125,13 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
+	
+	if (App->camera->cam->proj_update) {
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(App->camera->cam->ProjectionMatrix());
+		App->camera->cam->proj_update = false;
+	}
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->cam->ViewMatrix());
