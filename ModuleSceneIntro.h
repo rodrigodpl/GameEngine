@@ -1,16 +1,11 @@
 #pragma once
 #include "Module.h"
-#include "p2DynArray.h"
-#include "Globals.h"
-#include "Primitive.h"
-#include "ComponentMesh.h"
-#include "GameObject.h"
 
 #include <list>
 #include <vector>
 
-struct PhysBody3D;
-struct PhysMotor3D;
+class ComponentMaterial;
+class GameObject;
 
 class ModuleSceneIntro : public Module
 {
@@ -23,7 +18,6 @@ public:
 	bool CleanUp();
 
 	void DrawScene();
-
 public:
 
 	std::list<GameObject*> game_objects;

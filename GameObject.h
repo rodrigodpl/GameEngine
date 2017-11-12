@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 
+class ComponentCamera;
+
 class GameObject
 {
 
@@ -20,6 +22,7 @@ public:
 	GameObject* FindChild(const char* name);
 
 	void DrawRecursive();
+	void CullRecursive(ComponentCamera* cam);
 	//void CreateTree();
 
 public:
@@ -28,5 +31,7 @@ public:
 	std::string name;
 	std::vector<Component*> components;
 	std::vector<GameObject*> children;
+
+	bool culled = false;
 
 };

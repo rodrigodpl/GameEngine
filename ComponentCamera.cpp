@@ -85,6 +85,30 @@ void ComponentCamera::Zoom(float delta)
 	}
 }
 
+bool ComponentCamera::FrustumCulling(const ComponentAABB& aabb)
+{
+	Plane* planes = new Plane[6];
+	frustum->GetPlanes(planes);
+
+	for (int i = 0; i < 6; i++) {
+
+		int vert_pos_side = 0;
+
+		for (int j = 0; j < 8; j++) {
+			float3 vertex = { aabb.vertices[j * 3], aabb.vertices[(j * 3) + 1], aabb.vertices[(j * 3) + 2] };
+
+			if (planes[i].IsOnPositiveSide(vertex))
+				vert_pos_side++;
+		}
+
+		if (vert_pos_side == 8)
+			return true;
+	}
+
+	return false;
+}
+
+
 float* ComponentCamera::ViewMatrix()
 { 
 	float4x4 mat = frustum->ViewMatrix();

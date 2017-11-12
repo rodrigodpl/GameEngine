@@ -34,6 +34,7 @@ public:
 	float* ViewMatrix();
 	float* ProjectionMatrix();
 
+	bool FrustumCulling(const ComponentAABB& aabb);
 public:
 
 	ComponentTransform* transform = nullptr;

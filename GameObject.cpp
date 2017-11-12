@@ -1,5 +1,7 @@
 #include "GameObject.h"
 #include "ComponentMesh.h"
+#include "ComponentCamera.h"
+#include "ComponentAABB.h"
 
 
 GameObject::GameObject(const char* obj_name, GameObject* parent) : name(obj_name), parent(parent)
@@ -73,15 +75,27 @@ void GameObject::UpdateRecursive(float dt) {
 
 
 void GameObject::DrawRecursive() {
-	
 
-	std::vector<Component*> meshes = FindComponents(COMPONENT_MESH);   //should draw all meshes
-	
-	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
-		(*it)->Draw();
+	if (!culled) {
+		for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
+			(*it)->Draw();
+	}
 
 	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
 		(*it)->DrawRecursive();
+}
+
+void GameObject::CullRecursive(ComponentCamera* cam) 
+{
+	ComponentAABB* aabb = (ComponentAABB*)FindComponent(COMPONENT_AABB);
+
+	if (!aabb)
+		components.push_back(new ComponentAABB(*this));          // safeguard in case the gameobject has no AABB
+	else
+		culled = cam->FrustumCulling(*aabb);
+
+	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
+		(*it)->CullRecursive(cam);
 }
 
 /*void GameObject::CreateTree() {

@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleSceneIntro.h"
 #include "Primitive.h"
-#include "PhysBody3D.h"
+#include "GameObject.h"
 
 #include <stdlib.h>
 #include <time.h>
@@ -51,6 +51,9 @@ update_status ModuleSceneIntro::Update(float dt)
 
 void ModuleSceneIntro::DrawScene()
 {
-	for (std::list<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); it++)
-		(*it)->DrawRecursive();		
+	for (std::list<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); it++) {
+		(*it)->CullRecursive(App->camera->cam);
+		(*it)->DrawRecursive();
+	}
 }
+
