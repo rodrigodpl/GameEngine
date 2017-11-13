@@ -63,6 +63,8 @@ update_status ModuleGui::PreUpdate(float dt) {
 				draw_performance = !draw_performance;
 			if (ImGui::MenuItem("Transform"))
 				draw_transform = !draw_transform;
+			if (ImGui::MenuItem("Hierarchy"))
+				draw_hierarchy = !draw_hierarchy;
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Help"))
@@ -293,7 +295,10 @@ void ModuleGui::Draw() {
 	if (draw_hierarchy) {
 		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Hierarchy", &draw_transform, ImGuiWindowFlags_ShowBorders);
-		//App->scene_intro->game_objects
+		for (std::list<GameObject*>::iterator it = App->scene_intro->game_objects.begin(); it != App->scene_intro->game_objects.end(); it++) {
+			(*it)->CreateTree();
+		}
+
 		ImGui::End();
 	}
 

@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "ComponentMesh.h"
 
+#include "imgui.h"
 
 GameObject::GameObject(const char* obj_name, GameObject* parent) : name(obj_name), parent(parent)
 {}
@@ -84,9 +85,17 @@ void GameObject::DrawRecursive() {
 		(*it)->DrawRecursive();
 }
 
-/*void GameObject::CreateTree() {
-	for (int aux = 0; aux < children.size(); aux++) {
-		children[aux]->CreateTree();
+void GameObject::CreateTree() {
+	uint flags = 0;
+	if (ImGui::TreeNodeEx(name.c_str()), flags) {
+		if(children.empty()) flags |= ImGuiTreeNodeFlags_Leaf;
+		if (ImGui::IsItemClicked()) flags |= ImGuiTreeNodeFlags_Selected;
 		
+
+		for (int aux = 0; aux < children.size(); aux++) {
+			children[aux]->CreateTree();
+		}
+
+		ImGui::TreePop();
 	}
-}*/
+}
