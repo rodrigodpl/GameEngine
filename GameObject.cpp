@@ -167,14 +167,12 @@ void GameObject::RayCastAgainstMeshes(Ray ray, std::list<RayHit>& outHits) {
 
 void GameObject::CreateTree()
 {
-	uint flags = 0;
-	if (ImGui::TreeNodeEx(name.c_str()), flags) {
-		if (children.empty()) flags |= ImGuiTreeNodeFlags_Leaf;
-		if (ImGui::IsItemClicked()) flags |= ImGuiTreeNodeFlags_Selected;
+	int flags = 0;
+	if (children.empty()) flags |= ImGuiTreeNodeFlags_Leaf;
+	if (ImGui::IsItemClicked()) flags |= ImGuiTreeNodeFlags_Selected;
 
-		for (int aux = 0; aux < children.size(); aux++) {
-			children[aux]->CreateTree();
-		}
+	if (ImGui::TreeNodeEx(name.c_str(), flags)) {
+		for (int aux = 0; aux < children.size(); aux++)	children[aux]->CreateTree();
 
 		ImGui::TreePop();
 	}
