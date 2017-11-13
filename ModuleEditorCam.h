@@ -1,9 +1,11 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "ComponentMesh.h"
-#include "ComponentCamera.h"
-#include "glmath.h"
+#include "MathGeoLib.h"
+
+class GameObject;
+class ComponentCamera;
+
 
 class ModuleEditorCam : public Module
 {
@@ -17,5 +19,7 @@ public:
 	bool Start();
 	update_status Update(float dt);
 	bool CleanUp();
+
+	GameObject* MouseRaycast(Ray ray);
 
 };

@@ -1,10 +1,10 @@
-#include "Globals.h"
 #include "Application.h"
-#include "PhysBody3D.h"
 #include "ModuleEditorCam.h"
-#include "glmath.h"
-
-#include "MathGeoLib.h"
+#include "ComponentMesh.h"
+#include "ComponentCamera.h"
+#include "ComponentAABB.h"
+#include "GameObject.h"
+#include "RayHit.h"
 
 #include "Bullet/include/btBulletDynamicsCommon.h"
 
@@ -65,6 +65,13 @@ update_status ModuleEditorCam::Update(float dt)
 
 		dx = dy = 0;
 	}
+	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)							   // mouse raycast
+	{
+		float x, y;
+		App->input->GetMouseNormalized(x, y);
+		Ray ray = cam->GetRayFromMousePos(x, y);
+		App->scene_intro->selected_game_obj = MouseRaycast(ray);
+	}
 
 	float speed = 3.0f * dt;
 
@@ -89,3 +96,33 @@ update_status ModuleEditorCam::Update(float dt)
 
 	return UPDATE_CONTINUE;
 }
+
+bool sortNearestHit(const RayHit& a, const RayHit& b) { return a.hit_distance < b.hit_distance; }
+
+GameObject* ModuleEditorCam::MouseRaycast(Ray ray) {
+
+	std::list<RayHit> hits;
+	std::list<GameObject*>* game_objects = &App->scene_intro->game_objects;
+
+	for (std::list<GameObject*>::iterator it = game_objects->begin(); it != game_objects->end(); it++) 
+		(*it)->RayCastAgainstAABBs(ray, hits);
+
+
+	if (hits.empty())
+		return nullptr;
+	else {
+		std::list<RayHit> tri_hits;
+		
+		hits.sort(sortNearestHit);
+		for (std::list<RayHit>::iterator it = hits.begin(); it != hits.end(); it++)
+			(*it).object->RayCastAgainstMeshes(ray, tri_hits);
+
+		if (tri_hits.empty())
+			return nullptr;
+		else {
+			tri_hits.sort(sortNearestHit);
+			return tri_hits.front().object;
+		}
+	}
+}
+

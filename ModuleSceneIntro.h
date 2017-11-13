@@ -21,6 +21,7 @@ public:
 public:
 
 	std::list<GameObject*> game_objects;
+	GameObject* selected_game_obj = nullptr;
 
 	std::vector<ComponentMaterial*> materials;
 

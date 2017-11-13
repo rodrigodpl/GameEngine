@@ -108,6 +108,11 @@ bool ComponentCamera::FrustumCulling(const ComponentAABB& aabb)
 	return false;
 }
 
+Ray ComponentCamera::GetRayFromMousePos(float x_normalized, float y_normalized)
+{
+	return frustum->UnProjectLineSegment(x_normalized, y_normalized).ToRay();
+}
+
 
 float* ComponentCamera::ViewMatrix()
 { 

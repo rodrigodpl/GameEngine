@@ -30,6 +30,8 @@ public:
 
 	void Draw();
 
+	AABB GetMatGeoLibAABB();
+
 };
 
 class ObjectBB {

@@ -35,6 +35,7 @@ public:
 	float* ProjectionMatrix();
 
 	bool FrustumCulling(const ComponentAABB& aabb);
+	Ray GetRayFromMousePos(float x_normalized, float y_normalized);
 public:
 
 	ComponentTransform* transform = nullptr;
