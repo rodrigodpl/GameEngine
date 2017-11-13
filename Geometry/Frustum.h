@@ -154,8 +154,6 @@ private:
 		float orthographicHeight;
 	};
 
-	void WorldMatrixChanged();
-	void ProjectionMatrixChanged();
 
 	// Frustums are typically used in batch culling operations. Therefore the matrices associated with a Frustum are cached
 	// for immediate access.
@@ -174,6 +172,9 @@ public:
 		[opaque-qtscript] @todo remove the opaque-qtscript attribute.
 		@see type, pos, front, up, nearPlaneDistance, projectiveSpace, handedness, farPlaneDistance, horizontalFov, verticalFov, orthographicWidth, orthographicHeight. */
 	Frustum();
+
+	void WorldMatrixChanged();
+	void ProjectionMatrixChanged();
 
 	/// Sets the type of this Frustum.
 	/** @note Calling this function recomputes the cached view and projection matrices of this Frustum.

@@ -60,6 +60,8 @@ public:
 		return mouse_y_motion;
 	}
 
+	void GetMouseNormalized(float& x, float& y);
+
 private:
 	KEY_STATE* keyboard;
 	KEY_STATE mouse_buttons[MAX_MOUSE_BUTTONS];

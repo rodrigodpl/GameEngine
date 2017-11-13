@@ -1,9 +1,14 @@
 #pragma once
 
 #include "Component.h"
+#include "RayHit.h"
+#include "MathGeoLib.h"
 
 #include <vector>
 #include <string>
+#include <list>
+
+class ComponentCamera;
 
 class GameObject
 {
@@ -21,6 +26,9 @@ public:
 
 	void DrawRecursive();
 	void CreateTree();
+	void CullRecursive(ComponentCamera* cam);
+	void RayCastAgainstAABBs(Ray ray, std::list<RayHit>& outHits);    // recursive
+	void RayCastAgainstMeshes(Ray ray, std::list<RayHit>& outHits);     // not recursive
 
 public:
 
@@ -29,4 +37,7 @@ public:
 	std::vector<Component*> components;
 	std::vector<GameObject*> children;
 
+	bool culled = false;
+
 };
+

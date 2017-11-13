@@ -1,6 +1,7 @@
 #include "ModuleGui.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
+#include "ImGuizmo.h"
 #include "Globals.h"
 #include "Application.h"
 
@@ -28,6 +29,7 @@ bool ModuleGui::Start() {
 update_status ModuleGui::PreUpdate(float dt) {
 	//  Main Menu -------
 	ImGui_ImplSdl_NewFrame(App->window->window);
+	ImGuizmo::BeginFrame();
 
 	if (ImGui::BeginMainMenuBar())
 	{

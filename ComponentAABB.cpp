@@ -249,6 +249,7 @@ float ComponentAABB::GetMaxZ() {
 	return max_z;
 }
 
+
 ObjectBB::ObjectBB(ComponentAABB& parent_aabb) {
 
 	vertices = new float[BB_VERTNUM];
@@ -263,3 +264,4 @@ ObjectBB::ObjectBB(ComponentAABB& parent_aabb) {
 		vertices[i + 2] = parent_aabb.vertices[i + 2] - center_Z;
 	}
 }
+

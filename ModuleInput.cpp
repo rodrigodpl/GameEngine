@@ -145,6 +145,12 @@ update_status ModuleInput::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
+void ModuleInput::GetMouseNormalized(float& x, float& y) 
+{
+	x = ((((float)mouse_x / SCREEN_WIDTH ) - 0.5) * 2);               // TODO: this should take in account any possible screen size
+	y = ((((float)mouse_y / SCREEN_HEIGHT) - 0.5) * 2);
+}
+
 // Called before quitting
 bool ModuleInput::CleanUp()
 {

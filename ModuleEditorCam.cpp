@@ -1,10 +1,10 @@
-#include "Globals.h"
 #include "Application.h"
-#include "PhysBody3D.h"
 #include "ModuleEditorCam.h"
-#include "glmath.h"
-
-#include "MathGeoLib.h"
+#include "ComponentMesh.h"
+#include "ComponentCamera.h"
+#include "ComponentAABB.h"
+#include "GameObject.h"
+#include "RayHit.h"
 
 #include "Bullet/include/btBulletDynamicsCommon.h"
 
@@ -20,16 +20,21 @@
 
 
 ModuleEditorCam::ModuleEditorCam(Application* app, bool start_enabled) : Module(app, start_enabled)
-{
+{}
+
+ModuleEditorCam::~ModuleEditorCam()
+{}
+
+bool ModuleEditorCam::Start() {
+
 	cam = new ComponentCamera({ 0, 2, -5 });
 	GameObject* cam_game_obj = new GameObject("Main_Camera");
 
 	cam_game_obj->components.push_back(cam);
 	App->scene_intro->game_objects.push_back(cam_game_obj);
-}
 
-ModuleEditorCam::~ModuleEditorCam()
-{}
+	return cam;
+}
 
 // ----------------------------------------------------------------
 bool ModuleEditorCam::CleanUp()
@@ -43,105 +48,81 @@ bool ModuleEditorCam::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleEditorCam::Update(float dt)
 {
-	// Implement a debug camera with keys and mouse
-	// Now we can make this movememnt frame rate independant!
+	float dx = 0;  float dy = 0;  float dz = 0;
 
-	//vec3 newPos(0,0,0);
-	//float speed = 3.0f * dt;
+	// Look at (0,0,0)
+	if (App->input->GetKey(SDL_SCANCODE_F))
+		cam->LookAt({ 0,0,0 });
 
-	//// Mouse motion ----------------
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT) {
 
-	//if (App->input->GetKey(SDL_SCANCODE_F))
-	//	cam->LookAt(vec3(0, 0, 0));
+		//mouse motion
+		dx = -App->input->GetMouseXMotion();
+		dy = -App->input->GetMouseYMotion();
 
+		if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)      cam->LookAround(dx, dy);    // look around							
+		else if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)  cam->Orbit(dx, dy);	       // orbit around reference
 
-	//if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT) {
-	//	// look around
+		dx = dy = 0;
+	}
+	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)							   // mouse raycast
+	{
+		float x, y;
+		App->input->GetMouseNormalized(x, y);
+		Ray ray = cam->GetRayFromMousePos(x, y);
+		App->scene_intro->selected_game_obj = MouseRaycast(ray);
+	}
 
-	//	btVector3 VecPostoRef(cam->Reference.x - cam->Position.x, cam->Reference.y - cam->Position.y, cam->Reference.z - cam->Position.z);
+	float speed = 3.0f * dt;
 
-	//	int dx = -App->input->GetMouseXMotion();
-	//	int dy = -App->input->GetMouseYMotion();
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+		speed = 6.0f * dt;
 
-	//	float Sensitivity = 0.015f;
+	// key motion
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) dz += speed;
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) dz -= speed;
 
-	//	if (dx != 0)
-	//	{
-	//		float DeltaX = (float)dx * Sensitivity;
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) dx += speed;
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) dx -= speed;
 
-	//		VecPostoRef = VecPostoRef.rotate(btVector3(0, 1, 0), DeltaX);
-	//	}
-	//	if (dy != 0)
-	//	{
-	//		float DeltaY = (float)dy * Sensitivity;
-	//		
-	//		btVector3 axis(cam->X.x, cam->X.y, cam->X.y);
-	//		VecPostoRef = VecPostoRef.rotate(axis.normalized(), DeltaY);
-	//	}
+	if (App->input->GetKey(SDL_SCANCODE_J) == KEY_REPEAT) dy += speed;
+	if (App->input->GetKey(SDL_SCANCODE_K) == KEY_REPEAT) dy -= speed;
 
+	// Movement in camera axis
+	cam->Move(dx, dy, dz);
 
-	//	cam->Reference = { cam->Position.x + VecPostoRef.x(), cam->Position.y + VecPostoRef.y(), cam->Position.z + VecPostoRef.z()};
-	//	cam->LookAt(cam->Reference);
-
-	//}
-	//else if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT) {
-	//	// orbit around reference
-
-	//	int dx = -App->input->GetMouseXMotion();
-	//	int dy = -App->input->GetMouseYMotion();
-
-	//	float Sensitivity = 0.25f;
-
-	//	cam->Position -= cam->Reference;
-
-	//	if (dx != 0)
-	//	{
-	//		float DeltaX = (float)dx * Sensitivity;
-
-	//		cam->X = rotate(cam->X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-	//		cam->Y = rotate(cam->Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-	//		cam->Z = rotate(cam->Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-	//	}
-
-	//	if (dy != 0)
-	//	{
-	//		float DeltaY = (float)dy * Sensitivity;
-
-	//		cam->Y = rotate(cam->Y, DeltaY, cam->X);
-	//		cam->Z = rotate(cam->Z, DeltaY, cam->X);
-
-	//		if (cam->Y.y < 0.0f)
-	//		{
-	//			cam->Z = vec3(0.0f, cam->Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-	//			cam->Y = cross(cam->Z, cam->X);
-	//		}
-	//	}
-
-	//	cam->Position = cam->Reference + cam->Z * length(cam->Position);
-
-	//}
-
-	//if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-	//	speed = 8.0f * dt;
-
-	//if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= cam->Z * speed;
-	//if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += cam->Z * speed;
-
-
-	//if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= cam->X * speed;
-	//if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += cam->X * speed;
-
-	//cam->Position += newPos;
-	//cam->Reference += newPos;
-
-	//if (App->input->GetMouseZ() > 0)                // zoom in
-	//	cam->Position += (cam->Reference - cam->Position) * 0.1f;
-	//else if (App->input->GetMouseZ() < 0)           // zoom out
-	//	cam->Position += (cam->Position - cam->Reference) * 0.1f;
-
-
-	//// Recalculate matrix -------------
-	//cam->CalculateViewMatrix();
+	// Zoom in/out
+	cam->Zoom(App->input->GetMouseZ());
 
 	return UPDATE_CONTINUE;
 }
+
+bool sortNearestHit(const RayHit& a, const RayHit& b) { return a.hit_distance < b.hit_distance; }
+
+GameObject* ModuleEditorCam::MouseRaycast(Ray ray) {
+
+	std::list<RayHit> hits;
+	std::list<GameObject*>* game_objects = &App->scene_intro->game_objects;
+
+	for (std::list<GameObject*>::iterator it = game_objects->begin(); it != game_objects->end(); it++) 
+		(*it)->RayCastAgainstAABBs(ray, hits);
+
+
+	if (hits.empty())
+		return nullptr;
+	else {
+		std::list<RayHit> tri_hits;
+		
+		hits.sort(sortNearestHit);
+		for (std::list<RayHit>::iterator it = hits.begin(); it != hits.end(); it++)
+			(*it).object->RayCastAgainstMeshes(ray, tri_hits);
+
+		if (tri_hits.empty())
+			return nullptr;
+		else {
+			tri_hits.sort(sortNearestHit);
+			return tri_hits.front().object;
+		}
+	}
+}
+
