@@ -38,4 +38,5 @@ public:
 	std::vector<std::string> GetFilesInDir(const char* dir, bool append_root_folder = false);
 	unsigned int Save(const char* file_name, const char* data, const char* write_dir, unsigned int size) const;
 	void CreateDir(const char* path, bool hidden);
+
 };

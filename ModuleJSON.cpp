@@ -36,6 +36,8 @@ bool ModuleJSON::Start() {
 
 	config = LoadFile("config.json");
 
+	OpenFile("test.json", LIBRARY_BASE_PATH);
+
 	return true;
 }
 
@@ -46,7 +48,7 @@ bool ModuleJSON::CleanUp() {
 	return true;
 }
 
-JSON_file* ModuleJSON::LoadFile(const char * path)
+JSON_file* ModuleJSON::LoadFile(const char* path)
 {
 
 	JSON_Value *user_data = json_parse_file(path);
@@ -63,6 +65,24 @@ JSON_file* ModuleJSON::LoadFile(const char * path)
 	return nullptr;
 }
 
+JSON_file* ModuleJSON::OpenFile(const char* filename, const char* write_dir)
+{
+	JSON_file* file = nullptr;
+	if (!App->fs->Exists(filename))
+	{
+		if (App->fs->Save(filename, "", write_dir, 0))
+		{
+			std::string full_path(write_dir);
+			full_path.append(filename);
+
+			file = LoadFile(full_path.c_str());
+		}
+		else
+			App->gui->app_log.AddLog("Error creating %s file in %s directory !\n", filename, write_dir);
+	}
+
+	return file;
+}
 
 JSON_file::JSON_file(JSON_Value * value, JSON_Object * object, const char * path) : value(value), object(object), path(path)
 {}

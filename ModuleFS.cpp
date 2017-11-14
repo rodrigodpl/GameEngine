@@ -126,7 +126,6 @@ unsigned int ModuleFS::Save(const char* file_name, const char* data, const char*
 {
 	unsigned int ret = 0;
 
-
 	if (PHYSFS_setWriteDir(write_dir) != 0) {
 
 		PHYSFS_file* fs_file = PHYSFS_openWrite(file_name);
