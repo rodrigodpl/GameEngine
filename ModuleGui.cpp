@@ -236,7 +236,25 @@ void ModuleGui::Draw() {
 		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Properties", &draw_properties, ImGuiWindowFlags_ShowBorders);
 		if (ImGui::CollapsingHeader("Transformation")) {
-
+			//Position
+			if (ImGui::CollapsingHeader("Position")) {
+				//App->scene_intro->selected_game_obj
+				/*ImGui::InputInt("", &transX); ImGui::SameLine();
+				ImGui::InputInt("", &transY); ImGui::SameLine();
+				ImGui::InputInt("", &transZ);*/
+			}
+			//Rotation
+			if (ImGui::CollapsingHeader("Rotation")) {
+				/*ImGui::SliderFloat("", &rotX, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
+				ImGui::SliderFloat("", &rotY, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
+				ImGui::SliderFloat("", &rotZ, -180.0f, 180.0f, "%.0f");*/
+			}
+			//Scale
+			if (ImGui::CollapsingHeader("Scale")) {
+				/*ImGui::InputInt("", &scaleX); ImGui::SameLine();
+				ImGui::InputInt("", &scaleY); ImGui::SameLine();
+				ImGui::InputInt("", &scaleZ);*/
+			}
 		}
 		if (ImGui::CollapsingHeader("Geometry")) {
 			//ImGui::Text("# Indices: "); ImGui::SameLine();
@@ -270,27 +288,6 @@ void ModuleGui::Draw() {
 		}*/
 		ImGui::SliderFloat("", &dt, 0.0f, 1.0f, "%.2f");
 		App->Changedt(dt);
-		ImGui::End();
-	}
-
-	if (draw_transform) {
-		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
-		ImGui::Begin("Transform", &draw_transform, ImGuiWindowFlags_ShowBorders);
-		//Position
-		//ImGui::Text("Transformation");
-		//ImGui::InputInt("", &transX); ImGui::SameLine();
-		//ImGui::InputInt("", &transY); ImGui::SameLine();
-		//ImGui::InputInt("", &transZ);
-		//Rotation
-		//ImGui::Text("Rotation");
-		//ImGui::SliderFloat("", &rotX, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
-		//ImGui::SliderFloat("", &rotY, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
-		//ImGui::SliderFloat("", &rotZ, -180.0f, 180.0f, "%.0f");
-		//Scale
-		//ImGui::Text("Scale");
-		//ImGui::InputInt("", &scaleX); ImGui::SameLine();
-		//ImGui::InputInt("", &scaleY); ImGui::SameLine();
-		//ImGui::InputInt("", &scaleZ);
 		ImGui::End();
 	}
 
