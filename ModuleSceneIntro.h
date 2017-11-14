@@ -1,8 +1,8 @@
 #pragma once
 #include "Module.h"
 
-#include <list>
 #include <vector>
+#include <string>
 
 class ComponentMaterial;
 class GameObject;
@@ -20,7 +20,7 @@ public:
 	void DrawScene();
 public:
 
-	std::list<GameObject*> game_objects;
+	std::vector<GameObject*> game_objects;
 	GameObject* selected_game_obj = nullptr;
 
 	std::vector<ComponentMaterial*> materials;

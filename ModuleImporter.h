@@ -8,7 +8,14 @@
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
 
-#include <list>
+enum supported_extensions
+{
+	UNKNOWN,
+	PNG,
+	FBX,
+	WAV
+};
+
 
 class ModuleImporter : public Module
 {
@@ -23,5 +30,7 @@ public:
 	GameObject* LoadNodeRecursive(aiNode* node, const aiScene* scene, GameObject* parent = nullptr);
 
 	uint LoadImg(const char* full_path);
+
+	void LoadAssets(std::vector<std::string> files);
 
 };

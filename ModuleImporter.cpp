@@ -36,6 +36,8 @@ bool ModuleImporter::Start() {
 	ilutInit();
 	ilutRenderer(ILUT_OPENGL);
 
+	LoadAssets(App->fs->GetFilesInDir(ASSETS_BASE_PATH, true));
+
 	return true;
 }
 
@@ -95,7 +97,7 @@ GameObject* ModuleImporter::LoadNodeRecursive(aiNode* node, const aiScene* scene
 
 	//meshes and materials
 	App->gui->app_log.AddLog("Number of meshes %d\n", node->mNumMeshes);
-	for (int i = 0; i < node->mNumMeshes; i++) {
+	for (uint i = 0; i < node->mNumMeshes; i++) {
 
 		aiMesh* imp_mesh = scene->mMeshes[node->mMeshes[i]];
 
@@ -111,7 +113,7 @@ GameObject* ModuleImporter::LoadNodeRecursive(aiNode* node, const aiScene* scene
 	game_object->components.push_back(aabb);
 
 	//children
-	for (int i = 0; i < node->mNumChildren; i++) {
+	for (uint i = 0; i < node->mNumChildren; i++) {
 
 		aiNode* child_node = node->mChildren[i];
 		game_object->children.push_back(LoadNodeRecursive(child_node, scene, game_object));
@@ -123,7 +125,35 @@ GameObject* ModuleImporter::LoadNodeRecursive(aiNode* node, const aiScene* scene
 uint ModuleImporter::LoadImg(const char* full_path) 
 {
 	App->scene_intro->materials.push_back(new ComponentMaterial(full_path));
-
 	return (App->scene_intro->materials.size() - 1);
+}
+
+
+
+void ModuleImporter::LoadAssets(std::vector<std::string> files) 
+{
+	bool ret = false;
+
+	for (std::vector<std::string>::iterator filename = files.begin(); filename != files.end(); filename++)
+	{
+		std::string extension;
+		supported_extensions file_type = UNKNOWN;
+
+		extension.append(&(*filename).at((*filename).find_last_of(".") + 1));
+
+		if (extension == "png" || extension == "PNG")       file_type = PNG;
+		else if (extension == "fbx" || extension == "FBX")  file_type = FBX;
+		else if (extension == "wav" || extension == "WAV")  file_type = WAV;
+
+		switch (file_type) 
+		{
+		case PNG: LoadImg((*filename).c_str());
+		case FBX: App->scene_intro->game_objects.push_back(LoadFBX((*filename).c_str()));
+		case WAV: // LoadWav((*filename).c_str());
+
+		default: App->gui->app_log.AddLog("error loading file %s\n", (*filename).c_str());;
+		}
+	}
+
 }
 

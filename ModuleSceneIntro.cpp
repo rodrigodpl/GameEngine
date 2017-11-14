@@ -23,7 +23,7 @@ bool ModuleSceneIntro::Start()
 
 	srand(time(NULL));
 
-	game_objects.push_back(App->importer->LoadFBX("../Assets/BakerHouse.fbx"));
+	//game_objects.push_back(App->importer->LoadFBX("Assets/BakerHouse.fbx"));
 	//App->importer->LoadFBX("Test_files/Spaceship.fbx");
 
 	GameObject* floor = new GameObject("floor plane");
@@ -51,7 +51,7 @@ update_status ModuleSceneIntro::Update(float dt)
 
 void ModuleSceneIntro::DrawScene()
 {
-	for (std::list<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); it++) {
+	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); it++) {
 		(*it)->CullRecursive(App->camera->cam);
 		(*it)->DrawRecursive();
 	}

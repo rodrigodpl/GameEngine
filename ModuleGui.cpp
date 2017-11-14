@@ -294,7 +294,7 @@ void ModuleGui::Draw() {
 	if (draw_hierarchy) {
 		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Hierarchy", &draw_transform, ImGuiWindowFlags_ShowBorders);
-		for (std::list<GameObject*>::iterator it = App->scene_intro->game_objects.begin(); it != App->scene_intro->game_objects.end(); it++) {
+		for (std::vector<GameObject*>::iterator it = App->scene_intro->game_objects.begin(); it != App->scene_intro->game_objects.end(); it++) {
 			(*it)->CreateTree();
 		}
 

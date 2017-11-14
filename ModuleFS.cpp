@@ -4,12 +4,20 @@
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
 
 #include "PhysFS\include\physfs.h"
+
+#include <string>
+
 ModuleFS::ModuleFS(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	base_path = SDL_GetBasePath();
 	PHYSFS_init(base_path);
 
 	AddPath(".");
+
+	CreateDir(LIBRARY_BASE_PATH, true);
+	CreateDir(LIBRARY_MESHES_PATH, true);
+	CreateDir(LIBRARY_TEXTURES_PATH, true);
+
 }
 
 ModuleFS::~ModuleFS()
@@ -20,19 +28,7 @@ ModuleFS::~ModuleFS()
 bool ModuleFS::Start()
 {
 	App->gui->app_log.AddLog("Loading File System\n");
-	bool ret = true;
-
-	write_path = SDL_GetPrefPath("UPC DDV", "SpaceEngine");
-
-	if(PHYSFS_setWriteDir(write_path) == 0)
-		App->gui->app_log.AddLog("File System error while creating write dir: %s\n", PHYSFS_getLastError());
-	else
-	{
-		App->gui->app_log.AddLog("Writing directory:\n %s\n", write_path);
-		AddPath(write_path, GetSaveDirectory());
-	}
-
-	return ret;
+	return true;
 }
 
 bool ModuleFS::CleanUp()
@@ -65,7 +61,7 @@ bool ModuleFS::IsDirectory(const char* file) const
 }
 
 // Read a whole file and put it in a new buffer
-unsigned int ModuleFS::Load(const char* file, char** buffer) const
+unsigned int ModuleFS::Load(const char* file, char* buffer) const
 {
 	unsigned int ret = 0;
 
@@ -77,8 +73,8 @@ unsigned int ModuleFS::Load(const char* file, char** buffer) const
 
 		if(size > 0)
 		{
-			*buffer = new char[(uint)size];
-			PHYSFS_sint64 readed = PHYSFS_read(fs_file, *buffer, 1, (PHYSFS_sint32)size);
+			buffer = new char[(uint)size];
+			PHYSFS_sint64 readed = PHYSFS_read(fs_file, buffer, 1, (PHYSFS_sint32)size);
 			if(readed != size)
 			{
 				App->gui->app_log.AddLog("File System error while reading from file %s: %s\n", file, PHYSFS_getLastError());
@@ -102,7 +98,7 @@ unsigned int ModuleFS::Load(const char* file, char** buffer) const
 SDL_RWops* ModuleFS::Load(const char* file) const
 {
 	char* buffer;
-	int size = Load(file, &buffer);
+	int size = Load(file, buffer);
 
 	if(size > 0)
 	{
@@ -126,25 +122,68 @@ int close_sdl_rwops(SDL_RWops *rw)
 }
 
 // Save a whole buffer to disk
-unsigned int ModuleFS::Save(const char* file, const char* buffer, unsigned int size) const
+unsigned int ModuleFS::Save(const char* file_name, const char* data, const char* write_dir, unsigned int size)const
 {
 	unsigned int ret = 0;
 
-	PHYSFS_file* fs_file = PHYSFS_openWrite(file);
 
-	if(fs_file != NULL)
-	{
-		PHYSFS_sint64 written = PHYSFS_write(fs_file, (const void*)buffer, 1, size);
-		if(written != size)
-			App->gui->app_log.AddLog("File System error while writing to file %s: %s\n", file, PHYSFS_getLastError());
+	if (PHYSFS_setWriteDir(write_dir) != 0) {
+
+		PHYSFS_file* fs_file = PHYSFS_openWrite(file_name);
+
+		if (fs_file != NULL)
+		{
+			PHYSFS_sint64 written = PHYSFS_write(fs_file, (const void*)data, 1, size);
+			if (written != size)
+				App->gui->app_log.AddLog("File System error while writing to file %s: %s\n", file_name, PHYSFS_getLastError());
+			else
+				ret = (uint)written;
+
+			if (PHYSFS_close(fs_file) == 0)
+				App->gui->app_log.AddLog("File System error while closing file %s: %s\n", file_name, PHYSFS_getLastError());
+		}
 		else
-			ret = (uint) written;
-
-		if(PHYSFS_close(fs_file) == 0)
-			App->gui->app_log.AddLog("File System error while closing file %s: %s\n", file, PHYSFS_getLastError());
+			App->gui->app_log.AddLog("File System error while opening file %s: %s\n", file_name, PHYSFS_getLastError());
 	}
 	else
-		App->gui->app_log.AddLog("File System error while opening file %s: %s\n", file, PHYSFS_getLastError());
+		App->gui->app_log.AddLog("File System error while setting write dir  %s: %s\n", write_dir, PHYSFS_getLastError());
 
 	return ret;
+}
+
+
+void ModuleFS::CreateDir(const char* path, bool hidden)
+{
+	DWORD ftyp = GetFileAttributesA(path);
+	LPCSTR file = path;
+	if (ftyp == INVALID_FILE_ATTRIBUTES) {
+		CreateDirectory(file, NULL);
+		if (hidden) SetFileAttributes(file, FILE_ATTRIBUTE_HIDDEN);
+	}
+
+	if (ftyp & FILE_ATTRIBUTE_DIRECTORY);
+	//It exists
+}
+
+std::vector<std::string> ModuleFS::GetFilesInDir(const char* dir, bool append_root_folder)
+{
+	std::vector<std::string> files;
+	char** assets = PHYSFS_enumerateFiles(dir);
+
+	if (assets != nullptr) {
+
+		for (int i = 0; assets[i] != nullptr; i++)
+		{
+			std::string path(assets[i]);
+
+			if (append_root_folder) {
+				path.insert(0, "/");
+				path.insert(0, dir);
+			}
+
+			files.push_back(path);
+		}
+	}
+	PHYSFS_freeList(assets);
+	return files;
 }

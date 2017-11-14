@@ -70,11 +70,6 @@ bool Application::Init()
 		ret = item->data->Start();
 		item = item->next;
 	}
-
-	Createdir("../Library", true);
-	Createdir("../Library/Meshes", true);
-	Createdir("../Library/Materials", true);
-	Createdir("../Library/Animation", true);
 	
 	ms_timer.Start();
 	return ret;
@@ -151,17 +146,4 @@ float Application::Getdt() {
 
 void Application::Changedt(float newdt) {
 	dtmod = newdt;
-}
-
-void Application::Createdir(const std::string& path, bool hidden)
-{
-	DWORD ftyp = GetFileAttributesA(path.c_str());
-	LPCSTR file = path.c_str();
-	if (ftyp == INVALID_FILE_ATTRIBUTES) {
-		CreateDirectory(file, NULL);
-		if (hidden) SetFileAttributes(file, FILE_ATTRIBUTE_HIDDEN);
-	}
-
-	if (ftyp & FILE_ATTRIBUTE_DIRECTORY);
-		//It exists
 }

@@ -102,11 +102,10 @@ bool sortNearestHit(const RayHit& a, const RayHit& b) { return a.hit_distance < 
 GameObject* ModuleEditorCam::MouseRaycast(Ray ray) {
 
 	std::list<RayHit> hits;
-	std::list<GameObject*>* game_objects = &App->scene_intro->game_objects;
+	std::vector<GameObject*>* game_objects = &App->scene_intro->game_objects;
 
-	for (std::list<GameObject*>::iterator it = game_objects->begin(); it != game_objects->end(); it++) 
+	for (std::vector<GameObject*>::iterator it = game_objects->begin(); it != game_objects->end(); it++)
 		(*it)->RayCastAgainstAABBs(ray, hits);
-
 
 	if (hits.empty())
 		return nullptr;
