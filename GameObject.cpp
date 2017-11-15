@@ -3,25 +3,28 @@
 #include "imgui.h"
 #include "ComponentCamera.h"
 #include "ComponentAABB.h"
+#include "MD5.h"
 
-GameObject::GameObject(const char* obj_name, GameObject* parent) : name(obj_name), parent(parent)
-{}
+GameObject::GameObject(const char* obj_name, GameObject* parent) : name(obj_name), parent(parent), uid(CreateUID(name.c_str(), name.length()))
+{
 
-GameObject::GameObject(GameObject& game_obj) {
+}
 
+GameObject::GameObject(GameObject& game_obj) 
+{
 	parent = game_obj.parent;
 	name = game_obj.name + "_copy";
+	uid = CreateUID(name.c_str(), name.length());
 
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++) 
 		components.push_back((*it)->Duplicate());
-	
 
 	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
 		children.push_back(new GameObject(*(*it)));
 }
 
-GameObject::~GameObject() {
-
+GameObject::~GameObject() 
+{
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++) {
 		if ((*it)->type == COMPONENT_MATERIAL)    //  materials are stored and deleted by scene_intro
 			delete *it;

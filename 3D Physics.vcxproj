@@ -84,6 +84,7 @@
     <ClInclude Include="ComponentMesh.h" />
     <ClInclude Include="ComponentTransform.h" />
     <ClInclude Include="ImGuizmo.h" />
+    <ClInclude Include="MD5.h" />
     <ClInclude Include="ModuleFS.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="glmath.h" />
@@ -156,6 +157,7 @@
     <ClCompile Include="Math\Quat.cpp" />
     <ClCompile Include="Math\SSEMath.cpp" />
     <ClCompile Include="Math\TransformOps.cpp" />
+    <ClCompile Include="MD5.cpp" />
     <ClCompile Include="ModuleFS.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="glmath.cpp" />

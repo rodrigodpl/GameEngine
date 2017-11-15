@@ -34,6 +34,7 @@ public:
 
 	GameObject* parent;
 	std::string name;
+	std::string uid;
 	std::vector<Component*> components;
 	std::vector<GameObject*> children;
 

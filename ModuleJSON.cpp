@@ -36,7 +36,11 @@ bool ModuleJSON::Start() {
 
 	config = LoadFile("config.json");
 
-	OpenFile("test.json", LIBRARY_BASE_PATH);
+	test = OpenFile("test.json", LIBRARY_BASE_PATH);
+	
+	test->WriteNumber("vert:", 2);
+	test->WriteNumber("vert2:", 3);
+	test->Save();
 
 	return true;
 }
@@ -70,9 +74,10 @@ JSON_file* ModuleJSON::OpenFile(const char* filename, const char* write_dir)
 	JSON_file* file = nullptr;
 	if (!App->fs->Exists(filename))
 	{
-		if (App->fs->Save(filename, "", write_dir, 0))
+		if (App->fs->Save(filename, "{\n}", write_dir, 4))
 		{
 			std::string full_path(write_dir);
+			full_path.append("\\");
 			full_path.append(filename);
 
 			file = LoadFile(full_path.c_str());

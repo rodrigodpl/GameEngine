@@ -42,5 +42,8 @@ public:
 	JSON_file* LoadFile(const char* path);
 	JSON_file* OpenFile(const char* filename, const char* write_dir);    // if file does not exist, it will create it
 	
-	JSON_file* config;
+public:
+
+	JSON_file* config = nullptr;
+	JSON_file* test;
 };
