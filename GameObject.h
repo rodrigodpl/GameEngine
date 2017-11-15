@@ -9,6 +9,7 @@
 #include <list>
 
 class ComponentCamera;
+class JSON_file;
 
 class GameObject
 {
@@ -19,16 +20,20 @@ public:
 
 	~GameObject();
 
-	void UpdateRecursive(float dt);
 	Component* FindComponent(Component_type type);
 	std::vector<Component*> FindComponents(Component_type type);
 	GameObject* FindChild(const char* name);
 
+	void UpdateRecursive(float dt);
 	void DrawRecursive();
-	void CreateTree();
 	void CullRecursive(ComponentCamera* cam);
+
+	void CreateTree();
+
 	void RayCastAgainstAABBs(Ray ray, std::list<RayHit>& outHits);    // recursive
 	void RayCastAgainstMeshes(Ray ray, std::list<RayHit>& outHits);     // not recursive
+
+	void Serialize(JSON_file& save_file);
 
 public:
 
@@ -39,6 +44,6 @@ public:
 	std::vector<GameObject*> children;
 
 	bool culled = false;
-
+	bool enabled = true;
 };
 

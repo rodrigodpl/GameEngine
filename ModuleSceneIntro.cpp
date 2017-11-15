@@ -36,6 +36,14 @@ bool ModuleSceneIntro::Start()
 // Load assets
 bool ModuleSceneIntro::CleanUp()
 {
+
+	JSON_file* save_file = App->json->OpenFile("scene.json", LIBRARY_BASE_PATH);
+
+	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); it++)
+		(*it)->Serialize(*save_file);
+
+	save_file->Save();
+
 	App->gui->app_log.AddLog("Unloading Intro scene\n");
 	materials.clear();
 	game_objects.clear();

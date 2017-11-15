@@ -3,12 +3,11 @@
 #include "imgui.h"
 #include "ComponentCamera.h"
 #include "ComponentAABB.h"
+#include "ModuleJSON.h"
 #include "MD5.h"
 
 GameObject::GameObject(const char* obj_name, GameObject* parent) : name(obj_name), parent(parent), uid(CreateUID(name.c_str(), name.length()))
-{
-
-}
+{}
 
 GameObject::GameObject(GameObject& game_obj) 
 {
@@ -179,4 +178,20 @@ void GameObject::CreateTree()
 
 		ImGui::TreePop();
 	}
+}
+
+void GameObject::Serialize(JSON_file& save_file)
+{
+	std::string base_name = name;
+	base_name.append(".");
+
+	save_file.WriteString(std::string("uid:").insert(0, base_name).c_str(), uid.c_str());
+	save_file.WriteBool(std::string("enabled:").insert(0, base_name).c_str(), enabled);
+	if(parent)
+		save_file.WriteString(std::string("parent:").insert(0, base_name).c_str(), parent->uid.c_str());
+	else
+		save_file.WriteString(std::string("parent:").insert(0, base_name).c_str(), "null");
+
+	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
+		(*it)->Serialize(save_file);
 }

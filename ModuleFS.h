@@ -10,6 +10,7 @@ int close_sdl_rwops(SDL_RWops *rw);
 #define LIBRARY_MESHES_PATH "Library/Meshes"
 #define LIBRARY_TEXTURES_PATH "Library/Textures"
 #define ASSETS_BASE_PATH "Assets"
+#define SETTINGS_BASE_PATH "Settings"
 
 #include <vector>
 #include <string>
@@ -37,6 +38,6 @@ public:
 
 	std::vector<std::string> GetFilesInDir(const char* dir, bool append_root_folder = false);
 	unsigned int Save(const char* file_name, const char* data, const char* write_dir, unsigned int size) const;
-	void CreateDir(const char* path, bool hidden);
+	void CreateDir(const char* path, bool hidden = false);
 
 };

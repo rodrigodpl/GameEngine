@@ -36,12 +36,6 @@ bool ModuleJSON::Start() {
 
 	config = LoadFile("config.json");
 
-	test = OpenFile("test.json", LIBRARY_BASE_PATH);
-	
-	test->WriteNumber("vert:", 2);
-	test->WriteNumber("vert2:", 3);
-	test->Save();
-
 	return true;
 }
 

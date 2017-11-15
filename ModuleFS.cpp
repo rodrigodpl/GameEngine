@@ -15,8 +15,9 @@ ModuleFS::ModuleFS(Application* app, bool start_enabled) : Module(app, start_ena
 	AddPath(".");
 
 	CreateDir(LIBRARY_BASE_PATH, true);
-	CreateDir(LIBRARY_MESHES_PATH, true);
-	CreateDir(LIBRARY_TEXTURES_PATH, true);
+	CreateDir(LIBRARY_MESHES_PATH);
+	CreateDir(LIBRARY_TEXTURES_PATH);
+	CreateDir(SETTINGS_BASE_PATH);
 
 }
 
