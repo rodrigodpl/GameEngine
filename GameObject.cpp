@@ -187,6 +187,7 @@ void GameObject::Serialize(JSON_file& save_file)
 
 	save_file.WriteString(std::string("uid:").insert(0, base_name).c_str(), uid.c_str());
 	save_file.WriteBool(std::string("enabled:").insert(0, base_name).c_str(), enabled);
+
 	if(parent)
 		save_file.WriteString(std::string("parent:").insert(0, base_name).c_str(), parent->uid.c_str());
 	else
