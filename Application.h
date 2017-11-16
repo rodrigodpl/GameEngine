@@ -48,8 +48,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 
-	void SaveModules(JSON_file& config);
-	void LoadModules(JSON_file& config);
+	void SaveModules();
+	void LoadModules();
 
 private:
 
