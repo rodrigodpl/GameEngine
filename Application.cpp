@@ -53,11 +53,14 @@ bool Application::Init()
 	bool ret = true;
 	dtmod = 1.0f;
 	// Call Init() in all modules
+	JSON_file* config = json->OpenFile("config.json", SETTINGS_BASE_PATH);
 	p2List_item<Module*>* item = list_modules.getFirst();
+
+	if (!config) return false;                                 // early exit if config can not be load
 
 	while(item != NULL && ret == true)
 	{
-		ret = item->data->Init();
+		ret = item->data->Init(*config);
 		item = item->next;
 	}
 
@@ -75,7 +78,6 @@ bool Application::Init()
 	return ret;
 }
 
-// ---------------------------------------------
 void Application::PrepareUpdate()
 {
 	dt = ((float)ms_timer.Read() / 1000.0f) / dtmod;

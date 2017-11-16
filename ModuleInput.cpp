@@ -21,19 +21,18 @@ ModuleInput::~ModuleInput()
 }
 
 // Called before render is available
-bool ModuleInput::Init()
+bool ModuleInput::Init(JSON_file& config)
 {
 	App->gui->app_log.AddLog("Init SDL input event system\n");
-	bool ret = true;
 	SDL_Init(0);
 
 	if(SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
 	{
 		App->gui->app_log.AddLog("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
-		ret = false;
+		return false;
 	}
 	
-	return ret;
+	return true;
 }
 
 // Called every draw update

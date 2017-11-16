@@ -24,7 +24,7 @@ ModuleRenderer3D::~ModuleRenderer3D()
 {}
 
 // Called before render is available
-bool ModuleRenderer3D::Init()
+bool ModuleRenderer3D::Init(JSON_file& config)
 {
 	App->gui->app_log.AddLog("Creating 3D Renderer context\n");
 	bool ret = true;
@@ -45,7 +45,8 @@ bool ModuleRenderer3D::Init()
 	App->gui->app_log.AddLog("OpenGL version supported %s\n", glGetString(GL_VERSION));
 	App->gui->app_log.AddLog("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 	
-	if(ret == true)
+	//  (config.ReadBool("renderer.vsync")
+	if(ret)
 	{
 		//Use Vsync
 		if(VSYNC && SDL_GL_SetSwapInterval(1) < 0)
@@ -79,6 +80,8 @@ bool ModuleRenderer3D::Init()
 		glClearDepth(1.0f);
 		
 		//Initialize clear color
+		//Color background_color = config.ReadColor("renderer.background_color");
+		//glClearColor(background_color.r, background_color.g, background_color.b, background_color.a);
 		glClearColor(0.9f, 0.9f, 0.9f, 1.f);
 
 		//Check for error
@@ -89,7 +92,8 @@ bool ModuleRenderer3D::Init()
 			ret = false;
 		}
 		
-		GLfloat LightModelAmbient[] = {0.5f, 0.5f, 0.5f, 1.0f};
+		//Color ambient_light = config.ReadColor("renderer.ambient_light");
+		GLfloat LightModelAmbient[] = { 0.5, 0.5, 0.5, 1.0 };
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
 		
 		lights[0].ref = GL_LIGHT0;

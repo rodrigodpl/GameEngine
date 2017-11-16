@@ -15,6 +15,8 @@
 #include "ModuleJSON.h"
 #include "ModuleFS.h"
 
+class JSON_file;
+
 class Application
 {
 public:

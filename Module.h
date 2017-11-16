@@ -3,7 +3,8 @@
 #include "Globals.h"
 
 class Application;
-struct PhysBody3D;
+class PhysBody3D;
+class JSON_file;
 
 class Module
 {
@@ -19,7 +20,7 @@ public:
 	virtual ~Module()
 	{}
 
-	virtual bool Init() 
+	virtual bool Init(JSON_file& config)
 	{
 		return true; 
 	}
@@ -51,5 +52,6 @@ public:
 
 	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 	{}
+
 
 };

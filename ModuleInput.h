@@ -19,11 +19,9 @@ public:
 	ModuleInput(Application* app, bool start_enabled = true);
 	~ModuleInput();
 
-	bool Init();
+	bool Init(JSON_file& config);
 	update_status PreUpdate(float dt);
 	bool CleanUp();
-
-	char* GetExtension(char* filename);
 
 	KEY_STATE GetKey(int id) const
 	{

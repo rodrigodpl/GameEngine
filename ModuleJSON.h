@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "parson-master\parson.h"
+#include "Color.h"
 
 #include<string>
 #include<list>
@@ -15,10 +16,12 @@ public:
 	void		WriteString	(const char* name, const char* value);
 	void		WriteBool	(const char* name, bool value);
 	void		WriteNumber	(const char* name, float value);
+	void		WriteColor	(const char* name, Color value);
 										 
 	const char* ReadString	(const char* name);
 	bool		ReadBool	(const char* name);
 	float		ReadNumber	(const char* name);
+	Color		ReadColor   (const char* name);
 
 	void Save();
 	void CleanUp();

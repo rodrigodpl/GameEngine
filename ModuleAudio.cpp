@@ -13,7 +13,7 @@ ModuleAudio::~ModuleAudio()
 {}
 
 // Called before render is available
-bool ModuleAudio::Init()
+bool ModuleAudio::Init(JSON_file& config)   // audio channels
 {
 	App->gui->app_log.AddLog("Loading Audio Mixer\n");
 	bool ret = true;

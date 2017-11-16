@@ -11,30 +11,7 @@ ModuleJSON::~ModuleJSON() {}
 
 
 bool ModuleJSON::Start() {
-	std::fstream appendFileToWorkWith;
 
-	appendFileToWorkWith.open("config.json", std::fstream::in | std::fstream::out | std::fstream::app);
-
-	if (!appendFileToWorkWith)
-	{
-		App->gui->app_log.AddLog("Config file not found\n Creating config file\n");
-
-		appendFileToWorkWith.open("config.json", std::fstream::in | std::fstream::out | std::fstream::trunc);
-		appendFileToWorkWith << "{\n";
-		appendFileToWorkWith << "}\n";
-		appendFileToWorkWith.close();
-
-	}
-	else
-	{
-		App->gui->app_log.AddLog("Config file found\n");
-
-		appendFileToWorkWith.close();
-	}
-
-	App->gui->app_log.AddLog("Loading config file\n");
-
-	config = LoadFile("config.json");
 
 	return true;
 }
@@ -42,6 +19,7 @@ bool ModuleJSON::Start() {
 bool ModuleJSON::CleanUp() {
 
 	config->Save();
+	config->CleanUp();
 
 	return true;
 }
@@ -66,19 +44,19 @@ JSON_file* ModuleJSON::LoadFile(const char* path)
 JSON_file* ModuleJSON::OpenFile(const char* filename, const char* write_dir)
 {
 	JSON_file* file = nullptr;
-	if (!App->fs->Exists(filename))
-	{
-		if (App->fs->Save(filename, "{\n}", write_dir, 4))
-		{
-			std::string full_path(write_dir);
-			full_path.append("\\");
-			full_path.append(filename);
 
-			file = LoadFile(full_path.c_str());
-		}
-		else
+	std::string full_path(write_dir);
+	full_path.append("\\");
+	full_path.append(filename);
+
+	if (!App->fs->Exists(full_path.c_str()))
+	{
+		if (App->fs->Save(filename, "{\n}", write_dir, 4) == 0)
 			App->gui->app_log.AddLog("Error creating %s file in %s directory !\n", filename, write_dir);
 	}
+
+	if(!(file = LoadFile(full_path.c_str())));
+		App->gui->app_log.AddLog("Error loading %s file in %s directory !\n", filename, write_dir);
 
 	return file;
 }
