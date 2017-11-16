@@ -1,5 +1,5 @@
 #pragma once
-
+#include "ModuleJSON.h"
 
 enum Component_type {
 
@@ -21,9 +21,13 @@ public:
 
 	virtual Component* Duplicate() { return new Component(); };
 	virtual void Update(float dt) {};
-	virtual void Enable() { enabled = true; };
-	virtual void Disable() { enabled = false; };
 	virtual void Draw() {};
+
+	virtual void Save(JSON_file& save_file, const char* component_code) {};
+	virtual void Load(JSON_file& save_file, const char* component_code) {};
+
+	void Enable() { enabled = true; };
+	void Disable() { enabled = false; };
 
 public:
 	Component_type type = COMPONENT_NONE;

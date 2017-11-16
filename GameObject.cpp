@@ -193,6 +193,17 @@ void GameObject::Serialize(JSON_file& save_file)
 	else
 		save_file.WriteString(std::string("parent:").insert(0, base_name).c_str(), "null");
 
-	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
-		(*it)->Serialize(save_file);
+
+	save_file.WriteNumber(std::string("number of components:").insert(0, base_name).c_str(), components.size());
+	int counter = 0;
+	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
+	{
+		std::string component_code(base_name);
+		component_code.append("components."); component_code.append(std::to_string(counter));;
+		(*it)->Save(save_file, component_code.c_str());
+		counter++;
+	}
+
+	for (std::vector<GameObject*>::iterator it2 = children.begin(); it2 != children.end(); it2++)
+		(*it2)->Serialize(save_file);
 }

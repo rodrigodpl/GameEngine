@@ -7,22 +7,11 @@
 
 class ObjectBB;
 
-class ComponentAABB : public Component {
-
-public:
-	float* vertices = nullptr;
-	ObjectBB* obb = nullptr;                     // obb is created in Init method
-	ComponentTransform* transform;
-
+class BoundingBox : public Component {
 public:
 
-	ComponentAABB(float* vert, int num_vert, ComponentTransform* parent_transform = nullptr);
-	ComponentAABB(ComponentMesh& mesh, ComponentTransform* parent_transform = nullptr);
-	ComponentAABB(GameObject& game_obj);
-	~ComponentAABB();
-
-	void Init(float* vert, int num_vert);
-	void InitFromSeveralMeshes(std::vector<Component*> meshes);
+	void Save(JSON_file& save_file, const char* component_code);
+	//void Load(JSON_file& save_file, const char* component_code);
 
 	float GetMinX(); float GetMaxX();
 	float GetMinY(); float GetMaxY();
@@ -30,9 +19,30 @@ public:
 
 	void Draw();
 
+public:
+	float* vertices = nullptr;
+
 };
 
-class ObjectBB {
+class ComponentAABB : public BoundingBox {
+public:
+
+	ComponentAABB(float* vert, int num_vert, ComponentTransform* parent_transform = nullptr);
+	ComponentAABB(ComponentMesh& mesh, ComponentTransform* parent_transform = nullptr);
+	ComponentAABB(GameObject& game_obj);
+	ComponentAABB(float3 min_p, float3 max_p);
+	~ComponentAABB();
+
+	void Init(float* vert, int num_vert);
+	void InitFromSeveralMeshes(std::vector<Component*> meshes);
+
+public:
+	ObjectBB* obb = nullptr;                     // obb is created in Init method
+	ComponentTransform* transform;
+
+};
+
+class ObjectBB : BoundingBox {
 
 public:
 	float* vertices = nullptr;

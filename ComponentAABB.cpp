@@ -1,7 +1,7 @@
 #include "ComponentAABB.h"
 
-ComponentAABB::ComponentAABB(float* vert, int num_vert, ComponentTransform* parent_transform) {
-
+ComponentAABB::ComponentAABB(float* vert, int num_vert, ComponentTransform* parent_transform)
+{
 	type = COMPONENT_AABB;
 
 	Init(vert, num_vert);
@@ -12,8 +12,8 @@ ComponentAABB::ComponentAABB(float* vert, int num_vert, ComponentTransform* pare
 		transform = new ComponentTransform();
 }
 
-ComponentAABB::ComponentAABB(ComponentMesh& mesh, ComponentTransform* parent_transform) {
-
+ComponentAABB::ComponentAABB(ComponentMesh& mesh, ComponentTransform* parent_transform) 
+{
 	type = COMPONENT_AABB;
 
 	Init(mesh.vertices, mesh.num_vertices * 3);
@@ -24,8 +24,8 @@ ComponentAABB::ComponentAABB(ComponentMesh& mesh, ComponentTransform* parent_tra
 		transform = new ComponentTransform();
 }
 
-ComponentAABB::ComponentAABB(GameObject& game_obj) {
-
+ComponentAABB::ComponentAABB(GameObject& game_obj) 
+{
 	type = COMPONENT_AABB;
 
 	std::vector<Component*> meshes = game_obj.FindComponents(COMPONENT_MESH);
@@ -53,8 +53,8 @@ ComponentAABB::~ComponentAABB()
 		delete transform;
 }
 
-void ComponentAABB::Init(float* vert, int num_vert) {
-
+void ComponentAABB::Init(float* vert, int num_vert) 
+{
 	vertices = new float[BB_VERTNUM];
 
 	if (vert != nullptr && num_vert != 0) {
@@ -97,8 +97,8 @@ void ComponentAABB::Init(float* vert, int num_vert) {
 	obb = new ObjectBB(*this);
 }
 
-void ComponentAABB::InitFromSeveralMeshes(std::vector<Component*> meshes) {
-
+void ComponentAABB::InitFromSeveralMeshes(std::vector<Component*> meshes) 
+{
 	float* total_vert = nullptr;
 	int vert_count = 0;
 
@@ -130,8 +130,8 @@ void ComponentAABB::InitFromSeveralMeshes(std::vector<Component*> meshes) {
 	Init(total_vert, vert_count);
 }
 
-void ComponentAABB::Draw() {
-
+void BoundingBox::Draw() 
+{
 	glLineWidth(2.0f);
 
 	glColor3f(0.0f, 1.0f, 0.0f);
@@ -188,7 +188,32 @@ void ComponentAABB::Draw() {
 
 }
 
-float ComponentAABB::GetMinX() {
+void BoundingBox::Save(JSON_file& save_file, const char* component_code)
+{
+	std::string attribute_code(component_code);
+
+	save_file.WriteNumber(attribute_code.append(".type").c_str(), type);
+
+	attribute_code.clear(); attribute_code.append(component_code); 
+	save_file.WriteNumber(attribute_code.append(".min_point_x").c_str(), GetMinX());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	save_file.WriteNumber(attribute_code.append(".min_point_y").c_str(), GetMinY());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	save_file.WriteNumber(attribute_code.append(".min_point_z").c_str(), GetMinZ());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	save_file.WriteNumber(attribute_code.append(".max_point_x").c_str(), GetMaxX());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	save_file.WriteNumber(attribute_code.append(".max_point_y").c_str(), GetMaxY());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	save_file.WriteNumber(attribute_code.append(".max_point_z").c_str(), GetMaxZ());
+}
+
+float BoundingBox::GetMinX() {
 
 	float min_x = vertices[0];
 
@@ -198,7 +223,7 @@ float ComponentAABB::GetMinX() {
 	return min_x;
 }
 
-float ComponentAABB::GetMaxX() {
+float BoundingBox::GetMaxX() {
 
 	float max_x = vertices[0];
 
@@ -208,7 +233,7 @@ float ComponentAABB::GetMaxX() {
 	return max_x;
 }
 
-float ComponentAABB::GetMinY() {
+float BoundingBox::GetMinY() {
 
 	float min_y = vertices[1];
 
@@ -218,7 +243,7 @@ float ComponentAABB::GetMinY() {
 	return min_y;
 }
 
-float ComponentAABB::GetMaxY() {
+float BoundingBox::GetMaxY() {
 
 	float max_y = vertices[1];
 
@@ -229,7 +254,7 @@ float ComponentAABB::GetMaxY() {
 }
 
 
-float ComponentAABB::GetMinZ() {
+float BoundingBox::GetMinZ() {
 
 	float min_z = vertices[2];
 
@@ -239,7 +264,7 @@ float ComponentAABB::GetMinZ() {
 	return min_z;
 }
 
-float ComponentAABB::GetMaxZ() {
+float BoundingBox::GetMaxZ() {
 
 	float max_z = vertices[2];
 
