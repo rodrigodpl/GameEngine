@@ -9,18 +9,6 @@ ModuleJSON::ModuleJSON(Application* app, bool start_enabled) : Module(app, start
 
 ModuleJSON::~ModuleJSON() {}
 
-
-bool ModuleJSON::Start() {
-
-
-	return true;
-}
-
-bool ModuleJSON::CleanUp(JSON_file& config) {
-
-	return true;
-}
-
 JSON_file* ModuleJSON::LoadFile(const char* path)
 {
 	JSON_Value *user_data = json_parse_file(path);

@@ -90,7 +90,7 @@ update_status ModuleGui::PreUpdate(float dt) {
 }
 
 
-bool ModuleGui::CleanUp(JSON_file& config)
+bool ModuleGui::CleanUp()
 {
 	App->gui->app_log.AddLog("Unloading Gui\n");
 	ImGui_ImplSdl_Shutdown();

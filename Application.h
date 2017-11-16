@@ -37,7 +37,7 @@ private:
 	float	dt;
 	float	dtmod;
 	p2List<Module*> list_modules;
-	JSON_file* config;
+	JSON_file* config = nullptr;
 
 public:
 
@@ -47,6 +47,8 @@ public:
 	bool Init();
 	update_status Update();
 	bool CleanUp();
+
+	void Save(JSON_file& config);
 
 private:
 

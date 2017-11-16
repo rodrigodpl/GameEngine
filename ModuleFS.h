@@ -25,9 +25,6 @@ public:
 	ModuleFS(Application* app, bool start_enabled = true);
 	~ModuleFS();
 
-	bool Start();
-	bool CleanUp(JSON_file& config);
-
 	bool AddPath(const char* path_or_zip, const char* mount_point = NULL);
 	bool Exists(const char* file) const;
 	bool IsDirectory(const char* file) const;

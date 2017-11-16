@@ -16,9 +16,11 @@ public:
 	bool Init(JSON_file& config);
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
-	bool CleanUp(JSON_file& config);
-	void DebugDraw();
+	bool CleanUp();
 
+	void Save(JSON_file& config);
+
+	void DebugDraw();
 	void OnResize(int width, int height);
 
 public:
@@ -33,6 +35,7 @@ private:
 	Timer	ms_timer;
 	float	dt;
 
+	// config saved variables
 	bool	vsync = true;
 	bool	face_culling = true;
 	Color	clear_color =	{ 0.9f, 0.9f, 0.9f, 1.0f };

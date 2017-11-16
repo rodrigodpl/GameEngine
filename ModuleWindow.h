@@ -24,7 +24,9 @@ public:
 	virtual ~ModuleWindow();
 
 	bool Init(JSON_file& config);
-	bool CleanUp(JSON_file& config);
+	bool CleanUp();
+
+	void Save(JSON_file& config);
 
 	void SetTitle(const char* title);
 
@@ -32,6 +34,7 @@ public:
 	SDL_Window* window = nullptr;
 	SDL_Surface* screen_surface = nullptr;
 
+	// config saved variables
 	WindowMode win_mode = FULLSCREEN;
 	int screen_width = 800;
 	int screen_height = 600;

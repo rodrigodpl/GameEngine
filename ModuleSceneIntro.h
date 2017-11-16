@@ -15,7 +15,9 @@ public:
 
 	bool Start();
 	update_status Update(float dt);
-	bool CleanUp(JSON_file* config);
+	bool CleanUp();
+	
+	void Save(JSON_file& config);
 
 	void DrawScene();
 public:
@@ -24,5 +26,8 @@ public:
 	GameObject* selected_game_obj = nullptr;
 
 	std::vector<ComponentMaterial*> materials;
+
+	// config saved variables
+	std::string name;
 
 };

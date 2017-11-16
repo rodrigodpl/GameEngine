@@ -45,10 +45,13 @@ public:
 		return UPDATE_CONTINUE;
 	}
 
-	virtual bool CleanUp(JSON_file& config)
+	virtual bool CleanUp()
 	{ 
 		return true; 
 	}
+
+	virtual void Save(JSON_file& config)
+	{}
 
 	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 	{}

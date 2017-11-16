@@ -46,10 +46,8 @@ bool ModuleAudio::Init(JSON_file& config)   // audio channels
 }
 
 // Called before quitting
-bool ModuleAudio::CleanUp(JSON_file& config)
+bool ModuleAudio::CleanUp()
 {
-	config.WriteBool("audio.stereo", stereo);
-
 	App->gui->app_log.AddLog("Freeing sound FX, closing Mixer and Audio subsystem\n");
 
 	if(music != NULL)
@@ -69,6 +67,11 @@ bool ModuleAudio::CleanUp(JSON_file& config)
 	Mix_Quit();
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 	return true;
+}
+
+void ModuleAudio::Save(JSON_file& config)
+{
+	config.WriteBool("audio.stereo", stereo);
 }
 
 // Play a music file

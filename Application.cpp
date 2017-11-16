@@ -56,7 +56,7 @@ bool Application::Init()
 	config = json->OpenFile("config.json", SETTINGS_BASE_PATH);
 	p2List_item<Module*>* item = list_modules.getFirst();
 
-	if (!config) return false;                                 // early exit if config can not be load
+	if (!config) return false;                                 // early exit if config cannot be loaded nor created
 
 	while(item != NULL && ret == true)
 	{
@@ -126,17 +126,18 @@ update_status Application::Update()
 
 bool Application::CleanUp()
 {
+	Save(*config);
+	config->Save();
+	config->CleanUp();
+
 	bool ret = true;
 	p2List_item<Module*>* item = list_modules.getLast();
 
 	while(item != NULL && ret == true)
 	{
-		ret = item->data->CleanUp(*config);
+		ret = item->data->CleanUp();
 		item = item->prev;
 	}
-
-	config->Save();
-	config->CleanUp();
 
 	return ret;
 }
@@ -152,4 +153,18 @@ float Application::Getdt() {
 
 void Application::Changedt(float newdt) {
 	dtmod = newdt;
+}
+
+void Application::Save(JSON_file& config)
+{
+	config.WriteBool("empty", false);
+
+	p2List_item<Module*>* item = list_modules.getLast();
+
+	while (item)
+	{
+		item->data->Save(config);
+		item = item->prev;
+	}
+
 }

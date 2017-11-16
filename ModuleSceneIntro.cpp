@@ -10,7 +10,9 @@
 #define RADIUS 44
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
-{}
+{
+	name = "main_scene.json";
+}
 
 ModuleSceneIntro::~ModuleSceneIntro()
 {}
@@ -19,36 +21,38 @@ ModuleSceneIntro::~ModuleSceneIntro()
 bool ModuleSceneIntro::Start()
 {
 	App->gui->app_log.AddLog("Loading Intro assets\n");
-	bool ret = true;
 
 	srand(time(NULL));
-
-	//game_objects.push_back(App->importer->LoadFBX("Assets/BakerHouse.fbx"));
-	//App->importer->LoadFBX("Test_files/Spaceship.fbx");
 
 	GameObject* floor = new GameObject("floor plane");
 	floor->components.push_back((Component*)new PrimPlane(0, 1, 0, 10));
 	game_objects.push_back(floor);
 
-	return ret;
+	return true;
 }
 
 // Load assets
-bool ModuleSceneIntro::CleanUp(JSON_file* config)
+bool ModuleSceneIntro::CleanUp()
 {
-
-	JSON_file* save_file = App->json->OpenFile("scene.json", LIBRARY_BASE_PATH);
-
-	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); it++)
-		(*it)->Serialize(*save_file);
-
-	save_file->Save();
-
 	App->gui->app_log.AddLog("Unloading Intro scene\n");
 	materials.clear();
 	game_objects.clear();
 
 	return true;
+}
+
+// load: name = "main_scene.json";
+
+void ModuleSceneIntro::Save(JSON_file& config)
+{
+	JSON_file* save_file = App->json->OpenFile(name.c_str(), LIBRARY_BASE_PATH);
+
+	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); it++)
+		(*it)->Serialize(*save_file);
+
+	save_file->Save();
+	
+	config.WriteString("scene_manager.current_scene", name.c_str());
 }
 
 // Update

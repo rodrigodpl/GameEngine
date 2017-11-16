@@ -76,19 +76,22 @@ bool ModuleWindow::Init(JSON_file& config)
 }
 
 // Called before quitting
-bool ModuleWindow::CleanUp(JSON_file& config)
+bool ModuleWindow::CleanUp()
 {
-	config.WriteNumber("window.window_mode", win_mode);
-	config.WriteNumber("window.screen_width", screen_width);
-	config.WriteNumber("window.screen_heigth", screen_height);
-	config.WriteNumber("window.screen_size", screen_size);
-
 	App->gui->app_log.AddLog("Destroying SDL window and quitting all SDL systems\n");
 
 	if(window) SDL_DestroyWindow(window);
 	SDL_Quit();
 
 	return true;
+}
+
+void ModuleWindow::Save(JSON_file& config)
+{
+	config.WriteNumber("window.window_mode", win_mode);
+	config.WriteNumber("window.screen_width", screen_width);
+	config.WriteNumber("window.screen_heigth", screen_height);
+	config.WriteNumber("window.screen_size", screen_size);
 }
 
 void ModuleWindow::SetTitle(const char* title)

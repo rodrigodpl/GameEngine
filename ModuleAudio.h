@@ -14,7 +14,9 @@ public:
 	~ModuleAudio();
 
 	bool Init(JSON_file& config);
-	bool CleanUp(JSON_file& config);
+	bool CleanUp();
+
+	void Save(JSON_file& config);
 
 	// Play a music file
 	bool PlayMusic(const char* path, float fade_time = DEFAULT_MUSIC_FADE_TIME);
@@ -29,6 +31,8 @@ private:
 
 	Mix_Music*			music = nullptr;
 	p2List<Mix_Chunk*>	fx;
+
+	// config saved variables
 	bool				stereo = true;		// 0 : mono output, 1 : stereo output	
 };
 

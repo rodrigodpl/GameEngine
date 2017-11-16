@@ -21,7 +21,7 @@ public:
 
 	bool Init(JSON_file& config);
 	update_status PreUpdate(float dt);
-	bool CleanUp(JSON_file& config);
+	bool CleanUp();
 
 	KEY_STATE GetKey(int id) const
 	{

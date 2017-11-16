@@ -36,12 +36,10 @@ bool ModuleEditorCam::Start() {
 	return cam;
 }
 
-// ----------------------------------------------------------------
-bool ModuleEditorCam::CleanUp(JSON_file& config)
+
+void ModuleEditorCam::Save(JSON_file& config)
 {
 	config.WriteString("editorcam.main_camera_obj_uid", main_cam_obj->uid.c_str());
-
-	return true;
 }
 
 // -----------------------------------------------------------------

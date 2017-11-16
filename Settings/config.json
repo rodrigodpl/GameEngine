@@ -1,4 +1,5 @@
 {
+    "empty": false,
     "renderer": {
         "vsync": true,
         "face_cull": true,
@@ -23,6 +24,9 @@
     },
     "editorcam": {
         "main_camera_obj_uid": "9dc627f70fb5a4c744bca3b88575aba8"
+    },
+    "scene_manager": {
+        "current_scene": "main_scene.json"
     },
     "audio": {
         "stereo": true

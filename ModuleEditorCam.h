@@ -11,6 +11,8 @@ class ModuleEditorCam : public Module
 {
 public:
 	ComponentCamera* cam = nullptr;
+
+	// config saved variables
 	GameObject* main_cam_obj = nullptr;
 
 public:
@@ -19,7 +21,8 @@ public:
 
 	bool Start();
 	update_status Update(float dt);
-	bool CleanUp(JSON_file& config);
+
+	void Save(JSON_file& config);
 
 	GameObject* MouseRaycast(Ray ray);
 

@@ -26,17 +26,6 @@ ModuleFS::~ModuleFS()
 	PHYSFS_deinit();
 }
 
-bool ModuleFS::Start()
-{
-	App->gui->app_log.AddLog("Loading File System\n");
-	return true;
-}
-
-bool ModuleFS::CleanUp(JSON_file& config)
-{
-	App->gui->app_log.AddLog("Freeing File System subsystem\n");
-	return true;
-}
 
 // Add a new zip file or folder
 bool ModuleFS::AddPath(const char* path_or_zip, const char* mount_point)
