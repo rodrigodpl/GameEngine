@@ -45,7 +45,7 @@ public:
 		return UPDATE_CONTINUE;
 	}
 
-	virtual bool CleanUp() 
+	virtual bool CleanUp(JSON_file& config)
 	{ 
 		return true; 
 	}

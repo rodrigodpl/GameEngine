@@ -28,19 +28,18 @@ ModuleEditorCam::~ModuleEditorCam()
 bool ModuleEditorCam::Start() {
 
 	cam = new ComponentCamera({ 0, 2, -5 });
-	GameObject* cam_game_obj = new GameObject("Main_Camera");
+	main_cam_obj = new GameObject("Main_Camera");
 
-	cam_game_obj->components.push_back(cam);
-	App->scene_intro->game_objects.push_back(cam_game_obj);
+	main_cam_obj->components.push_back(cam);
+	App->scene_intro->game_objects.push_back(main_cam_obj);
 
 	return cam;
 }
 
 // ----------------------------------------------------------------
-bool ModuleEditorCam::CleanUp()
+bool ModuleEditorCam::CleanUp(JSON_file& config)
 {
-	if(cam)
-		delete cam;
+	config.WriteString("editorcam.main_camera_obj_uid", main_cam_obj->uid.c_str());
 
 	return true;
 }

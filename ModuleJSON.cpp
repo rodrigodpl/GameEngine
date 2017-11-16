@@ -16,29 +16,26 @@ bool ModuleJSON::Start() {
 	return true;
 }
 
-bool ModuleJSON::CleanUp() {
-
-	config->Save();
-	config->CleanUp();
+bool ModuleJSON::CleanUp(JSON_file& config) {
 
 	return true;
 }
 
 JSON_file* ModuleJSON::LoadFile(const char* path)
 {
-
 	JSON_Value *user_data = json_parse_file(path);
 	JSON_Object *root_object = json_value_get_object(user_data);
+	JSON_file* file = nullptr;
 
 	if (user_data && root_object)
 	{
-		return config = new JSON_file(user_data, root_object, path);
 		App->gui->app_log.AddLog("Succesfully loaded %s file\n", path);
+		file = new JSON_file(user_data, root_object, path);
 	}
 	else
 		App->gui->app_log.AddLog("Error loading %s file!\n", path);
 
-	return nullptr;
+	return file;
 }
 
 JSON_file* ModuleJSON::OpenFile(const char* filename, const char* write_dir)
@@ -82,6 +79,23 @@ void JSON_file::WriteNumber(const char* name, float value)
 	json_object_dotset_number(object, name, value);
 }
 
+void JSON_file::WriteColor(const char* name, Color value)
+{
+	std::string s; 
+
+	s.append(name); s.append(".r");
+	json_object_dotset_number(object, s.c_str(), value.r);
+
+	s.clear(); s.append(name); s.append(".g");
+	json_object_dotset_number(object, s.c_str(), value.g);
+
+	s.clear(); s.append(name); s.append(".b");
+	json_object_dotset_number(object, s.c_str(), value.b);
+
+	s.clear(); s.append(name); s.append(".a");
+	json_object_dotset_number(object, s.c_str(), value.a);
+}
+
 const char * JSON_file::ReadString(const char* name)
 {
 	JSON_Value* value = json_object_dotget_value(object, name);
@@ -99,7 +113,7 @@ bool JSON_file::ReadBool(const char * name)
 	if (value != nullptr && json_value_get_type(value) == json_value_type::JSONBoolean)
 		return json_object_dotget_boolean(object, name);
 	else
-		return false;
+		return -1;
 }
 
 float JSON_file::ReadNumber(const char * name)
@@ -111,6 +125,26 @@ float JSON_file::ReadNumber(const char * name)
 	else
 		return -1;
 }
+
+Color JSON_file::ReadColor(const char* name)
+{
+	std::string s; Color ret = {0.0f, 0.0f, 0.0f, 0.0f};
+
+	s.append(name); s.append(".r");
+	ret.r = json_object_dotget_number(object, s.c_str());
+
+	s.clear(); s.append(name); s.append(".g");
+	ret.g = json_object_dotget_number(object, s.c_str());
+
+	s.clear(); s.append(name); s.append(".b");
+	ret.b = json_object_dotget_number(object, s.c_str());
+
+	s.clear(); s.append(name); s.append(".a");
+	ret.a = json_object_dotget_number(object, s.c_str());
+
+	return ret;
+}
+
 
 void JSON_file::Save()
 {

@@ -168,9 +168,15 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 }
 
 // Called before quitting
-bool ModuleRenderer3D::CleanUp()
+bool ModuleRenderer3D::CleanUp(JSON_file& config)
 {
 	App->gui->app_log.AddLog("Destroying 3D Renderer\n");
+
+	config.WriteBool("renderer.vsync", vsync);
+	config.WriteBool("renderer.face_cull", face_culling);
+	config.WriteColor("renderer.clear_color", clear_color);
+	config.WriteColor("renderer.light_ambient", light_ambient);
+	config.WriteColor("renderer.main_light", main_light);
 
 	SDL_GL_DeleteContext(context);
 

@@ -41,7 +41,7 @@ bool ModuleImporter::Start() {
 	return true;
 }
 
-bool ModuleImporter::CleanUp() {
+bool ModuleImporter::CleanUp(JSON_file& config) {
 	
 	aiDetachAllLogStreams();
 

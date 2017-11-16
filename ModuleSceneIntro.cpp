@@ -34,7 +34,7 @@ bool ModuleSceneIntro::Start()
 }
 
 // Load assets
-bool ModuleSceneIntro::CleanUp()
+bool ModuleSceneIntro::CleanUp(JSON_file* config)
 {
 
 	JSON_file* save_file = App->json->OpenFile("scene.json", LIBRARY_BASE_PATH);

@@ -37,6 +37,7 @@ private:
 	float	dt;
 	float	dtmod;
 	p2List<Module*> list_modules;
+	JSON_file* config;
 
 public:
 

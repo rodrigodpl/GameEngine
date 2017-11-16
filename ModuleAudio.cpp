@@ -46,8 +46,10 @@ bool ModuleAudio::Init(JSON_file& config)   // audio channels
 }
 
 // Called before quitting
-bool ModuleAudio::CleanUp()
+bool ModuleAudio::CleanUp(JSON_file& config)
 {
+	config.WriteBool("audio.stereo", stereo);
+
 	App->gui->app_log.AddLog("Freeing sound FX, closing Mixer and Audio subsystem\n");
 
 	if(music != NULL)

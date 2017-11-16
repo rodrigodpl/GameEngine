@@ -19,7 +19,6 @@ class ModuleFS : public Module
 {
 public:
 	char* base_path;
-	char* write_path;
 
 public:
 
@@ -27,7 +26,7 @@ public:
 	~ModuleFS();
 
 	bool Start();
-	bool CleanUp();
+	bool CleanUp(JSON_file& config);
 
 	bool AddPath(const char* path_or_zip, const char* mount_point = NULL);
 	bool Exists(const char* file) const;

@@ -32,7 +32,7 @@ bool ModuleFS::Start()
 	return true;
 }
 
-bool ModuleFS::CleanUp()
+bool ModuleFS::CleanUp(JSON_file& config)
 {
 	App->gui->app_log.AddLog("Freeing File System subsystem\n");
 	return true;

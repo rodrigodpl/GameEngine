@@ -151,7 +151,7 @@ void ModuleInput::GetMouseNormalized(float& x, float& y)
 }
 
 // Called before quitting
-bool ModuleInput::CleanUp()
+bool ModuleInput::CleanUp(JSON_file& config)
 {
 	App->gui->app_log.AddLog("Quitting SDL input event subsystem\n");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);

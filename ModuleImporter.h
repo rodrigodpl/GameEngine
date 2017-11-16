@@ -24,7 +24,7 @@ public:
 	~ModuleImporter();
 
 	bool Start();
-	bool CleanUp();
+	bool CleanUp(JSON_file& config);
 
 	GameObject* LoadFBX(const char* full_path);
 	GameObject* LoadNodeRecursive(aiNode* node, const aiScene* scene, GameObject* parent = nullptr);

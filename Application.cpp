@@ -22,7 +22,6 @@ Application::Application()
 
 	// Main Modules
 	AddModule(window);
-	AddModule(camera);
 	AddModule(input);
 	AddModule(audio);
 	AddModule(importer);
@@ -32,6 +31,7 @@ Application::Application()
 
 	// Scenes
 	AddModule(scene_intro);
+	AddModule(camera);          // must be load AFTER scene
 
 	// Renderer last!
 	AddModule(renderer3D);
@@ -53,7 +53,7 @@ bool Application::Init()
 	bool ret = true;
 	dtmod = 1.0f;
 	// Call Init() in all modules
-	JSON_file* config = json->OpenFile("config.json", SETTINGS_BASE_PATH);
+	config = json->OpenFile("config.json", SETTINGS_BASE_PATH);
 	p2List_item<Module*>* item = list_modules.getFirst();
 
 	if (!config) return false;                                 // early exit if config can not be load
@@ -131,9 +131,13 @@ bool Application::CleanUp()
 
 	while(item != NULL && ret == true)
 	{
-		ret = item->data->CleanUp();
+		ret = item->data->CleanUp(*config);
 		item = item->prev;
 	}
+
+	config->Save();
+	config->CleanUp();
+
 	return ret;
 }
 

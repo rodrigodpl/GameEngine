@@ -33,7 +33,7 @@ public:
 	bool Start();
 	update_status PreUpdate(float dt);
 	void HandleEvent(SDL_Event* sdl_event);
-	bool CleanUp();
+	bool CleanUp(JSON_file& config);
 	void Draw();
 
 	AppLog app_log;

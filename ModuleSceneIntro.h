@@ -15,7 +15,7 @@ public:
 
 	bool Start();
 	update_status Update(float dt);
-	bool CleanUp();
+	bool CleanUp(JSON_file* config);
 
 	void DrawScene();
 public:

@@ -40,13 +40,9 @@ public:
 	~ModuleJSON();
 
 	bool Start();
-	bool CleanUp();
+	bool CleanUp(JSON_file& config);
 
 	JSON_file* LoadFile(const char* path);
 	JSON_file* OpenFile(const char* filename, const char* write_dir);    // if file does not exist, it will create it
 	
-public:
-
-	JSON_file* config = nullptr;
-	JSON_file* test;
 };
