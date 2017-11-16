@@ -23,10 +23,11 @@ public:
 	// Destructor
 	virtual ~ModuleWindow();
 
-	bool Init(JSON_file& config);
+	bool Init();
 	bool CleanUp();
 
 	void Save(JSON_file& config);
+	void Load(JSON_file& config);
 
 	void SetTitle(const char* title);
 
@@ -35,9 +36,9 @@ public:
 	SDL_Surface* screen_surface = nullptr;
 
 	// config saved variables
-	WindowMode win_mode = FULLSCREEN;
+	WindowMode win_mode = RESIZABLE;
 	int screen_width = 800;
-	int screen_height = 600;
+	int screen_heigth = 600;
 	float screen_size = 1.0f;
 
 };

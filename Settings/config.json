@@ -22,17 +22,17 @@
             "a": 1
         }
     },
-    "editorcam": {
-        "main_camera_obj_uid": "9dc627f70fb5a4c744bca3b88575aba8"
-    },
     "scene_manager": {
         "current_scene": "main_scene.json"
+    },
+    "editorcam": {
+        "main_camera_obj_uid": "9dc627f70fb5a4c744bca3b88575aba8"
     },
     "audio": {
         "stereo": true
     },
     "window": {
-        "window_mode": 0,
+        "window_mode": 1,
         "screen_width": 800,
         "screen_heigth": 600,
         "screen_size": 1

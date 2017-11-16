@@ -13,7 +13,7 @@ ModuleAudio::~ModuleAudio()
 {}
 
 // Called before render is available
-bool ModuleAudio::Init(JSON_file& config)   // audio channels
+bool ModuleAudio::Init()   // audio channels
 {
 	App->gui->app_log.AddLog("Loading Audio Mixer\n");
 	bool ret = true;
@@ -36,7 +36,7 @@ bool ModuleAudio::Init(JSON_file& config)   // audio channels
 	}
 
 	//Initialize SDL_mixer
-	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, (stereo ? 1 : 2), 2048) < 0)
 	{
 		App->gui->app_log.AddLog("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 		ret = false;
@@ -72,6 +72,12 @@ bool ModuleAudio::CleanUp()
 void ModuleAudio::Save(JSON_file& config)
 {
 	config.WriteBool("audio.stereo", stereo);
+}
+
+
+void ModuleAudio::Load(JSON_file& config)
+{
+	stereo = config.ReadBool("audio.stereo");
 }
 
 // Play a music file

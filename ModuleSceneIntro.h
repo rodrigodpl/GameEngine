@@ -18,6 +18,7 @@ public:
 	bool CleanUp();
 	
 	void Save(JSON_file& config);
+	void Load(JSON_file& config);
 
 	void DrawScene();
 public:
@@ -28,6 +29,6 @@ public:
 	std::vector<ComponentMaterial*> materials;
 
 	// config saved variables
-	std::string name;
+	std::string name = "main_scene.json";
 
 };

@@ -42,6 +42,11 @@ void ModuleEditorCam::Save(JSON_file& config)
 	config.WriteString("editorcam.main_camera_obj_uid", main_cam_obj->uid.c_str());
 }
 
+void ModuleEditorCam::Load(JSON_file& config)
+{
+	main_cam_obj_uid = config.ReadString("editorcam.main_camera_obj_uid");
+}
+
 // -----------------------------------------------------------------
 update_status ModuleEditorCam::Update(float dt)
 {

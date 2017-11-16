@@ -13,12 +13,13 @@ public:
 	ModuleRenderer3D(Application* app, bool start_enabled = true);
 	~ModuleRenderer3D();
 
-	bool Init(JSON_file& config);
+	bool Init();
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
 	void Save(JSON_file& config);
+	void Load(JSON_file& config);
 
 	void DebugDraw();
 	void OnResize(int width, int height);

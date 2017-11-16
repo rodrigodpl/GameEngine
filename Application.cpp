@@ -28,10 +28,10 @@ Application::Application()
 	AddModule(json);
 	AddModule(gui);
 	AddModule(fs);
+	AddModule(camera);         
 
 	// Scenes
 	AddModule(scene_intro);
-	AddModule(camera);          // must be load AFTER scene
 
 	// Renderer last!
 	AddModule(renderer3D);
@@ -57,10 +57,11 @@ bool Application::Init()
 	p2List_item<Module*>* item = list_modules.getFirst();
 
 	if (!config) return false;                                 // early exit if config cannot be loaded nor created
+	else LoadModules(*config);
 
 	while(item != NULL && ret == true)
 	{
-		ret = item->data->Init(*config);
+		ret = item->data->Init();
 		item = item->next;
 	}
 
@@ -126,7 +127,7 @@ update_status Application::Update()
 
 bool Application::CleanUp()
 {
-	Save(*config);
+	SaveModules(*config);
 	config->Save();
 	config->CleanUp();
 
@@ -155,7 +156,7 @@ void Application::Changedt(float newdt) {
 	dtmod = newdt;
 }
 
-void Application::Save(JSON_file& config)
+void Application::SaveModules(JSON_file& config)
 {
 	config.WriteBool("empty", false);
 
@@ -167,4 +168,22 @@ void Application::Save(JSON_file& config)
 		item = item->prev;
 	}
 
+}
+
+void Application::LoadModules(JSON_file& config)
+{
+	bool empty_config = config.ReadBool("empty");
+
+	if (!empty_config) {
+
+		p2List_item<Module*>* item = list_modules.getLast();
+
+		while (item)
+		{
+			item->data->Load(config);
+			item = item->prev;
+		}
+	}
+	else
+		gui->app_log.AddLog("empty config file! the engine will start with default values\n");
 }

@@ -13,10 +13,11 @@ public:
 	ModuleAudio(Application* app, bool start_enabled = true);
 	~ModuleAudio();
 
-	bool Init(JSON_file& config);
+	bool Init();
 	bool CleanUp();
 
 	void Save(JSON_file& config);
+	void Load(JSON_file& config);
 
 	// Play a music file
 	bool PlayMusic(const char* path, float fade_time = DEFAULT_MUSIC_FADE_TIME);

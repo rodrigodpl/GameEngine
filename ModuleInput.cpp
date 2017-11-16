@@ -21,7 +21,7 @@ ModuleInput::~ModuleInput()
 }
 
 // Called before render is available
-bool ModuleInput::Init(JSON_file& config)
+bool ModuleInput::Init()
 {
 	App->gui->app_log.AddLog("Init SDL input event system\n");
 	SDL_Init(0);
@@ -66,8 +66,8 @@ update_status ModuleInput::PreUpdate(float dt)
 
 	Uint32 buttons = SDL_GetMouseState(&mouse_x, &mouse_y);
 
-	mouse_x /= SCREEN_SIZE;
-	mouse_y /= SCREEN_SIZE;
+	mouse_x /= App->window->screen_size;
+	mouse_y /= App->window->screen_size;
 	mouse_z = 0;
 
 	for(int i = 0; i < 5; ++i)
@@ -102,11 +102,11 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 			case SDL_MOUSEMOTION:
-			mouse_x = e.motion.x / SCREEN_SIZE;
-			mouse_y = e.motion.y / SCREEN_SIZE;
+			mouse_x = e.motion.x / App->window->screen_size;
+			mouse_y = e.motion.y / App->window->screen_size;
 
-			mouse_x_motion = e.motion.xrel / SCREEN_SIZE;
-			mouse_y_motion = e.motion.yrel / SCREEN_SIZE;
+			mouse_x_motion = e.motion.xrel / App->window->screen_size;
+			mouse_y_motion = e.motion.yrel / App->window->screen_size;
 			break;
 
 			case SDL_QUIT:
@@ -146,8 +146,8 @@ update_status ModuleInput::PreUpdate(float dt)
 
 void ModuleInput::GetMouseNormalized(float& x, float& y) 
 {
-	x = ((((float)mouse_x / SCREEN_WIDTH ) - 0.5) * 2);               // TODO: this should take in account any possible screen size
-	y = ((((float)mouse_y / SCREEN_HEIGHT) - 0.5) * 2);
+	x = ((((float)mouse_x / App->window->screen_width * App->window->screen_size) - 0.5) * 2);               
+	y = ((((float)mouse_y / App->window->screen_heigth* App->window->screen_size) - 0.5) * 2);
 }
 
 // Called before quitting

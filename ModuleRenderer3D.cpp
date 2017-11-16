@@ -24,7 +24,7 @@ ModuleRenderer3D::~ModuleRenderer3D()
 {}
 
 // Called before render is available
-bool ModuleRenderer3D::Init(JSON_file& config)
+bool ModuleRenderer3D::Init()
 {
 	App->gui->app_log.AddLog("Creating 3D Renderer context\n");
 	bool ret = true;
@@ -49,7 +49,7 @@ bool ModuleRenderer3D::Init(JSON_file& config)
 	if(ret)
 	{
 		//Use Vsync
-		if(VSYNC && SDL_GL_SetSwapInterval(1) < 0)
+		if(vsync && SDL_GL_SetSwapInterval(1) < 0)
 			App->gui->app_log.AddLog("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
 		//Initialize Projection Matrix
@@ -79,10 +79,8 @@ bool ModuleRenderer3D::Init(JSON_file& config)
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		glClearDepth(1.0f);
 		
-		//Initialize clear color
-		//Color background_color = config.ReadColor("renderer.background_color");
-		//glClearColor(background_color.r, background_color.g, background_color.b, background_color.a);
-		glClearColor(0.9f, 0.9f, 0.9f, 1.f);
+		//Clear color
+		glClearColor(clear_color.r, clear_color.g, clear_color.b, clear_color.a);
 
 		//Check for error
 		error = glGetError();
@@ -92,13 +90,12 @@ bool ModuleRenderer3D::Init(JSON_file& config)
 			ret = false;
 		}
 		
-		//Color ambient_light = config.ReadColor("renderer.ambient_light");
-		GLfloat LightModelAmbient[] = { 0.5, 0.5, 0.5, 1.0 };
+		GLfloat LightModelAmbient[] = { light_ambient.r, light_ambient.g, light_ambient.b, light_ambient.a };
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
 		
 		lights[0].ref = GL_LIGHT0;
 		lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
-		lights[0].diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
+		lights[0].diffuse.Set(main_light.r, main_light.g, main_light.b, main_light.a);
 		lights[0].SetPos(0.0f, 0.0f, 2.5f);
 		lights[0].Init();
 		
@@ -109,14 +106,16 @@ bool ModuleRenderer3D::Init(JSON_file& config)
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 		
 		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
+
+		if(face_culling)
+			glEnable(GL_CULL_FACE);
 	}
 
 	// Projection matrix for
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	OnResize(App->window->screen_width, App->window->screen_heigth);
 
 	return ret;
 }
@@ -183,6 +182,15 @@ void ModuleRenderer3D::Save(JSON_file& config)
 	config.WriteColor("renderer.clear_color", clear_color);
 	config.WriteColor("renderer.light_ambient", light_ambient);
 	config.WriteColor("renderer.main_light", main_light);
+}
+
+void ModuleRenderer3D::Load(JSON_file& config)
+{
+	vsync			= config.ReadBool("renderer.vsync");
+	face_culling	= config.ReadBool("renderer.face_cull");
+	clear_color		= config.ReadColor("renderer.clear_color");
+	light_ambient	= config.ReadColor("renderer.light_ambient");
+	main_light		= config.ReadColor("renderer.main_light");
 }
 
 

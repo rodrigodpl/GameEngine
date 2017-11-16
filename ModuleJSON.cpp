@@ -91,7 +91,7 @@ const char * JSON_file::ReadString(const char* name)
 	if (value != nullptr && json_value_get_type(value) == json_value_type::JSONString)
 		return json_object_dotget_string(object, name);
 	else
-		return ("unable to find string");
+		return ("");
 }
 
 bool JSON_file::ReadBool(const char * name)

@@ -20,7 +20,7 @@ public:
 	virtual ~Module()
 	{}
 
-	virtual bool Init(JSON_file& config)
+	virtual bool Init()
 	{
 		return true; 
 	}
@@ -51,6 +51,9 @@ public:
 	}
 
 	virtual void Save(JSON_file& config)
+	{}
+
+	virtual void Load(JSON_file& config)
 	{}
 
 	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)

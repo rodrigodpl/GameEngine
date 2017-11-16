@@ -14,7 +14,7 @@ ModuleWindow::~ModuleWindow()
 }
 
 // Called before render is available
-bool ModuleWindow::Init(JSON_file& config)
+bool ModuleWindow::Init()
 {
 	App->gui->app_log.AddLog("Init SDL window & surface\n");
 	bool ret = true;
@@ -27,8 +27,8 @@ bool ModuleWindow::Init(JSON_file& config)
 	else
 	{
 		//Create window
-		int width = SCREEN_WIDTH * SCREEN_SIZE;
-		int height = SCREEN_HEIGHT * SCREEN_SIZE;
+		int width = screen_width * screen_size;
+		int height = screen_heigth * screen_size;
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -38,24 +38,12 @@ bool ModuleWindow::Init(JSON_file& config)
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
-		if(WIN_FULLSCREEN == true)
+		switch (win_mode) 
 		{
-			flags |= SDL_WINDOW_FULLSCREEN;
-		}
-
-		if(WIN_RESIZABLE == true)
-		{
-			flags |= SDL_WINDOW_RESIZABLE;
-		}
-
-		if(WIN_BORDERLESS == true)
-		{
-			flags |= SDL_WINDOW_BORDERLESS;
-		}
-
-		if(WIN_FULLSCREEN_DESKTOP == true)
-		{
-			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+			case FULLSCREEN: flags |= SDL_WINDOW_FULLSCREEN; break;
+			case RESIZABLE: flags |= SDL_WINDOW_RESIZABLE; break;
+			case BORDERLESS: flags |= SDL_WINDOW_BORDERLESS; break;
+			case FULLSCREEN_DESKTOP: flags |= SDL_WINDOW_FULLSCREEN_DESKTOP; break;
 		}
 
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
@@ -90,8 +78,16 @@ void ModuleWindow::Save(JSON_file& config)
 {
 	config.WriteNumber("window.window_mode", win_mode);
 	config.WriteNumber("window.screen_width", screen_width);
-	config.WriteNumber("window.screen_heigth", screen_height);
+	config.WriteNumber("window.screen_heigth", screen_heigth);
 	config.WriteNumber("window.screen_size", screen_size);
+}
+
+void ModuleWindow::Load(JSON_file& config)
+{
+	win_mode = (WindowMode)((int)config.ReadNumber("window.window_mode"));
+	screen_width = config.ReadNumber("window.screen_width");
+	screen_heigth = config.ReadNumber("window.screen_heigth");
+	screen_size = config.ReadNumber("window.screen_size");
 }
 
 void ModuleWindow::SetTitle(const char* title)

@@ -10,9 +10,7 @@
 #define RADIUS 44
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
-{
-	name = "main_scene.json";
-}
+{}
 
 ModuleSceneIntro::~ModuleSceneIntro()
 {}
@@ -53,6 +51,11 @@ void ModuleSceneIntro::Save(JSON_file& config)
 	save_file->Save();
 	
 	config.WriteString("scene_manager.current_scene", name.c_str());
+}
+
+void ModuleSceneIntro::Load(JSON_file& config)
+{
+	name = config.ReadString("scene_manager.current_scene");
 }
 
 // Update
