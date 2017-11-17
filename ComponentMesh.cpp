@@ -18,7 +18,7 @@ ComponentMesh::ComponentMesh(ComponentMesh& mesh) {
 
 	type = Component_type::COMPONENT_MESH;
 
-	num_indices = mesh.num_indices;		indices = mesh.indices;    // should be (new) + memcpy()
+	num_tris = mesh.num_tris;			tris = mesh.tris;    // should be (new) + memcpy()
 	num_vertices = mesh.num_vertices;	vertices = mesh.vertices;
 	num_normals = mesh.num_normals;		normals = mesh.normals;
 	num_colors = mesh.num_colors;		colors = mesh.colors;
@@ -32,16 +32,11 @@ ComponentMesh::ComponentMesh(ComponentMesh& mesh) {
 
 ComponentMesh::~ComponentMesh() {
 
-	if(indices)
-		delete indices;
-	if (vertices)
-		delete vertices;
-	if (normals)
-		delete normals;
-	if (colors)
-		delete colors;
-	if (texcoords)
-		delete texcoords;
+	if (tris)		delete tris;
+	if (vertices)	delete vertices;
+	if (normals)	delete normals;
+	if (colors)		delete colors;
+	if (texcoords)	delete texcoords;
 
 }
 
@@ -54,21 +49,21 @@ bool ComponentMesh::LoadDataFromAssimp(aiMesh& imp_mesh) {
 
 	if (imp_mesh.HasFaces())
 	{
-		num_indices = imp_mesh.mNumFaces * 3;
-		indices = new uint[num_indices]; // assume each face is a triangle
+		num_tris = imp_mesh.mNumFaces;
+		tris = new Tri[num_tris]; // assume each face is a triangle
 		for (uint i = 0; i < imp_mesh.mNumFaces; ++i)
 		{
 			if (imp_mesh.mFaces[i].mNumIndices != 3)
 				return false;
 			else
-				memcpy(&indices[i * 3], imp_mesh.mFaces[i].mIndices, 3 * sizeof(uint));
+				memcpy(&tris[i], imp_mesh.mFaces[i].mIndices, 3 * sizeof(uint));
 		}
 	}
 
 	if (imp_mesh.HasPositions()) {
 
 		num_vertices = imp_mesh.mNumVertices;
-		vertices = new float[num_vertices * 3];
+		vertices = new float3[num_vertices];
 
 		memcpy(vertices, imp_mesh.mVertices, sizeof(float) * num_vertices * 3);
 	}
@@ -76,7 +71,7 @@ bool ComponentMesh::LoadDataFromAssimp(aiMesh& imp_mesh) {
 	if (imp_mesh.HasNormals()) {
 
 		num_normals = num_vertices;
-		normals = new float[num_normals * 3];
+		normals = new float3[num_normals];
 
 		memcpy(normals, imp_mesh.mNormals, sizeof(float) * num_normals * 3);
 	}
@@ -88,14 +83,12 @@ bool ComponentMesh::LoadDataFromAssimp(aiMesh& imp_mesh) {
 
 		memcpy(temp_texcoords, imp_mesh.mTextureCoords[0], sizeof(float) * num_texcoords * 3);
 
-		texcoords = new float[num_texcoords * 2];
+		texcoords = new float2[num_texcoords];
 
-		for (int i = 0, j = 0; i < num_texcoords * 3; i++) {
-
-			if ((i + 1) % 3 != 0) {    // remove the 0 value from assimp
-				texcoords[j] = temp_texcoords[i];
-				j++;
-			}
+		for (int i = 0; i < num_texcoords; i++)    // remove the 0 value from assimp
+		{
+			texcoords[i].x = temp_texcoords[i * 3];
+			texcoords[i].y = temp_texcoords[i * 3 + 1];
 		}
 
 		delete[] temp_texcoords;
@@ -107,11 +100,11 @@ bool ComponentMesh::LoadDataFromAssimp(aiMesh& imp_mesh) {
 
 void ComponentMesh::LoadDataToVRAM() {
 
-	if (num_indices > 0)
+	if (num_tris > 0)
 	{
-		glGenBuffers(1, (GLuint*) &(id_indices));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices, indices, GL_STATIC_DRAW);
+		glGenBuffers(1, (GLuint*) &(id_tris));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_tris);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Tri) * num_tris, tris, GL_STATIC_DRAW);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	}
@@ -120,7 +113,7 @@ void ComponentMesh::LoadDataToVRAM() {
 
 		glGenBuffers(1, (GLuint*) &(id_vertices));
 		glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float3) * num_vertices, vertices, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	}
@@ -129,7 +122,7 @@ void ComponentMesh::LoadDataToVRAM() {
 
 		glGenBuffers(1, (GLuint*) &(id_normals));
 		glBindBuffer(GL_ARRAY_BUFFER, id_normals);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_normals * 3, normals, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float3) * num_normals, normals, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	}
@@ -137,7 +130,7 @@ void ComponentMesh::LoadDataToVRAM() {
 	if (num_texcoords > 0) {
 		glGenBuffers(1, (GLuint*) &(id_texcoords));
 		glBindBuffer(GL_ARRAY_BUFFER, id_texcoords);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_texcoords * 2, texcoords, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float2) * num_texcoords, texcoords, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	}
@@ -154,7 +147,7 @@ void ComponentMesh::Draw() {
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_tris);
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
 	glBindBuffer(GL_TEXTURE_COORD_ARRAY, id_texcoords);
 	glBindBuffer(GL_NORMAL_ARRAY, id_normals);
@@ -167,7 +160,7 @@ void ComponentMesh::Draw() {
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 	glNormalPointer(GL_FLOAT, 0, NULL);
-	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, num_tris * 3, GL_UNSIGNED_INT, NULL);
 
 	if (mat)
 		glBindTexture(GL_TEXTURE_2D, 0);

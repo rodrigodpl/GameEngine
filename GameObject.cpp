@@ -112,8 +112,8 @@ void GameObject::RayCastAgainstAABBs(math::Ray ray, std::list<RayHit>& outHits) 
 		comp_aabb = (ComponentAABB*)components.back();
 	}
 
-	float3 min_point = { comp_aabb->GetMinX(), comp_aabb->GetMinY(), comp_aabb->GetMinZ() };
-	float3 max_point = { comp_aabb->GetMaxX(), comp_aabb->GetMaxY(), comp_aabb->GetMaxZ() };
+	float3 min_point = comp_aabb->GetMinP(); 
+	float3 max_point = comp_aabb->GetMaxP();
 
 	AABB aabb(min_point, max_point);
 
@@ -144,12 +144,11 @@ void GameObject::RayCastAgainstMeshes(Ray ray, std::list<RayHit>& outHits) {
 			
 			ComponentMesh* mesh = (ComponentMesh*)(*it);
 
-			for (int i = 0; i < mesh->num_indices; i += 3) {
+			for (int i = 0; i < mesh->num_tris; i += 3) {
 
-				float3 vert1, vert2, vert3;
-				vert1 = { mesh->vertices[mesh->indices[i]], mesh->vertices[mesh->indices[i] + 1], mesh->vertices[mesh->indices[i + 2] + 2] };
-				vert2 = { mesh->vertices[mesh->indices[i + 1]], mesh->vertices[mesh->indices[i + 1] + 1], mesh->vertices[mesh->indices[i + 1] + 2] };
-				vert3 = { mesh->vertices[mesh->indices[i + 2]], mesh->vertices[mesh->indices[i + 2] + 1], mesh->vertices[mesh->indices[i + 2] +2] };
+				float3 vert1 = mesh->vertices[mesh->tris[i].vert1];
+				float3 vert2 = mesh->vertices[mesh->tris[i].vert2];
+				float3 vert3 = mesh->vertices[mesh->tris[i].vert3];
 
 				Triangle tri(vert1, vert2, vert3);
 

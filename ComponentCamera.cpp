@@ -95,7 +95,7 @@ bool ComponentCamera::FrustumCulling(const ComponentAABB& aabb)
 		int vert_pos_side = 0;
 
 		for (int j = 0; j < 8; j++) {
-			float3 vertex = { aabb.vertices[j * 3], aabb.vertices[(j * 3) + 1], aabb.vertices[(j * 3) + 2] };
+			float3 vertex = aabb.vertices[j];
 
 			if (planes[i].IsOnPositiveSide(vertex))
 				vert_pos_side++;
@@ -153,7 +153,7 @@ void ComponentCamera::ChangeAspectRatio(float aspect_ratio)
 
 void ComponentCamera::RepositionToDisplay(ComponentAABB& aabb) 
 {
-	SetPosition(float3(aabb.GetMaxX(), aabb.GetMaxY(), aabb.GetMaxZ()) * REPOSITION_SCALE);
+	SetPosition(aabb.GetMaxP() * REPOSITION_SCALE);
 	LookAt({ 0,0,0 });
 }
 

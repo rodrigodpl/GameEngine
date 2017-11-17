@@ -113,38 +113,44 @@ void Cube::BuildVert() {
 	float sz = size.z * 0.5f;
 
 	num_vertices = 8;
-	float* v = vertices;
+	vertices = new float3[num_vertices];
 
-	*v++ = -sx; *v++ = -sy; *v++ = -sz;   *v++ = -sx; *v++ = sy; *v++ = -sz;  
-	*v++ =  sx; *v++ = -sy; *v++ = -sz;   *v++ =  sx; *v++ = sy; *v++ = -sz; 
-	*v++ = -sx; *v++ = -sy; *v++ = sz ;   *v++ = -sx; *v++ = sy; *v++ = sz ; 
-	*v++ =  sx; *v++ = -sy; *v++ = sz ;   *v++ =  sx; *v++ = sy; *v++ = sz ; 
+	vertices[0].x = -sx; vertices[0].y = -sy; vertices[0].z = -sz;
+	vertices[1].x = sx;  vertices[1].y = -sy; vertices[1].z = -sz;
+	vertices[2].x = -sx; vertices[2].y = -sy; vertices[2].z = sz;
+	vertices[3].x = sx;  vertices[3].y = -sy; vertices[3].z = sz;
 
-	num_indices = 36;
-	uint* i = indices;
-	
-	*i++ = 0; *i++ = 1; *i++ = 2;      *i++ = 3; *i++ = 2; *i++ = 1;      //front
-	*i++ = 6; *i++ = 5; *i++ = 4;      *i++ = 5; *i++ = 6; *i++ = 7;      //back
-	*i++ = 5; *i++ = 3; *i++ = 1;      *i++ = 3; *i++ = 5; *i++ = 7;      //up
-	*i++ = 0; *i++ = 2; *i++ = 4;      *i++ = 6; *i++ = 4; *i++ = 2;      //down	
-	*i++ = 4; *i++ = 1; *i++ = 0;      *i++ = 1; *i++ = 4; *i++ = 5;      //left	
-	*i++ = 2; *i++ = 3; *i++ = 6;      *i++ = 7; *i++ = 6; *i++ = 3;      //right
+	vertices[4].x = -sx; vertices[4].y = sy;  vertices[4].z = -sz;
+	vertices[5].x = sx;  vertices[5].y = sy;  vertices[5].z = -sz;
+	vertices[6].x = -sx; vertices[6].y = sy;  vertices[6].z = sz;
+	vertices[7].x = sx;  vertices[7].y = sy;  vertices[7].z = sz;
+
+	num_tris = 12;
+	tris = new Tri[num_tris];
+
+	tris[0].vert1 = 0; tris[0].vert2 = 1; tris[0].vert3 = 2;    tris[1].vert1 = 3; tris[1].vert2 = 2; tris[1].vert3 = 1;      //front
+	tris[2].vert1 = 6; tris[2].vert2 = 5; tris[2].vert3 = 4;    tris[3].vert1 = 5; tris[3].vert2 = 6; tris[3].vert3 = 7;      //back
+	tris[4].vert1 = 5; tris[4].vert2 = 3; tris[4].vert3 = 1;    tris[5].vert1 = 3; tris[5].vert2 = 5; tris[5].vert3 = 7;      //up
+	tris[6].vert1 = 0; tris[6].vert2 = 2; tris[6].vert3 = 4;    tris[7].vert1 = 6; tris[7].vert2 = 4; tris[7].vert3 = 2;      //down	
+	tris[8].vert1 = 4; tris[8].vert2 = 1; tris[8].vert3 = 0;    tris[9].vert1 = 1; tris[9].vert2 = 4; tris[9].vert3 = 5;      //left	
+	tris[10].vert1 = 2; tris[10].vert2 = 3; tris[10].vert3 = 6; tris[11].vert1 = 7; tris[11].vert2 = 6; tris[11].vert3 = 3;   //right
 
 }
 
 void Cube::InnerRender() const
-{	
+{
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_tris);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, num_tris * 3, GL_UNSIGNED_INT, NULL);
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
+
 //
 // SPHERE ============================================
 //Sphere::Sphere() : Primitive(), radius(1.0f)
@@ -227,54 +233,56 @@ void Cube::InnerRender() const
 //}
 
 // CYLINDER ============================================
-Cylinder::Cylinder() : Primitive(), radius(1.0f), height(1.0f)
+Cyl::Cyl() : Primitive(), radius(1.0f), height(1.0f)
 {
 	primitive_type = PrimitiveTypes::Primitive_Cylinder;
 	BuildVert();
 	LoadDataToVRAM();
 }
 
-Cylinder::Cylinder(float radius, float height, uint sides) : Primitive(), radius(radius), height(height), sides(sides)
+Cyl::Cyl(float radius, float height, uint sides) : Primitive(), radius(radius), height(height), sides(sides)
 {
 	primitive_type = PrimitiveTypes::Primitive_Cylinder;
 	BuildVert();
 	LoadDataToVRAM();
 }
 
-void Cylinder::BuildVert() {
+void Cyl::BuildVert() {
 
 	num_vertices = ((360 / (360 / sides)) * 2) + 4;    //sides  (vertex per circumference) * 2 (circumferences) + 2 (circumference center)
-	float* v = vertices;
+	vertices = new float3[num_vertices];
 
-	*v++ =  height*0.5f ; *v++ =   0;  *v++ =  0;     //vertices[0] is top center vertex
-	*v++ =  -height*0.5f; *v++ =   0;  *v++ =  0;    //vertices[1] is top bottom vertex
+	vertices[0].x = height*0.5f;  vertices[0].y = 0; vertices[0].z = 0;     //vertices[0] is top center vertex
+	vertices[1].x = -height*0.5f; vertices[1].y = 0; vertices[2].z = 0;    //vertices[1] is top bottom vertex
 
-	for (int a = 360; a >= 0; a -= (360 / sides))
+	for (int a = 360, i = 2; a >= 0; a -= (360 / sides), i++)
 	{
 		float b = a * M_PI / 180; // degrees to radians
-		*v++ = radius * cos(b); *v++ = height * 0.5f; *v++ = radius * sin(b);    //vertices[2] is first vertex in top circumference
-		*v++ = radius * cos(b); *v++ = -height*0.5f;  *v++ = radius * sin(b);    //vertices[3] is first vertex in bottom circumference
-	} 
+		vertices[i].x = radius * cos(b); vertices[i].y = height * 0.5f; vertices[i].z = radius * sin(b);    //vertices[2] is first vertex in top circumference
+		i++;
+		vertices[i].x = radius * cos(b); vertices[i].y = -height*0.5f;  vertices[i].x = radius * sin(b);    //vertices[3] is first vertex in bottom circumference
+	}
 
-	num_indices = (num_vertices * 6) - 4;
-	uint* i = indices;
+	num_tris = (num_vertices * 2) - 4;
+	tris = new Tri[num_tris];
 
-	for (int a = 2; (a + 2) < num_vertices; a++)
+	for (int a = 2, i = 0; (a + 2) < num_vertices; a++, i++)
 	{
-		*i++ = a + ((a + 1) % 2 ? 2 : 0); *i++ = a % 2; *i++ = a + (a % 2 ? 2 : 0);	// top and bottom circ
-		*i++ = a + ((a + 1) % 2 ? 0 : 2); *i++ = a + 1; *i++ = a + (a % 2 ? 0 : 2);   // side
+		tris[i].vert1 = a + ((a + 1) % 2 ? 2 : 0); tris[i].vert2 = a % 2; tris[i].vert3 = a + (a % 2 ? 2 : 0);	// top and bottom circ
+		i++;
+		tris[i].vert1 = a + ((a + 1) % 2 ? 0 : 2); tris[i].vert2 = a + 1; tris[i].vert3 = a + (a % 2 ? 0 : 2);   // side
 	}
 
 }
 
-void Cylinder::InnerRender() const
+void Cyl::InnerRender() const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_tris);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, num_tris * 3, GL_UNSIGNED_INT, NULL);
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -283,18 +291,18 @@ void Cylinder::InnerRender() const
 }
 
 // LINE ==================================================
-Line::Line() : Primitive(), origin({ 0, 0, 0 }), destination({ 1, 1, 1 })
+LineSegm::LineSegm() : Primitive(), origin({ 0, 0, 0 }), destination({ 1, 1, 1 })
 {
 	primitive_type = PrimitiveTypes::Primitive_Line;
 }
 
-Line::Line(Vertex origin, Vertex dest) : Primitive(), origin(origin), destination(dest)
+LineSegm::LineSegm(Vertex origin, Vertex dest) : Primitive(), origin(origin), destination(dest)
 {
 	primitive_type = PrimitiveTypes::Primitive_Line;
 }
 
 
-void Line::InnerRender() const
+void LineSegm::InnerRender() const
 {
 	glLineWidth(2.0f);
 

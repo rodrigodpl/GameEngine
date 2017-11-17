@@ -3,6 +3,8 @@
 #include "parson-master\parson.h"
 #include "Color.h"
 
+#include "MathGeoLib.h"
+
 #include<string>
 #include<list>
 
@@ -17,10 +19,12 @@ public:
 	void		WriteBool	(const char* name, bool value);
 	void		WriteNumber	(const char* name, float value);
 	void		WriteColor	(const char* name, Color value);
+	void		WriteFloat3 (const char* name, float3 value);
 										 
 	const char* ReadString	(const char* name);
 	bool		ReadBool	(const char* name);
 	float		ReadNumber	(const char* name);
+	float3		ReadFloat3 (const char* name);
 	Color		ReadColor   (const char* name);
 
 	void Save();

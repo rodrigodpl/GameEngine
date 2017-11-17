@@ -74,11 +74,11 @@ public:
 //};
 
 // ============================================
-class Cylinder : public Primitive
+class Cyl : public Primitive
 {
 public:
-	Cylinder();
-	Cylinder(float radius, float height, uint sides);
+	Cyl();
+	Cyl(float radius, float height, uint sides);
 	void InnerRender() const;
 	void BuildVert();
 public:
@@ -88,11 +88,11 @@ public:
 };
 
 // ============================================
-class Line : public Primitive
+class LineSegm : public Primitive
 {
 public:
-	Line();
-	Line(Vertex origin, Vertex dest);
+	LineSegm();
+	LineSegm(Vertex origin, Vertex dest);
 	void InnerRender() const;
 public:
 	Vertex origin;

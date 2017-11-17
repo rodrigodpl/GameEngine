@@ -84,6 +84,20 @@ void JSON_file::WriteColor(const char* name, Color value)
 	json_object_dotset_number(object, s.c_str(), value.a);
 }
 
+void JSON_file::WriteFloat3(const char* name, float3 value)
+{
+	std::string s;
+
+	s.append(name); s.append(".x");
+	json_object_dotset_number(object, s.c_str(), value.x);
+
+	s.clear(); s.append(name); s.append(".y");
+	json_object_dotset_number(object, s.c_str(), value.y);
+
+	s.clear(); s.append(name); s.append(".z");
+	json_object_dotset_number(object, s.c_str(), value.z);
+}
+
 const char * JSON_file::ReadString(const char* name)
 {
 	JSON_Value* value = json_object_dotget_value(object, name);
@@ -129,6 +143,22 @@ Color JSON_file::ReadColor(const char* name)
 
 	s.clear(); s.append(name); s.append(".a");
 	ret.a = json_object_dotget_number(object, s.c_str());
+
+	return ret;
+}
+
+float3 JSON_file::ReadFloat3(const char* name)
+{
+	std::string s; float3 ret = { -1.0f, -1.0f, -1.0f};
+
+	s.append(name); s.append(".x");
+	ret.x = json_object_dotget_number(object, s.c_str());
+
+	s.clear(); s.append(name); s.append(".y");
+	ret.y = json_object_dotget_number(object, s.c_str());
+
+	s.clear(); s.append(name); s.append(".z");
+	ret.z = json_object_dotget_number(object, s.c_str());
 
 	return ret;
 }
