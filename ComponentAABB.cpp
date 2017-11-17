@@ -142,6 +142,9 @@ void ComponentAABB::Save(JSON_file& save_file, const char* component_code)
 
 	attribute_code.clear(); attribute_code.append(component_code);
 	save_file.WriteFloat3(attribute_code.append(".max_point").c_str(), GetMaxP());
+
+	attribute_code.clear(); attribute_code.append(component_code); attribute_code.append(".transform");
+	transform->Save(save_file, attribute_code.c_str());
 }
 
 void ComponentAABB::Load(JSON_file& save_file, const char* component_code)
@@ -153,6 +156,9 @@ void ComponentAABB::Load(JSON_file& save_file, const char* component_code)
 
 	attribute_code.clear(); attribute_code.append(component_code);
 	min_max[1] = save_file.ReadFloat3(attribute_code.append(".max_point").c_str());
+
+	attribute_code.clear(); attribute_code.append(component_code); attribute_code.append(".transform");
+	transform->Load(save_file, attribute_code.c_str());
 
 	Init(min_max, 2);
 }

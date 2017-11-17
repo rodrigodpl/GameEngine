@@ -101,8 +101,8 @@ GameObject* ModuleImporter::LoadNodeRecursive(aiNode* node, const aiScene* scene
 
 	//meshes and materials
 	App->gui->app_log.AddLog("Number of meshes %d\n", node->mNumMeshes);
-	for (uint i = 0; i < node->mNumMeshes; i++) {
-
+	for (uint i = 0; i < node->mNumMeshes; i++) 
+	{
 		std::string mesh_name("mesh");
 		aiMesh* imp_mesh = scene->mMeshes[node->mMeshes[i]];
 		
@@ -111,8 +111,6 @@ GameObject* ModuleImporter::LoadNodeRecursive(aiNode* node, const aiScene* scene
 		mesh->mat = App->scene_intro->materials.at(imp_mesh->mMaterialIndex);
 
 		game_object->components.push_back((Component*)mesh);
-		game_object->components.push_back((Component*)mesh->mat);
-
 	}
 
 	ComponentAABB* aabb = new ComponentAABB(*game_object);

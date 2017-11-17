@@ -34,7 +34,7 @@ public:
 
 public:
 	ObjectBB* obb = nullptr;                     // obb is created in Init method
-	ComponentTransform* transform;
+	ComponentTransform* transform = nullptr;
 
 };
 

@@ -1,4 +1,5 @@
 #include "ComponentMesh.h"
+#include "ComponentTransform.h"
 
 #include "glew-2.1.0\include\GL\glew.h"
 
@@ -7,6 +8,8 @@ ComponentMesh::ComponentMesh() { type = Component_type::COMPONENT_MESH; }
 ComponentMesh::ComponentMesh(aiMesh& mesh) {
 
 	type = Component_type::COMPONENT_MESH;
+
+	transform = new ComponentTransform();
 
 	LoadDataFromAssimp(mesh);
 	LoadDataToVRAM();
@@ -25,6 +28,7 @@ ComponentMesh::ComponentMesh(ComponentMesh& mesh) {
 	num_texcoords = mesh.num_texcoords;	texcoords = mesh.texcoords;
 
 	mat = (ComponentMaterial*) mesh.mat->Duplicate();
+	transform = (ComponentTransform*) mesh.transform->Duplicate();;
 
 	LoadDataToVRAM();
 
@@ -176,4 +180,19 @@ void ComponentMesh::Draw() {
 	if (mat)
 		glDisable(GL_TEXTURE_2D);
 
+}
+
+
+void ComponentMesh::Save(JSON_file& save_file, const char* component_code)
+{
+	std::string attribute_code(component_code);
+	attribute_code.append(".transform");
+	transform->Save(save_file, attribute_code.c_str());
+}
+
+void ComponentMesh::Load(JSON_file& save_file, const char* component_code)
+{
+	std::string attribute_code(component_code);
+	attribute_code.append(".transform");
+	transform->Load(save_file, attribute_code.c_str());
 }

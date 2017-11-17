@@ -86,3 +86,35 @@ void ComponentTransform::Update()
 {}
 
 
+void ComponentTransform::Save(JSON_file& save_file, const char* component_code)
+{
+	std::string attribute_code(component_code);
+
+	save_file.WriteNumber(attribute_code.append(".type").c_str(), type);
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	save_file.WriteFloat3(attribute_code.append(".position").c_str(), position);
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	save_file.WriteFloat3(attribute_code.append(".scale").c_str(), scale);
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	save_file.WriteFloat3(attribute_code.append(".rotation_euler").c_str(), rotation.ToEulerXYZ());
+}
+
+void ComponentTransform::Load(JSON_file& save_file, const char* component_code)
+{
+	std::string attribute_code(component_code);
+
+	position = save_file.ReadFloat3(attribute_code.append(".position").c_str());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	scale = save_file.ReadFloat3(attribute_code.append(".scale").c_str());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	float3 rotation_euler = save_file.ReadFloat3(attribute_code.append(".rotation_euler").c_str());
+	rotation.FromEulerXYZ(rotation_euler.x, rotation_euler.y, rotation_euler.z);
+
+	mat.FromTRS(position, rotation, scale);
+}
+

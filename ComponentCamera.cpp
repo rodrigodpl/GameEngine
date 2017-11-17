@@ -2,6 +2,8 @@
 
 ComponentCamera::ComponentCamera(float3 position)
 {
+	type = COMPONENT_CAMERA;
+
 	frustum = new Frustum();
 
 	frustum->SetKind(FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
@@ -155,5 +157,59 @@ void ComponentCamera::RepositionToDisplay(ComponentAABB& aabb)
 {
 	SetPosition(aabb.GetMaxP() * REPOSITION_SCALE);
 	LookAt({ 0,0,0 });
+}
+
+
+void ComponentCamera::Save(JSON_file& save_file, const char* component_code)
+{
+	std::string attribute_code(component_code);
+
+	save_file.WriteNumber(attribute_code.append(".type").c_str(), type);
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	save_file.WriteNumber(attribute_code.append(".speed").c_str(), speed);
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	save_file.WriteNumber(attribute_code.append(".sensitivity").c_str(), sensitivity);
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	save_file.WriteNumber(attribute_code.append(".near_plane").c_str(), frustum->NearPlaneDistance());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	save_file.WriteNumber(attribute_code.append(".far_plane").c_str(), frustum->FarPlaneDistance());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	save_file.WriteNumber(attribute_code.append(".horizontal_fov").c_str(), frustum->HorizontalFov());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	save_file.WriteNumber(attribute_code.append(".vertical_fov").c_str(), frustum->VerticalFov());
+
+	attribute_code.clear(); attribute_code.append(component_code); attribute_code.append(".transform");
+	transform->Save(save_file, attribute_code.c_str());
+
+}
+void ComponentCamera::Load(JSON_file& save_file, const char* component_code)
+{
+	std::string attribute_code(component_code);
+
+	speed = save_file.ReadNumber(attribute_code.append(".speed").c_str());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	sensitivity = save_file.ReadNumber(attribute_code.append(".sensitivity").c_str());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	near_plane_d = save_file.ReadNumber(attribute_code.append(".near_plane").c_str());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	far_plane_d = save_file.ReadNumber(attribute_code.append(".far_plane").c_str());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	horizontal_fov = save_file.ReadNumber(attribute_code.append(".horizontal_fov").c_str());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	vertical_fov = save_file.ReadNumber(attribute_code.append(".vertical_fov").c_str());
+
+	attribute_code.clear(); attribute_code.append(component_code); attribute_code.append(".transform");
+	transform->Load(save_file, attribute_code.c_str());
 }
 

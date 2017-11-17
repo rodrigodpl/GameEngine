@@ -43,7 +43,7 @@ bool ModuleSceneIntro::CleanUp()
 
 void ModuleSceneIntro::Save(JSON_file& config)
 {
-	JSON_file* save_file = App->json->OpenFile(name.c_str(), LIBRARY_BASE_PATH);
+	JSON_file* save_file = App->json->OpenFile(name.c_str(), ASSETS_BASE_PATH);
 
 	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); it++)
 		(*it)->Serialize(*save_file);
