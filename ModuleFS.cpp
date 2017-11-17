@@ -51,28 +51,28 @@ bool ModuleFS::IsDirectory(const char* file) const
 }
 
 // Read a whole file and put it in a new buffer
-unsigned int ModuleFS::Load(const char* file, char* buffer) const
+char* ModuleFS::Load(const char* file, uint& size) const
 {
-	unsigned int ret = 0;
+	char* buffer = nullptr;
 
 	PHYSFS_file* fs_file = PHYSFS_openRead(file);
 
 	if(fs_file != NULL)
 	{
-		PHYSFS_sint64 size = PHYSFS_fileLength(fs_file);
+		size = PHYSFS_fileLength(fs_file);
 
 		if(size > 0)
 		{
-			buffer = new char[(uint)size];
+			buffer = new char[size];
 			PHYSFS_sint64 readed = PHYSFS_read(fs_file, buffer, 1, (PHYSFS_sint32)size);
 			if(readed != size)
 			{
 				App->gui->app_log.AddLog("File System error while reading from file %s: %s\n", file, PHYSFS_getLastError());
-				if (buffer)
+				if (buffer) {
 					delete[] buffer;
+					buffer = nullptr;
+				}
 			}
-			else
-				ret = (uint)readed;
 		}
 
 		if(PHYSFS_close(fs_file) == 0)
@@ -81,14 +81,14 @@ unsigned int ModuleFS::Load(const char* file, char* buffer) const
 	else
 		App->gui->app_log.AddLog("File System error while opening file %s: %s\n", file, PHYSFS_getLastError());
 
-	return ret;
+	return buffer;
 }
 
 // Read a whole file and put it in a new buffer
 SDL_RWops* ModuleFS::Load(const char* file) const
 {
-	char* buffer;
-	int size = Load(file, buffer);
+	uint size = 0;
+	char* buffer = Load(file, size);
 
 	if(size > 0)
 	{
@@ -112,7 +112,7 @@ int close_sdl_rwops(SDL_RWops *rw)
 }
 
 // Save a whole buffer to disk
-unsigned int ModuleFS::Save(const char* file_name, const char* data, const char* write_dir, unsigned int size)const
+unsigned int ModuleFS::Save(const char* file_name, const void* data, const char* write_dir, unsigned int size)const
 {
 	unsigned int ret = 0;
 
@@ -122,7 +122,7 @@ unsigned int ModuleFS::Save(const char* file_name, const char* data, const char*
 
 		if (fs_file != NULL)
 		{
-			PHYSFS_sint64 written = PHYSFS_write(fs_file, (const void*)data, 1, size);
+			PHYSFS_sint64 written = PHYSFS_write(fs_file, data, 1, size);
 			if (written != size)
 				App->gui->app_log.AddLog("File System error while writing to file %s: %s\n", file_name, PHYSFS_getLastError());
 			else

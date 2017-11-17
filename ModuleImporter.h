@@ -1,12 +1,16 @@
 #pragma once
 
 #include "Module.h"
-#include "GameObject.h"
 
-#include "Assimp/include/cimport.h"
-#include "Assimp/include/scene.h"
-#include "Assimp/include/postprocess.h"
-#include "Assimp/include/cfileio.h"
+#include <string>
+#include <vector>
+
+class Texture;
+class aiMesh;
+class aiNode;
+class aiScene;
+class ComponentMesh;
+class GameObject;
 
 enum supported_extensions
 {
@@ -32,5 +36,15 @@ public:
 	uint LoadImg(const char* full_path);
 
 	void LoadAssets(std::vector<std::string> files);
+
+	// Textures:
+	bool ImportTex(const char* imported_file_fullpath, std::string& exported_file_name);
+	bool ImportTex(const void* buffer, uint size, std::string& exported_file_name);
+	bool LoadTex(const char* exported_file, Texture* resource);
+	//bool LoadCheckers(Texture* resource);
+
+	// Meshes: 
+	bool ImportMesh(aiMesh& imported_mesh, std::string& exported_file_name);
+	bool LoadMesh(const char* exported_file, ComponentMesh* resource);
 
 };
