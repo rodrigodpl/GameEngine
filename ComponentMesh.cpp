@@ -3,7 +3,10 @@
 
 #include "glew-2.1.0\include\GL\glew.h"
 
-ComponentMesh::ComponentMesh() { type = Component_type::COMPONENT_MESH; }
+ComponentMesh::ComponentMesh() 
+{ 
+	type = Component_type::COMPONENT_MESH; 
+}
 
 ComponentMesh::ComponentMesh(aiMesh& mesh) {
 
@@ -15,7 +18,6 @@ ComponentMesh::ComponentMesh(aiMesh& mesh) {
 	LoadDataToVRAM();
 	
 }
-
 
 ComponentMesh::ComponentMesh(ComponentMesh& mesh) {
 
@@ -186,13 +188,11 @@ void ComponentMesh::Draw() {
 void ComponentMesh::Save(JSON_file& save_file, const char* component_code)
 {
 	std::string attribute_code(component_code);
-	attribute_code.append(".transform");
-	transform->Save(save_file, attribute_code.c_str());
+	transform->Save(save_file, attribute_code.append(".transform").c_str());
 }
 
 void ComponentMesh::Load(JSON_file& save_file, const char* component_code)
 {
 	std::string attribute_code(component_code);
-	attribute_code.append(".transform");
-	transform->Load(save_file, attribute_code.c_str());
+	transform->Load(save_file, attribute_code.append(".transform").c_str());
 }

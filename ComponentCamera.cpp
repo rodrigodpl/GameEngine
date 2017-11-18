@@ -4,14 +4,9 @@ ComponentCamera::ComponentCamera(float3 position)
 {
 	type = COMPONENT_CAMERA;
 
-	frustum = new Frustum();
-
-	frustum->SetKind(FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
-	frustum->SetViewPlaneDistances(0.5f, 100.0f);
-	frustum->SetFrame(position, { 0,0,1 }, { 0,1,0 });
-	frustum->SetPerspective(90.0f * DEGTORAD, 59.0f * DEGTORAD);                       //these angles provide an aspect ratio of 16:9
+	InitFrustum(position);
 	
-	transform = new ComponentTransform(Quat::identity, { position.x, position.y, position.z });
+	transform = new ComponentTransform(Quat::identity, { position.x, position.y, position.z }, { 1,1,1 });
 
 	ref_dist = INITIAL_REF_DISTANCE;
 	reference = transform->position + (frustum->Front() * ref_dist);
@@ -19,9 +14,27 @@ ComponentCamera::ComponentCamera(float3 position)
 	proj_update = true;
 }
 
+ComponentCamera::ComponentCamera()
+{
+	type = COMPONENT_CAMERA;
+
+	ref_dist = INITIAL_REF_DISTANCE;
+	reference = transform->position + (frustum->Front() * ref_dist);
+}
+
 ComponentCamera::~ComponentCamera()
 {
 	delete frustum;
+}
+
+void ComponentCamera::InitFrustum(float3 position)
+{
+	frustum = new Frustum();
+
+	frustum->SetKind(FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
+	frustum->SetViewPlaneDistances(near_plane_d, far_plane_d);
+	frustum->SetFrame(position, { 0,0,1 }, { 0,1,0 });
+	frustum->SetPerspective(horizontal_fov, vertical_fov);                       //these angles provide an aspect ratio of 16:9
 }
 
 void ComponentCamera::LookAt(const float3 &Spot)
@@ -162,54 +175,33 @@ void ComponentCamera::RepositionToDisplay(ComponentAABB& aabb)
 
 void ComponentCamera::Save(JSON_file& save_file, const char* component_code)
 {
-	std::string attribute_code(component_code);
+	save_file.WriteNumber(std::string(".type").insert(0, component_code).c_str(), type);
+	save_file.WriteNumber(std::string(".speed").insert(0, component_code).c_str(), speed);
+	save_file.WriteNumber(std::string(".sensitivity").insert(0, component_code).c_str(), sensitivity);
 
-	save_file.WriteNumber(attribute_code.append(".type").c_str(), type);
+	save_file.WriteNumber(std::string(".near_plane").insert(0, component_code).c_str(), frustum->NearPlaneDistance());
+	save_file.WriteNumber(std::string(".far_plane").insert(0, component_code).c_str(), frustum->FarPlaneDistance());
+	save_file.WriteNumber(std::string(".horizontal_fov").insert(0, component_code).c_str(), frustum->HorizontalFov());
+	save_file.WriteNumber(std::string(".vertical_fov").insert(0, component_code).c_str(), frustum->VerticalFov());
 
-	attribute_code.clear(); attribute_code.append(component_code);
-	save_file.WriteNumber(attribute_code.append(".speed").c_str(), speed);
-
-	attribute_code.clear(); attribute_code.append(component_code);
-	save_file.WriteNumber(attribute_code.append(".sensitivity").c_str(), sensitivity);
-
-	attribute_code.clear(); attribute_code.append(component_code);
-	save_file.WriteNumber(attribute_code.append(".near_plane").c_str(), frustum->NearPlaneDistance());
-
-	attribute_code.clear(); attribute_code.append(component_code);
-	save_file.WriteNumber(attribute_code.append(".far_plane").c_str(), frustum->FarPlaneDistance());
-
-	attribute_code.clear(); attribute_code.append(component_code);
-	save_file.WriteNumber(attribute_code.append(".horizontal_fov").c_str(), frustum->HorizontalFov());
-
-	attribute_code.clear(); attribute_code.append(component_code);
-	save_file.WriteNumber(attribute_code.append(".vertical_fov").c_str(), frustum->VerticalFov());
-
-	attribute_code.clear(); attribute_code.append(component_code); attribute_code.append(".transform");
-	transform->Save(save_file, attribute_code.c_str());
+	transform->Save(save_file, std::string(".transform").insert(0, component_code).c_str());
 
 }
 void ComponentCamera::Load(JSON_file& save_file, const char* component_code)
 {
-	std::string attribute_code(component_code);
+	speed = save_file.ReadNumber(std::string(".speed").insert(0, component_code).c_str());
+	sensitivity = save_file.ReadNumber(std::string(".sensitivity").insert(0, component_code).c_str());
 
-	speed = save_file.ReadNumber(attribute_code.append(".speed").c_str());
+	near_plane_d = save_file.ReadNumber(std::string(".near_plane").insert(0, component_code).c_str());
+	far_plane_d = save_file.ReadNumber(std::string(".far_plane").insert(0, component_code).c_str());
+	horizontal_fov = save_file.ReadNumber(std::string(".horizontal_fov").insert(0, component_code).c_str());
+	vertical_fov = save_file.ReadNumber(std::string(".vertical_fov").insert(0, component_code).c_str());
 
-	attribute_code.clear(); attribute_code.append(component_code);
-	sensitivity = save_file.ReadNumber(attribute_code.append(".sensitivity").c_str());
+	transform = new ComponentTransform();
+	transform->Load(save_file, std::string(".transform").insert(0, component_code).c_str());
 
-	attribute_code.clear(); attribute_code.append(component_code);
-	near_plane_d = save_file.ReadNumber(attribute_code.append(".near_plane").c_str());
+	InitFrustum(transform->position);
 
-	attribute_code.clear(); attribute_code.append(component_code);
-	far_plane_d = save_file.ReadNumber(attribute_code.append(".far_plane").c_str());
-
-	attribute_code.clear(); attribute_code.append(component_code);
-	horizontal_fov = save_file.ReadNumber(attribute_code.append(".horizontal_fov").c_str());
-
-	attribute_code.clear(); attribute_code.append(component_code);
-	vertical_fov = save_file.ReadNumber(attribute_code.append(".vertical_fov").c_str());
-
-	attribute_code.clear(); attribute_code.append(component_code); attribute_code.append(".transform");
-	transform->Load(save_file, attribute_code.c_str());
+	proj_update = true;
 }
 

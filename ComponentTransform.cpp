@@ -4,7 +4,6 @@ ComponentTransform::ComponentTransform(Quat rot , float3 pos, float3 scl) : posi
 {
 	type = Component_type::COMPONENT_TRANSFORM;
 	mat = mat.FromTRS(position, rotation, scale);
-
 }
 
 ComponentTransform::ComponentTransform(float3 euler_axis, float3 pos, float3 scl) : position(pos), scale(scl)
@@ -18,6 +17,11 @@ ComponentTransform::ComponentTransform(ComponentTransform& transform) : position
 {
 	type = Component_type::COMPONENT_TRANSFORM;
 	mat = (transform.mat);
+}
+
+ComponentTransform::ComponentTransform() 
+{
+	type = Component_type::COMPONENT_TRANSFORM;
 }
 
 ComponentTransform::~ComponentTransform() 
@@ -90,31 +94,19 @@ void ComponentTransform::Save(JSON_file& save_file, const char* component_code)
 {
 	std::string attribute_code(component_code);
 
-	save_file.WriteNumber(attribute_code.append(".type").c_str(), type);
-
-	attribute_code.clear(); attribute_code.append(component_code);
-	save_file.WriteFloat3(attribute_code.append(".position").c_str(), position);
-
-	attribute_code.clear(); attribute_code.append(component_code);
-	save_file.WriteFloat3(attribute_code.append(".scale").c_str(), scale);
-
-	attribute_code.clear(); attribute_code.append(component_code);
-	save_file.WriteFloat3(attribute_code.append(".rotation_euler").c_str(), rotation.ToEulerXYZ());
+	save_file.WriteNumber(std::string(".type").insert(0, component_code).c_str(), type);
+	save_file.WriteFloat3(std::string(".position").insert(0, component_code).c_str(), position);
+	save_file.WriteFloat3(std::string(".scale").insert(0, component_code).c_str(),	scale);
+	save_file.WriteFloat3(std::string(".rotation_euler").insert(0, component_code).c_str(), rotation.ToEulerXYZ());
 }
 
 void ComponentTransform::Load(JSON_file& save_file, const char* component_code)
 {
-	std::string attribute_code(component_code);
+	position = save_file.ReadFloat3(std::string(".position").insert(0, component_code).c_str());
+	scale = save_file.ReadFloat3(std::string(".scale").insert(0, component_code).c_str());
+	float3 rotation_euler = save_file.ReadFloat3(std::string(".rotation_euler").insert(0, component_code).c_str());
 
-	position = save_file.ReadFloat3(attribute_code.append(".position").c_str());
-
-	attribute_code.clear(); attribute_code.append(component_code);
-	scale = save_file.ReadFloat3(attribute_code.append(".scale").c_str());
-
-	attribute_code.clear(); attribute_code.append(component_code);
-	float3 rotation_euler = save_file.ReadFloat3(attribute_code.append(".rotation_euler").c_str());
 	rotation.FromEulerXYZ(rotation_euler.x, rotation_euler.y, rotation_euler.z);
-
 	mat.FromTRS(position, rotation, scale);
 }
 

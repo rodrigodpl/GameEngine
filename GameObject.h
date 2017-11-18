@@ -17,6 +17,7 @@ class GameObject
 public:
 	GameObject(const char* name, GameObject* parent = nullptr);
 	GameObject(GameObject& game_obj);
+	GameObject();														// empty constructor! Load MUST be called afterwards
 
 	~GameObject();
 
@@ -30,20 +31,25 @@ public:
 
 	void CreateTree();
 
-	void RayCastAgainstAABBs(Ray ray, std::list<RayHit>& outHits);    // recursive
-	void RayCastAgainstMeshes(Ray ray, std::list<RayHit>& outHits);     // not recursive
+	void RayCastAgainstAABBs(Ray ray, std::list<RayHit>& outHits);		// recursive
+	void RayCastAgainstMeshes(Ray ray, std::list<RayHit>& outHits);		// not recursive
 
-	void Serialize(JSON_file& save_file);
+	void Save(JSON_file& save_file, uint& obj_index);
+	void Load(JSON_file& save_file, uint& obj_index);
+
+	void FindParent(std::vector<GameObject*>& objects);					// recursive
+	GameObject* RetrieveParent(std::string& parent_uid);				// recursive
 
 public:
 
-	GameObject* parent;
-	std::string name;
-	std::string uid;
-	std::vector<Component*> components;
-	std::vector<GameObject*> children;
+	GameObject* parent = nullptr;
+	std::string name;						// scene saved variable
+	std::string uid;						// scene saved variable
+	std::string parent_uid;					// scene saved variable
+	std::vector<Component*> components;		// scene saved variable
+	std::vector<GameObject*> children;		// scene saved variable
 
 	bool culled = false;
-	bool enabled = true;
+	bool enabled = true;					// scene saved variable
 };
 

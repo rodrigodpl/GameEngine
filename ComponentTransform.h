@@ -7,9 +7,10 @@
 class ComponentTransform : Component {
 public:
 
-	ComponentTransform(Quat rot = { 0,0,0,0 },float3 pos = { 0,0,0 }, float3 scl = { 1,1,1 } );
-	ComponentTransform(float3 euler_axis, float3 pos = { 0,0,0 }, float3 scl = { 1,1,1 });
+	ComponentTransform(Quat rot ,float3 pos, float3 scl);
+	ComponentTransform(float3 euler_axis, float3 pos, float3 scl);
 	ComponentTransform(ComponentTransform& transform);
+	ComponentTransform();											// empty constructor! Load MUST be called afterwards
 
 	~ComponentTransform();
 
@@ -31,9 +32,9 @@ public:
 
 public:
 
-	float3 position;
-	float3 scale;
-	Quat rotation;
+	float3 position = { 0,0,0 };			// scene saved variable
+	float3 scale = { 1,1,1 };				// scene saved variable
+	Quat rotation = { 0,0,0,0 };			// scene saved variable
 	
-	float4x4 mat;
+	float4x4 mat = mat.identity;
 };

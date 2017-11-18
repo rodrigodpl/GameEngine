@@ -24,9 +24,9 @@ class ComponentTransform;
 class ComponentMesh : Component {
 public:
 
-	ComponentMesh();
 	ComponentMesh(aiMesh& mesh);
 	ComponentMesh(ComponentMesh& mesh);
+	ComponentMesh();
 
 	~ComponentMesh();
 
@@ -62,5 +62,5 @@ public:
 	float2* texcoords = nullptr;
 
 	ComponentMaterial* mat = nullptr;
-	ComponentTransform* transform = nullptr;
+	ComponentTransform* transform = nullptr;			// scene saved variable
 };

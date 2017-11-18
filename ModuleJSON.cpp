@@ -31,7 +31,7 @@ JSON_file* ModuleJSON::OpenFile(const char* filename, const char* write_dir)
 	JSON_file* file = nullptr;
 
 	std::string full_path(write_dir);
-	full_path.append("\\");
+	full_path.append("/");
 	full_path.append(filename);
 
 	if (!App->fs->Exists(full_path.c_str()))

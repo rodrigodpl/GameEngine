@@ -14,7 +14,8 @@ public:
 	void Draw();
 
 public:
-	float3* vertices = nullptr;
+
+	float3* vertices = nullptr;						// scene saved variable
 
 };
 
@@ -24,6 +25,7 @@ public:
 	ComponentAABB(float3* vert, int num_vert, ComponentTransform* parent_transform = nullptr);
 	ComponentAABB(ComponentMesh& mesh, ComponentTransform* parent_transform = nullptr);
 	ComponentAABB(GameObject& game_obj);
+	ComponentAABB();									// empty constructor! Load MUST be called afterwards
 	~ComponentAABB();
 
 	void Init(float3* vert, int num_vert);

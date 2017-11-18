@@ -13,8 +13,11 @@
 class ComponentCamera : public Component
 {
 public:
-	ComponentCamera(float3 position = { 0.0f, -2.0f, -5.0f });
+	ComponentCamera(float3 position);
+	ComponentCamera();												// empty constructor! Load MUST be called afterwards
 	~ComponentCamera();
+
+	void InitFrustum(float3 position);
 
 	void LookAt(const float3 &Spot);
 	void LookAround(float dx, float dy);
@@ -48,15 +51,15 @@ private:
 	// TODO: mark saved variables
 	Frustum* frustum = nullptr;
 
-	float near_plane_d		= 0.5f;
-	float far_plane_d		= 100.0f;
+	float near_plane_d		= 0.5f;					// scene saved variable
+	float far_plane_d		= 100.0f;				// scene saved variable
 
-	float horizontal_fov	= 90.0f * DEGTORAD;
-	float vertical_fov		= 59.0f * DEGTORAD; 
+	float horizontal_fov	= 90.0f * DEGTORAD;		// scene saved variable
+	float vertical_fov		= 59.0f * DEGTORAD;		// scene saved variable
 
-	float speed				= 1.0f;
-	float sensitivity		= 0.25f;
-
+	float speed				= 1.0f;					// scene saved variable
+	float sensitivity		= 0.25f;				// scene saved variable
+		
 	float3 reference		= { 0,0,0 };
 	float ref_dist			= INITIAL_REF_DISTANCE;
 };

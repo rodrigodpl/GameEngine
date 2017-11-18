@@ -22,10 +22,13 @@ GameObject::GameObject(GameObject& game_obj)
 		children.push_back(new GameObject(*(*it)));
 }
 
+GameObject::GameObject() 
+{}
+
 GameObject::~GameObject() 
 {
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++) {
-		if ((*it)->type == COMPONENT_MATERIAL)    //  materials are stored and deleted by scene_intro
+		if ((*it)->type != COMPONENT_MATERIAL)    //  materials are stored and deleted by scene_intro
 			delete *it;
 	}
 
@@ -179,30 +182,98 @@ void GameObject::CreateTree()
 	}
 }
 
-void GameObject::Serialize(JSON_file& save_file)
+void GameObject::Save(JSON_file& save_file, uint& obj_index)
 {
-	std::string base_name = name;
-	base_name.append(".");
+	std::string base_name = ("objects.");
+	base_name.append(std::to_string(obj_index));
 
-	save_file.WriteString(std::string("uid:").insert(0, base_name).c_str(), uid.c_str());
-	save_file.WriteBool(std::string("enabled:").insert(0, base_name).c_str(), enabled);
+	save_file.WriteString(std::string(".name").insert(0, base_name).c_str(), name.c_str());
+	save_file.WriteString(std::string(".uid").insert(0, base_name).c_str(), uid.c_str());
+	save_file.WriteBool(std::string(".enabled").insert(0, base_name).c_str(), enabled);
 
 	if(parent)
-		save_file.WriteString(std::string("parent:").insert(0, base_name).c_str(), parent->uid.c_str());
+		save_file.WriteString(std::string(".parent_uid").insert(0, base_name).c_str(), parent->uid.c_str());
 	else
-		save_file.WriteString(std::string("parent:").insert(0, base_name).c_str(), "null");
+		save_file.WriteString(std::string(".parent_uid").insert(0, base_name).c_str(), "none");
 
-
-	save_file.WriteNumber(std::string("number of components:").insert(0, base_name).c_str(), components.size());
-	int counter = 0;
-	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
+	save_file.WriteNumber(std::string(".number of components").insert(0, base_name).c_str(), components.size());
+	uint comp_index = 0;
+	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++, comp_index++)
 	{
 		std::string component_code(base_name);
-		component_code.append("components."); component_code.append(std::to_string(counter));;
+		component_code.append(".components."); component_code.append(std::to_string(comp_index));
 		(*it)->Save(save_file, component_code.c_str());
-		counter++;
 	}
 
 	for (std::vector<GameObject*>::iterator it2 = children.begin(); it2 != children.end(); it2++)
-		(*it2)->Serialize(save_file);
+		(*it2)->Save(save_file, ++obj_index);
+}
+
+void GameObject::Load(JSON_file& save_file, uint& obj_index)
+{
+	std::string base_name = ("objects.");
+	base_name.append(std::to_string(obj_index));
+
+	name = save_file.ReadString(std::string(".name").insert(0, base_name).c_str());
+	uid = save_file.ReadString(std::string(".uid").insert(0, base_name).c_str());
+	enabled = save_file.ReadBool(std::string(".enabled").insert(0, base_name).c_str());
+
+	parent_uid = save_file.ReadString(std::string(".parent_uid").insert(0, base_name).c_str());
+	// parent pointer MUST be setup by scene loading method AFTER game object loading
+
+	uint comp_num = save_file.ReadNumber(std::string(".number of components").insert(0, base_name).c_str());
+
+	for (uint comp_index = 0; comp_index < comp_num; comp_index++)
+	{
+		std::string component_code(base_name);
+		component_code.append(".components."); component_code.append(std::to_string(comp_index));
+
+		Component_type type = (Component_type)((uint)save_file.ReadNumber(std::string(".type").insert(0, component_code).c_str()));
+		Component* new_comp = nullptr;
+
+		switch (type)
+		{
+		case COMPONENT_MESH:		new_comp = (Component*) new ComponentMesh();		break;
+		case COMPONENT_TRANSFORM:	new_comp = (Component*) new ComponentTransform();	break;
+		case COMPONENT_CAMERA:		new_comp = (Component*) new ComponentCamera();		break;
+		case COMPONENT_AABB:		new_comp = (Component*) new ComponentAABB();		break;
+		}
+
+		if (new_comp)
+		{
+			new_comp->Load(save_file, component_code.c_str());
+			components.push_back(new_comp);
+		}
+	}
+
+	for (std::vector<GameObject*>::iterator it2 = children.begin(); it2 != children.end(); it2++)
+		(*it2)->Load(save_file, ++obj_index);
+
+}
+
+void GameObject::FindParent(std::vector<GameObject*>& objects)
+{
+	if (parent_uid != "none")
+	{
+		for (std::vector<GameObject*>::iterator it = objects.begin(); it != objects.end() && parent == nullptr; it++)
+			parent = (*it)->RetrieveParent(parent_uid);
+	}
+
+	for (std::vector<GameObject*>::iterator it2 = children.begin(); it2 != children.end(); it2++)
+		(*it2)->FindParent(objects);
+}
+
+GameObject* GameObject::RetrieveParent(std::string& parent_uid)
+{
+	if (uid == parent_uid) return this;
+	else
+	{
+		GameObject* searched_parent = nullptr;
+		for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
+		{
+			if(searched_parent = (*it)->RetrieveParent(parent_uid)) return searched_parent;
+		}
+		
+	}
+	return nullptr;
 }

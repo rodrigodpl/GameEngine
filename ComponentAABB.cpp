@@ -1,5 +1,11 @@
 #include "ComponentAABB.h"
 
+ComponentAABB::ComponentAABB() 
+{
+	type = COMPONENT_AABB;
+	transform = new ComponentTransform();
+}
+
 ComponentAABB::ComponentAABB(float3* vert, int num_vert, ComponentTransform* parent_transform) {
 
 	type = COMPONENT_AABB;
@@ -133,32 +139,20 @@ void ComponentAABB::InitFromSeveralMeshes(std::vector<Component*> meshes) {
 
 void ComponentAABB::Save(JSON_file& save_file, const char* component_code)
 {
-	std::string attribute_code(component_code);
+	save_file.WriteNumber(std::string(".type").insert(0, component_code).c_str(), type);
+	save_file.WriteFloat3(std::string(".min_point").insert(0, component_code).c_str(), GetMinP());
+	save_file.WriteFloat3(std::string(".max_point").insert(0, component_code).c_str(), GetMaxP());
 
-	save_file.WriteNumber(attribute_code.append(".type").c_str(), type);
-
-	attribute_code.clear(); attribute_code.append(component_code);
-	save_file.WriteFloat3(attribute_code.append(".min_point").c_str(), GetMinP());
-
-	attribute_code.clear(); attribute_code.append(component_code);
-	save_file.WriteFloat3(attribute_code.append(".max_point").c_str(), GetMaxP());
-
-	attribute_code.clear(); attribute_code.append(component_code); attribute_code.append(".transform");
-	transform->Save(save_file, attribute_code.c_str());
+	transform->Save(save_file, std::string(".transform").insert(0, component_code).c_str());
 }
 
 void ComponentAABB::Load(JSON_file& save_file, const char* component_code)
 {
-	std::string attribute_code(component_code);
 	float3 min_max[2];
+	min_max[0] = save_file.ReadFloat3(std::string(".min_point").insert(0, component_code).c_str());
+	min_max[1] = save_file.ReadFloat3(std::string(".max_point").insert(0, component_code).c_str());
 
-	min_max[0] = save_file.ReadFloat3(attribute_code.append(".min_point").c_str());
-
-	attribute_code.clear(); attribute_code.append(component_code);
-	min_max[1] = save_file.ReadFloat3(attribute_code.append(".max_point").c_str());
-
-	attribute_code.clear(); attribute_code.append(component_code); attribute_code.append(".transform");
-	transform->Load(save_file, attribute_code.c_str());
+	transform->Load(save_file, std::string(".transform").insert(0, component_code).c_str());
 
 	Init(min_max, 2);
 }

@@ -39,14 +39,16 @@ bool ModuleSceneIntro::CleanUp()
 	return true;
 }
 
-// load: name = "main_scene.json";
-
 void ModuleSceneIntro::Save(JSON_file& config)
 {
 	JSON_file* save_file = App->json->OpenFile(name.c_str(), ASSETS_BASE_PATH);
 
-	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); it++)
-		(*it)->Serialize(*save_file);
+	save_file->WriteBool("empty", false);
+	save_file->WriteNumber("obj_num", game_objects.size());
+
+	uint obj_index = 0;
+	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); it++, obj_index++)
+		(*it)->Save(*save_file, obj_index);
 
 	save_file->Save();
 	
@@ -56,6 +58,22 @@ void ModuleSceneIntro::Save(JSON_file& config)
 void ModuleSceneIntro::Load(JSON_file& config)
 {
 	name = config.ReadString("scene_manager.current_scene");
+
+	JSON_file* save_file = App->json->OpenFile(name.c_str(), ASSETS_BASE_PATH);
+	
+	if (!save_file->ReadBool("empty"))
+	{
+		uint obj_num = save_file->ReadNumber("obj_num");
+		for (uint obj_index = 0; obj_index < obj_num; obj_index++)
+		{
+			GameObject* new_obj = new GameObject();
+			new_obj->Load(*save_file, obj_index);
+			game_objects.push_back(new_obj);
+		}
+
+		for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); it++)
+			(*it)->FindParent(game_objects);
+	}
 }
 
 // Update
