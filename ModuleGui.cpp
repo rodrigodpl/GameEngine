@@ -23,6 +23,17 @@ bool ModuleGui::Start() {
 	prev = 0;
 	rgb_data = new float[3];
 
+	config = App->json->OpenFile("config.json", SETTINGS_BASE_PATH);
+	
+	if (config->ReadBool("Vsync")) vsync = config->ReadBool("Vsync");
+	else vsync = true;
+
+	if (config->ReadNumber("WindowsSize") >= 0)	win_size = config->ReadNumber("WindowsSize");
+	else win_size = 1;
+
+	if (config->ReadNumber("WindowOption") >= 0) window_option = config->ReadNumber("WindowOption");
+	else window_option = 1;
+
 	return true;
 }
 
@@ -63,8 +74,6 @@ update_status ModuleGui::PreUpdate(float dt) {
 				draw_log = !draw_log;
 			if (ImGui::MenuItem("Performance"))
 				draw_performance = !draw_performance;
-			if (ImGui::MenuItem("Transform"))
-				draw_transform = !draw_transform;
 			if (ImGui::MenuItem("Hierarchy"))
 				draw_hierarchy = !draw_hierarchy;
 			ImGui::EndMenu();
@@ -183,20 +192,17 @@ void ModuleGui::Draw() {
 		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Options", &draw_options, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders);
 		if (ImGui::CollapsingHeader("Display")) {
-			static int win_size = 1;
 			const char* sizes[] = { "640x480", "800x600", "960x720", "1024x576", "1024x768", "1152x648", "1280x720", "1280x800", "1280x960", "1366x768", "1440x900", "1400x1050", "1440x1080", "1600x900", "1600x1200", "1680x1050", "1856x1392", "1920x1440", "1920x1080", "1920x1200", "2048x1536", "2560x1440", "2560x1600", "3840x2160" };
-			
 			ImGui::Text("Window Size"); ImGui::SameLine();
 			ImGui::Combo("", &win_size, sizes, IM_ARRAYSIZE(sizes));
+			App->window->SetWindowsSize(win_size); //Changes window size but leaves the screen white
 			ImGui::Separator();
-			static bool vsync = true;
 			ImGui::Checkbox("Vsync", &vsync);
-			//App->json->config->WriteBool("Vsync", vsync);
+			config->WriteBool("Vsync", vsync);
 			ImGui::Separator();
-			static int e = 1;
-			ImGui::RadioButton("Fullscreen", &e, 0);
-			ImGui::RadioButton("Windowed", &e, 1); 
-			ImGui::RadioButton("Borderless", &e, 2);
+			ImGui::RadioButton("Fullscreen", &window_option, 0);
+			ImGui::RadioButton("Windowed", &window_option, 1); 
+			ImGui::RadioButton("Borderless", &window_option, 2);
 		}
 		if (ImGui::CollapsingHeader("Input")) {
 			

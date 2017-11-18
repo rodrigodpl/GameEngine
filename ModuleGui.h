@@ -68,6 +68,11 @@ private:
 
 	float* rgb_data;
 
+	JSON_file* config = nullptr;
+	bool vsync;
+	int win_size;
+	int window_option;
+
 public:
 	void Fps_app_data(float aux);
 	void Fps_renderer_data(float aux);

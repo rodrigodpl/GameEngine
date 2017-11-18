@@ -147,7 +147,7 @@ update_status ModuleInput::PreUpdate(float dt)
 void ModuleInput::GetMouseNormalized(float& x, float& y) 
 {
 	x = ((((float)mouse_x / App->window->screen_width * App->window->screen_size) - 0.5) * 2);               
-	y = ((((float)mouse_y / App->window->screen_heigth* App->window->screen_size) - 0.5) * 2);
+	y = ((((float)mouse_y / App->window->screen_height* App->window->screen_size) - 0.5) * 2);
 }
 
 // Called before quitting
