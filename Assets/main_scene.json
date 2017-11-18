@@ -1,6 +1,6 @@
 {
     "empty": false,
-    "obj_num": 7,
+    "obj_num": 5,
     "objects": {
         "0": {
             "name": "Main_Camera",
@@ -22,7 +22,7 @@
                         "position": {
                             "x": 0,
                             "y": 2,
-                            "z": -4.0095000267028809
+                            "z": -4.5
                         },
                         "scale": {
                             "x": 1,
@@ -284,86 +284,6 @@
             }
         },
         "4": {
-            "name": "load error",
-            "uid": "8931bfa5cbf7639a54d76ab0c649abbb",
-            "enabled": true,
-            "parent_uid": "none",
-            "number of components": 1,
-            "components": {
-                "0": {
-                    "type": 4,
-                    "min_point": {
-                        "x": 0,
-                        "y": 0,
-                        "z": 0
-                    },
-                    "max_point": {
-                        "x": 0,
-                        "y": 0,
-                        "z": 0
-                    },
-                    "transform": {
-                        "type": 2,
-                        "position": {
-                            "x": 0,
-                            "y": 0,
-                            "z": 0
-                        },
-                        "scale": {
-                            "x": 1,
-                            "y": 1,
-                            "z": 1
-                        },
-                        "rotation_euler": {
-                            "x": -0,
-                            "y": 0,
-                            "z": -0
-                        }
-                    }
-                }
-            }
-        },
-        "5": {
-            "name": "load error",
-            "uid": "8931bfa5cbf7639a54d76ab0c649abbb",
-            "enabled": true,
-            "parent_uid": "none",
-            "number of components": 1,
-            "components": {
-                "0": {
-                    "type": 4,
-                    "min_point": {
-                        "x": 0,
-                        "y": 0,
-                        "z": 0
-                    },
-                    "max_point": {
-                        "x": 0,
-                        "y": 0,
-                        "z": 0
-                    },
-                    "transform": {
-                        "type": 2,
-                        "position": {
-                            "x": 0,
-                            "y": 0,
-                            "z": 0
-                        },
-                        "scale": {
-                            "x": 1,
-                            "y": 1,
-                            "z": 1
-                        },
-                        "rotation_euler": {
-                            "x": -0,
-                            "y": 0,
-                            "z": -0
-                        }
-                    }
-                }
-            }
-        },
-        "6": {
             "name": "floor plane",
             "uid": "231e149236fe8a68bd439a9b9d528b82",
             "enabled": true,

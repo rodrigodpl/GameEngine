@@ -152,11 +152,20 @@ void ModuleImporter::LoadAssets(std::vector<std::string> files)
 		(*filename).insert(0, "/");
 		(*filename).insert(0, ASSETS_BASE_PATH);
 
+		GameObject* new_obj = nullptr;
+
 		switch (file_type) 
 		{
-		case PNG: ret = ImportTex((*filename).c_str(), std::string("texture"));
-		case FBX: App->scene_intro->AddRootObject(LoadFBX((*filename).c_str()));
-		case WAV: // LoadWav((*filename).c_str());
+		case PNG: ret = ImportTex((*filename).c_str(), std::string("texture")); break;
+		case FBX: 
+			new_obj = LoadFBX((*filename).c_str());
+			if (new_obj)
+			{
+				ret = true;
+				App->scene_intro->AddRootObject(new_obj);
+			}
+			break;
+		case WAV: break; // LoadWav((*filename).c_str());
 
 		default: App->gui->app_log.AddLog("unsupported extension found: %s\n", extension.c_str());
 		}
