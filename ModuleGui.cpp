@@ -26,13 +26,13 @@ bool ModuleGui::Start() {
 
 	config = App->json->OpenFile("config.json", SETTINGS_BASE_PATH);
 	
-	if (config->ReadBool("Vsync")) vsync = config->ReadBool("Vsync");
+	if (config->ReadBool("application.vsync")) vsync = config->ReadBool("Vsync");
 	else vsync = true;
 
-	if (config->ReadNumber("WindowsSize") >= 0)	win_size = config->ReadNumber("WindowsSize");
+	if (config->ReadNumber("window.screen_size") >= 0)	win_size = config->ReadNumber("window.screen_size");
 	else win_size = 1;
 
-	if (config->ReadNumber("WindowOption") >= 0) window_option = config->ReadNumber("WindowOption");
+	if (config->ReadNumber("window.window_mode") >= 0) window_option = config->ReadNumber("window.screen_mode");
 	else window_option = 1;
 
 	return true;
@@ -204,6 +204,7 @@ void ModuleGui::Draw() {
 			ImGui::RadioButton("Fullscreen", &window_option, 0);
 			ImGui::RadioButton("Windowed", &window_option, 1); 
 			ImGui::RadioButton("Borderless", &window_option, 2);
+			ImGui::RadioButton("Fullscreen desktop", &window_option, 3);
 		}
 		if (ImGui::CollapsingHeader("Input")) {
 			

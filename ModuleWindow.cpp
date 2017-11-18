@@ -21,12 +21,12 @@ bool ModuleWindow::Init()
 
 	config = App->json->OpenFile("config.json", SETTINGS_BASE_PATH);
 
-	if (config->ReadNumber("WindowsSize") >= 0) {
-		win_size = config->ReadNumber("WindowsSize");
+	if (config->ReadNumber("window.screen_size") >= 0) {
+		win_size = config->ReadNumber("window.screen_size");
 	}
 	else win_size = 1;
 
-	if (config->ReadNumber("WindowOption") >= 0) window_option = config->ReadNumber("WindowOption");
+	if (config->ReadNumber("window.window_mode") >= 0) window_option = config->ReadNumber("window.window_mode");
 	else window_option = 1;
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -179,7 +179,6 @@ void ModuleWindow::SetWindowsSize(int value) {
 			screen_height = 600;
 		}
 		win_size = value;
-		config->WriteNumber("WindowsSize", win_size);
 		CreateNewWindow();
 	}
 }
