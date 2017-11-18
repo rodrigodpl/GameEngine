@@ -17,9 +17,6 @@ ComponentCamera::ComponentCamera(float3 position)
 ComponentCamera::ComponentCamera()
 {
 	type = COMPONENT_CAMERA;
-
-	ref_dist = INITIAL_REF_DISTANCE;
-	reference = transform->position + (frustum->Front() * ref_dist);
 }
 
 ComponentCamera::~ComponentCamera()
@@ -201,6 +198,9 @@ void ComponentCamera::Load(JSON_file& save_file, const char* component_code)
 	transform->Load(save_file, std::string(".transform").insert(0, component_code).c_str());
 
 	InitFrustum(transform->position);
+
+	ref_dist = INITIAL_REF_DISTANCE;
+	reference = transform->position + (frustum->Front() * ref_dist);
 
 	proj_update = true;
 }

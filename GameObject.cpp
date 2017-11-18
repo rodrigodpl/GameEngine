@@ -67,30 +67,23 @@ GameObject* GameObject::FindChild(const char* obj_name) {
 	return nullptr;
 }
 
-void GameObject::UpdateRecursive(float dt) {
-
+void GameObject::Update(float dt) 
+{
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++) {
 		if ((*it)->enabled)
 			(*it)->Update(dt);
 	}
 	
-	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
-		(*it)->UpdateRecursive(dt);
 }
 
 
-void GameObject::DrawRecursive() {
-
-	if (!culled) {
-		for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
-			(*it)->Draw();
-	}
-
-	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
-		(*it)->DrawRecursive();
+void GameObject::Draw() 
+{
+	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
+		(*it)->Draw();
 }
 
-void GameObject::CullRecursive(ComponentCamera* cam) 
+bool GameObject::Cull(ComponentCamera* cam) 
 {
 	ComponentAABB* aabb = (ComponentAABB*)FindComponent(COMPONENT_AABB);
 
@@ -99,10 +92,7 @@ void GameObject::CullRecursive(ComponentCamera* cam)
 		aabb = (ComponentAABB*)components.back();
 	}
 
-	culled = cam->FrustumCulling(*aabb);
-
-	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
-		(*it)->CullRecursive(cam);
+	return cam->FrustumCulling(*aabb);
 }
 
 
@@ -128,10 +118,6 @@ void GameObject::RayCastAgainstAABBs(math::Ray ray, std::list<RayHit>& outHits) 
 		hit.hit_distance = near_d; hit.object = this;
 		outHits.push_back(hit);
 	}
-
-	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
-		(*it)->RayCastAgainstAABBs(ray, outHits);
-
 }
 
 
@@ -181,6 +167,9 @@ void GameObject::HierarchyTree(std::string& selected_obj_uid)
 
 		ImGui::TreePop();
 	}
+
+	//CHANGE STARTING LOADING SCHEME
+	//CITY TEST
 }
 
 void GameObject::Save(JSON_file& save_file, uint& obj_index)
@@ -206,8 +195,6 @@ void GameObject::Save(JSON_file& save_file, uint& obj_index)
 		(*it)->Save(save_file, component_code.c_str());
 	}
 
-	for (std::vector<GameObject*>::iterator it2 = children.begin(); it2 != children.end(); it2++)
-		(*it2)->Save(save_file, ++obj_index);
 }
 
 void GameObject::Load(JSON_file& save_file, uint& obj_index)
@@ -246,10 +233,6 @@ void GameObject::Load(JSON_file& save_file, uint& obj_index)
 			components.push_back(new_comp);
 		}
 	}
-
-	for (std::vector<GameObject*>::iterator it2 = children.begin(); it2 != children.end(); it2++)
-		(*it2)->Load(save_file, ++obj_index);
-
 }
 
 void GameObject::FindParent(std::vector<GameObject*>& objects)
@@ -257,24 +240,8 @@ void GameObject::FindParent(std::vector<GameObject*>& objects)
 	if (parent_uid != "none")
 	{
 		for (std::vector<GameObject*>::iterator it = objects.begin(); it != objects.end() && parent == nullptr; it++)
-			parent = (*it)->RetrieveParent(parent_uid);
-	}
-
-	for (std::vector<GameObject*>::iterator it2 = children.begin(); it2 != children.end(); it2++)
-		(*it2)->FindParent(objects);
-}
-
-GameObject* GameObject::RetrieveParent(std::string& parent_uid)
-{
-	if (uid == parent_uid) return this;
-	else
-	{
-		GameObject* searched_parent = nullptr;
-		for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
 		{
-			if(searched_parent = (*it)->RetrieveParent(parent_uid)) return searched_parent;
+			if (parent_uid == (*it)->uid) parent = (*it);
 		}
-		
 	}
-	return nullptr;
 }

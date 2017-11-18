@@ -29,8 +29,8 @@ ModuleImporter::ModuleImporter(Application* app, bool start_enabled) : Module(ap
 
 ModuleImporter::~ModuleImporter() {}
 
-bool ModuleImporter::Start() {
-
+bool ModuleImporter::Start() 
+{
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
@@ -39,8 +39,6 @@ bool ModuleImporter::Start() {
 	iluInit();
 	ilutRenderer(ILUT_OPENGL);
 	ilutInit();
-
-	LoadAssets(App->fs->GetFilesInDir(ASSETS_BASE_PATH, true));
 
 	return true;
 }
@@ -117,10 +115,12 @@ GameObject* ModuleImporter::LoadNodeRecursive(aiNode* node, const aiScene* scene
 	game_object->components.push_back(aabb);
 
 	//children
-	for (uint i = 0; i < node->mNumChildren; i++) {
-
+	for (uint i = 0; i < node->mNumChildren; i++) 
+	{
 		aiNode* child_node = node->mChildren[i];
-		game_object->children.push_back(LoadNodeRecursive(child_node, scene, game_object));
+		GameObject* child_obj = LoadNodeRecursive(child_node, scene, game_object);
+		game_object->children.push_back(child_obj);
+		App->scene_intro->all_game_objects.push_back(child_obj);
 	}
 
 	return game_object;
@@ -131,8 +131,6 @@ uint ModuleImporter::LoadImg(const char* full_path)
 	App->scene_intro->materials.push_back(new ComponentMaterial(full_path));
 	return (App->scene_intro->materials.size() - 1);
 }
-
-
 
 void ModuleImporter::LoadAssets(std::vector<std::string> files) 
 {
@@ -151,10 +149,13 @@ void ModuleImporter::LoadAssets(std::vector<std::string> files)
 
 		bool ret = false;
 
+		(*filename).insert(0, "/");
+		(*filename).insert(0, ASSETS_BASE_PATH);
+
 		switch (file_type) 
 		{
 		case PNG: ret = ImportTex((*filename).c_str(), std::string("texture"));
-		case FBX: App->scene_intro->game_objects.push_back(LoadFBX((*filename).c_str()));
+		case FBX: App->scene_intro->AddRootObject(LoadFBX((*filename).c_str()));
 		case WAV: // LoadWav((*filename).c_str());
 
 		default: App->gui->app_log.AddLog("unsupported extension found: %s\n", extension.c_str());
