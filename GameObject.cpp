@@ -173,10 +173,10 @@ void GameObject::HierarchyTree(std::string& selected_obj_uid)
 {
 	int flags = 0;
 	if (children.empty()) flags |= ImGuiTreeNodeFlags_Leaf;
-	if (ImGui::IsItemClicked()) selected_obj_uid = uid;
 	if (selected_obj_uid == uid) flags |= ImGuiTreeNodeFlags_Selected;
 
 	if (ImGui::TreeNodeEx(name.c_str(), flags)) {
+		if (ImGui::IsItemClicked()) selected_obj_uid = uid;
 		for (int aux = 0; aux < children.size(); aux++)	children[aux]->HierarchyTree(selected_obj_uid);
 
 		ImGui::TreePop();
