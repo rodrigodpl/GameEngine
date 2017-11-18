@@ -26,7 +26,7 @@ bool ModuleGui::Start() {
 
 	config = App->json->OpenFile("config.json", SETTINGS_BASE_PATH);
 	
-	if (config->ReadBool("application.vsync")) vsync = config->ReadBool("Vsync");
+	if (config->ReadBool("renderer.vsync")) vsync = config->ReadBool("renderer.vsync");
 	else vsync = true;
 
 	if (config->ReadNumber("window.screen_size") >= 0)	win_size = config->ReadNumber("window.screen_size");
@@ -199,12 +199,12 @@ void ModuleGui::Draw() {
 			App->window->SetWindowsSize(win_size); //Changes window size but leaves the screen white
 			ImGui::Separator();
 			ImGui::Checkbox("Vsync", &vsync);
-			config->WriteBool("Vsync", vsync);
 			ImGui::Separator();
 			ImGui::RadioButton("Fullscreen", &window_option, 0);
 			ImGui::RadioButton("Windowed", &window_option, 1); 
 			ImGui::RadioButton("Borderless", &window_option, 2);
 			ImGui::RadioButton("Fullscreen desktop", &window_option, 3);
+			App->window->SetWindowMode(window_option); //Same problem as setwindowssize
 		}
 		if (ImGui::CollapsingHeader("Input")) {
 			
@@ -448,9 +448,4 @@ void ModuleGui::Fps_physics_data(float aux)
 
 void ModuleGui::Get_colour(Color aux) {
 	aux.Set(rgb_data[0], rgb_data[1], rgb_data[2], 1.0f);
-}
-
-void ModuleGui::CreateTree() {
-	//App->scene_intro->game_objects
-	//ImGui::TreeNode()
 }

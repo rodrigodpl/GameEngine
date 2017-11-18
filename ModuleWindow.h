@@ -31,6 +31,7 @@ public:
 
 	void SetTitle(const char* title);
 	void SetWindowsSize(int value);
+	void SetWindowMode(int mode);
 
 public:
 	SDL_Window* window = nullptr;

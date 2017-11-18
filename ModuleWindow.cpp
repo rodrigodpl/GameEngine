@@ -220,3 +220,10 @@ bool ModuleWindow::CreateNewWindow() {
 		return true;
 	}
 }
+
+void ModuleWindow::SetWindowMode(int mode) {
+	if (win_mode != mode) {
+		win_mode = (WindowMode)mode;
+		CreateNewWindow();
+	}
+}
