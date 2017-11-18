@@ -72,7 +72,8 @@ update_status ModuleEditorCam::Update(float dt)
 		float x, y;
 		App->input->GetMouseNormalized(x, y);
 		Ray ray = cam->GetRayFromMousePos(x, y);
-		App->scene_intro->selected_game_obj = MouseRaycast(ray);
+		if(GameObject* selected_obj = MouseRaycast(ray))
+			App->scene_intro->selected_game_obj_uid = selected_obj->uid;
 	}
 
 	float speed = 3.0f * dt;

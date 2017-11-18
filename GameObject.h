@@ -29,7 +29,7 @@ public:
 	void DrawRecursive();
 	void CullRecursive(ComponentCamera* cam);
 
-	void CreateTree();
+	void HierarchyTree(std::string& selected_obj_uid);
 
 	void RayCastAgainstAABBs(Ray ray, std::list<RayHit>& outHits);		// recursive
 	void RayCastAgainstMeshes(Ray ray, std::list<RayHit>& outHits);		// not recursive

@@ -24,7 +24,7 @@ public:
 public:
 
 	std::vector<GameObject*> game_objects;
-	GameObject* selected_game_obj = nullptr;
+	std::string selected_game_obj_uid;
 
 	std::vector<ComponentMaterial*> materials;
 

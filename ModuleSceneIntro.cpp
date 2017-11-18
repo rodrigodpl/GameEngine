@@ -10,7 +10,9 @@
 #define RADIUS 44
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
-{}
+{
+	selected_game_obj_uid.append("none");
+}
 
 ModuleSceneIntro::~ModuleSceneIntro()
 {}
