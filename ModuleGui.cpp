@@ -23,17 +23,10 @@ bool ModuleGui::Start() {
 
 	prev = 0;
 	rgb_data = new float[3];
-
-	config = App->json->OpenFile("config.json", SETTINGS_BASE_PATH);
 	
-	if (config->ReadBool("renderer.vsync")) vsync = config->ReadBool("renderer.vsync");
-	else vsync = true;
-
-	if (config->ReadNumber("window.screen_size") >= 0)	win_size = config->ReadNumber("window.screen_size");
-	else win_size = 1;
-
-	if (config->ReadNumber("window.window_mode") >= 0) window_option = config->ReadNumber("window.screen_mode");
-	else window_option = 1;
+	vsync = App->renderer3D->vsync;
+	win_size = App->window->screen_size;
+	window_option = App->window->win_mode;
 
 	return true;
 }
@@ -197,6 +190,7 @@ void ModuleGui::Draw() {
 			ImGui::Text("Window Size"); ImGui::SameLine();
 			ImGui::Combo("", &win_size, sizes, IM_ARRAYSIZE(sizes));
 			App->window->SetWindowsSize(win_size); //Changes window size but leaves the screen white
+			return;
 			ImGui::Separator();
 			ImGui::Checkbox("Vsync", &vsync);
 			ImGui::Separator();

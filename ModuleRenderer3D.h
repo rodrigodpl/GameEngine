@@ -32,12 +32,14 @@ public:
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
+	// config saved variables
+	bool	vsync = true;
+
 private:
 	Timer	ms_timer;
 	float	dt;
 
 	// config saved variables
-	bool	vsync = true;
 	bool	face_culling = true;
 	Color	clear_color =	{ 0.9f, 0.9f, 0.9f, 1.0f };
 	Color	light_ambient = { 0.5f, 0.5f, 0.5f, 1.0f };

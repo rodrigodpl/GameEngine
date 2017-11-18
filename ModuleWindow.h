@@ -33,6 +33,7 @@ public:
 	void SetWindowsSize(int value);
 	void SetWindowMode(int mode);
 
+	bool ChangeWindow();
 public:
 	SDL_Window* window = nullptr;
 	SDL_Surface* screen_surface = nullptr;
@@ -44,7 +45,6 @@ public:
 	float screen_size = 1.0f;
 
 private:
-	bool CreateNewWindow();
 	int win_size;
 	int window_option;
 
