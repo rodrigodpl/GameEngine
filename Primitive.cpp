@@ -7,6 +7,7 @@
 #pragma comment (lib, "glut/glut32.lib")
 
 #include "glew-2.1.0\include\GL\glew.h"
+#include "ComponentTransform.h"
 
 #include <gl/GL.h>
 #include <gl/GLU.h>
@@ -15,6 +16,7 @@
 Primitive::Primitive() : color(White), wire(false), axis(false), alpha(1.0f), primitive_type(PrimitiveTypes::Primitive_Point)
 {
 	color = { (float)(rand() % 100) / 100, (float)(rand() % 100) / 100, (float)(rand() % 100) / 100 };
+	transform = new ComponentTransform();
 }
 
 // ------------------------------------------------------------

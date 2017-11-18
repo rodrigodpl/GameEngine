@@ -19,6 +19,7 @@ struct Tri
 	uint vert3 = 0;
 };
 
+class ComponentTransform;
 
 class ComponentMesh : Component {
 public:
@@ -28,6 +29,9 @@ public:
 	ComponentMesh(ComponentMesh& mesh);
 
 	~ComponentMesh();
+
+	void Save(JSON_file& save_file, const char* component_code);
+	void Load(JSON_file& save_file, const char* component_code);
 
 	bool LoadDataFromAssimp(aiMesh& mesh);
 	void LoadDataToVRAM();
@@ -58,4 +62,5 @@ public:
 	float2* texcoords = nullptr;
 
 	ComponentMaterial* mat = nullptr;
+	ComponentTransform* transform = nullptr;
 };

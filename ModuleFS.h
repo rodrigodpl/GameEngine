@@ -29,11 +29,11 @@ public:
 	bool Exists(const char* file) const;
 	bool IsDirectory(const char* file) const;
 
-	unsigned int Load(const char* file, char* buffer) const;
+	char* Load(const char* file, uint& size) const;
 	SDL_RWops* Load(const char* file) const;
 
 	std::vector<std::string> GetFilesInDir(const char* dir, bool append_root_folder = false);
-	unsigned int Save(const char* file_name, const char* data, const char* write_dir, unsigned int size) const;
+	unsigned int Save(const char* file_name, const void* data, const char* write_dir, unsigned int size) const;
 	void CreateDir(const char* path, bool hidden = false);
 
 };

@@ -3,6 +3,7 @@
 #include "imgui_impl_sdl.h"
 #include "ImGuizmo.h"
 #include "Globals.h"
+#include "GameObject.h"
 #include "Application.h"
 
 #include <stdlib.h>

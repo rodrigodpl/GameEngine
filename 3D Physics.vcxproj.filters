@@ -22,9 +22,6 @@
     <Filter Include="Sources\GameObject/Components">
       <UniqueIdentifier>{193a1a7e-8e94-49b7-8738-61ce76e69cb8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Importers">
-      <UniqueIdentifier>{0edb6374-40e7-44b4-b840-310a12c41dfc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\math">
       <UniqueIdentifier>{282e2f45-f34a-4279-a0fe-f76c48d0048a}</UniqueIdentifier>
     </Filter>
@@ -116,9 +113,6 @@
     </ClInclude>
     <ClInclude Include="Primitive.h">
       <Filter>Sources\GameObject/Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Importer.h">
-      <Filter>Sources\Importers</Filter>
     </ClInclude>
     <ClInclude Include="ModuleFS.h">
       <Filter>Sources\Modules</Filter>
@@ -217,9 +211,6 @@
     </ClCompile>
     <ClCompile Include="Primitive.cpp">
       <Filter>Sources\GameObject/Components</Filter>
-    </ClCompile>
-    <ClCompile Include="MaterialImporter.cpp">
-      <Filter>Sources\Importers</Filter>
     </ClCompile>
     <ClCompile Include="ModuleFS.cpp">
       <Filter>Sources\Modules</Filter>

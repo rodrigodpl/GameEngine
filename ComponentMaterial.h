@@ -14,12 +14,11 @@
 #define CHECKERS_HEIGHT 64
 #define CHECKERS_WIDTH 64
 
-struct Texture {
-
+struct Texture 
+{
 	aiString path;
 	uint width = 0, height = 0;
 	uint gl_binding = 0;
-
 };
 
 class ComponentMaterial : Component {

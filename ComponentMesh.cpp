@@ -1,4 +1,5 @@
 #include "ComponentMesh.h"
+#include "ComponentTransform.h"
 
 #include "glew-2.1.0\include\GL\glew.h"
 
@@ -7,6 +8,8 @@ ComponentMesh::ComponentMesh() { type = Component_type::COMPONENT_MESH; }
 ComponentMesh::ComponentMesh(aiMesh& mesh) {
 
 	type = Component_type::COMPONENT_MESH;
+
+	transform = new ComponentTransform();
 
 	LoadDataFromAssimp(mesh);
 	LoadDataToVRAM();
@@ -25,6 +28,7 @@ ComponentMesh::ComponentMesh(ComponentMesh& mesh) {
 	num_texcoords = mesh.num_texcoords;	texcoords = mesh.texcoords;
 
 	mat = (ComponentMaterial*) mesh.mat->Duplicate();
+	transform = (ComponentTransform*) mesh.transform->Duplicate();;
 
 	LoadDataToVRAM();
 
@@ -56,7 +60,7 @@ bool ComponentMesh::LoadDataFromAssimp(aiMesh& imp_mesh) {
 			if (imp_mesh.mFaces[i].mNumIndices != 3)
 				return false;
 			else
-				memcpy(&tris[i], imp_mesh.mFaces[i].mIndices, 3 * sizeof(uint));
+				memcpy(&tris[i], imp_mesh.mFaces[i].mIndices, sizeof(Tri));
 		}
 	}
 
@@ -65,7 +69,7 @@ bool ComponentMesh::LoadDataFromAssimp(aiMesh& imp_mesh) {
 		num_vertices = imp_mesh.mNumVertices;
 		vertices = new float3[num_vertices];
 
-		memcpy(vertices, imp_mesh.mVertices, sizeof(float) * num_vertices * 3);
+		memcpy(vertices, imp_mesh.mVertices, sizeof(float3) * num_vertices);
 	}
 
 	if (imp_mesh.HasNormals()) {
@@ -73,7 +77,7 @@ bool ComponentMesh::LoadDataFromAssimp(aiMesh& imp_mesh) {
 		num_normals = num_vertices;
 		normals = new float3[num_normals];
 
-		memcpy(normals, imp_mesh.mNormals, sizeof(float) * num_normals * 3);
+		memcpy(normals, imp_mesh.mNormals, sizeof(float3) * num_normals);
 	}
 
 	if (imp_mesh.HasTextureCoords(0)) {
@@ -81,7 +85,7 @@ bool ComponentMesh::LoadDataFromAssimp(aiMesh& imp_mesh) {
 		num_texcoords = num_vertices;
 		float* temp_texcoords = new float[num_texcoords * 3];
 
-		memcpy(temp_texcoords, imp_mesh.mTextureCoords[0], sizeof(float) * num_texcoords * 3);
+		memcpy(temp_texcoords, imp_mesh.mTextureCoords[0], sizeof(float3) * num_texcoords);
 
 		texcoords = new float2[num_texcoords];
 
@@ -124,9 +128,8 @@ void ComponentMesh::LoadDataToVRAM() {
 		glBindBuffer(GL_ARRAY_BUFFER, id_normals);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float3) * num_normals, normals, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 	}
-
+	
 	if (num_texcoords > 0) {
 		glGenBuffers(1, (GLuint*) &(id_texcoords));
 		glBindBuffer(GL_ARRAY_BUFFER, id_texcoords);
@@ -177,4 +180,19 @@ void ComponentMesh::Draw() {
 	if (mat)
 		glDisable(GL_TEXTURE_2D);
 
+}
+
+
+void ComponentMesh::Save(JSON_file& save_file, const char* component_code)
+{
+	std::string attribute_code(component_code);
+	attribute_code.append(".transform");
+	transform->Save(save_file, attribute_code.c_str());
+}
+
+void ComponentMesh::Load(JSON_file& save_file, const char* component_code)
+{
+	std::string attribute_code(component_code);
+	attribute_code.append(".transform");
+	transform->Load(save_file, attribute_code.c_str());
 }

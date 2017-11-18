@@ -13,6 +13,8 @@ public:
 
 	~ComponentTransform();
 
+	void Save(JSON_file& save_file, const char* component_code);
+	void Load(JSON_file& save_file, const char* component_code);
 
 	void SetPosition(float3 pos);
 	void Translate(float3 dir);
