@@ -30,6 +30,8 @@ public:
 	void Load(JSON_file& config);
 
 	void SetTitle(const char* title);
+	void SetWindowsSize(int value);
+	void SetWindowMode(int mode);
 
 public:
 	SDL_Window* window = nullptr;
@@ -38,9 +40,15 @@ public:
 	// config saved variables
 	WindowMode win_mode = RESIZABLE;
 	int screen_width = 800;
-	int screen_heigth = 600;
+	int screen_height = 600;
 	float screen_size = 1.0f;
 
+private:
+	bool CreateNewWindow();
+	int win_size;
+	int window_option;
+
+	JSON_file* config = nullptr;
 };
 
 #endif // __ModuleWindow_H__
