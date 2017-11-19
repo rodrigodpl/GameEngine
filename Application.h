@@ -12,6 +12,7 @@
 #include "ModuleEditorCam.h"
 #include "ModuleGui.h"
 #include "ModuleImporter.h"
+#include "ModuleResources.h"
 #include "ModuleJSON.h"
 #include "ModuleFS.h"
 
@@ -23,6 +24,7 @@ public:
 	ModuleWindow* window;
 	ModuleInput* input;
 	ModuleAudio* audio;
+	ModuleResources* resources;
 	ModuleSceneIntro* scene_intro;
 	ModuleRenderer3D* renderer3D;
 	ModuleEditorCam* camera;

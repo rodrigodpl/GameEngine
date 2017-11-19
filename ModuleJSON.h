@@ -36,7 +36,7 @@ public:
 	std::string path;
 };
 
-
+//this class should not be a module
 class ModuleJSON : public Module
 {
 public:

@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "Component.h"
 #include "ComponentMaterial.h"
+#include "ResourceMesh.h"
 
 #include "MathGeoLib.h"
 
@@ -12,12 +13,7 @@
 
 #include "glew-2.1.0\include\GL\glew.h"
 
-struct Tri
-{
-	uint vert1 = 0;
-	uint vert2 = 0;
-	uint vert3 = 0;
-};
+
 
 class ComponentTransform;
 

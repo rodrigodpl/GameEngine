@@ -3,14 +3,10 @@
 #include "Module.h"
 
 struct SDL_RWops;
+class Color;
 
 int close_sdl_rwops(SDL_RWops *rw);
 
-#define LIBRARY_BASE_PATH "Library"
-#define LIBRARY_MESHES_PATH "Library/Meshes"
-#define LIBRARY_TEXTURES_PATH "Library/Textures"
-#define ASSETS_BASE_PATH "Assets"
-#define SETTINGS_BASE_PATH "Settings"
 
 #include <vector>
 #include <string>

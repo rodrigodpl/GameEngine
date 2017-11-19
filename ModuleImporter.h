@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Module.h"
+#include "ResourceTexture.h"
 
 #include <string>
 #include <vector>
@@ -38,13 +39,13 @@ public:
 	void LoadAssets(std::vector<std::string> files);
 
 	// Textures:
-	bool ImportTex(const char* imported_file_fullpath, std::string& exported_file_name);
-	bool ImportTex(const void* buffer, uint size, std::string& exported_file_name);
-	bool LoadTex(const char* exported_file, Texture* resource);
+	bool ImportTex(const char* imported_file_fullpath);
+	void SaveTexMetaFile(JSON_file& meta_file, TexImportOptions& options);
+	TexImportOptions GetTexImportOptionsFromBoundImg();				// must be called only when there's a DevIL bound image
 	//bool LoadCheckers(Texture* resource);
 
 	// Meshes: 
 	bool ImportMesh(aiMesh& imported_mesh, std::string& exported_file_name);
-	bool LoadMesh(const char* exported_file, ComponentMesh* resource);
+	//bool SaveMeshMetaFile(JSON_file& meta_file, TexImportOptions& options);
 
 };

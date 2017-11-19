@@ -8,6 +8,9 @@
 #include "ComponentTransform.h"
 #include "ComponentAABB.h"
 #include "GameObject.h"
+#include "ResourceMesh.h"
+#include "Resource.h"
+#include "MD5.h"
 
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
@@ -101,7 +104,8 @@ GameObject* ModuleImporter::LoadNodeRecursive(aiNode* node, const aiScene* scene
 	App->gui->app_log.AddLog("Number of meshes %d\n", node->mNumMeshes);
 	for (uint i = 0; i < node->mNumMeshes; i++) 
 	{
-		std::string mesh_name("mesh");
+		std::string mesh_name(node->mName.C_Str());
+		mesh_name.append("mesh");
 		aiMesh* imp_mesh = scene->mMeshes[node->mMeshes[i]];
 		
 		ComponentMesh* mesh = new ComponentMesh(*imp_mesh);
@@ -156,7 +160,7 @@ void ModuleImporter::LoadAssets(std::vector<std::string> files)
 
 		switch (file_type) 
 		{
-		case PNG: ret = ImportTex((*filename).c_str(), std::string("texture")); break;
+		case PNG: ret = ImportTex((*filename).c_str()); break;
 		case FBX: 
 			new_obj = LoadFBX((*filename).c_str());
 			if (new_obj)
@@ -175,63 +179,7 @@ void ModuleImporter::LoadAssets(std::vector<std::string> files)
 	}
 
 }
-
-bool ModuleImporter::ImportTex(const char* imported_file_fullpath, std::string& exported_file_name)
-{
-	ILuint id; uint ret = 0;
-	ilGenImages(1, &id);
-	ilBindImage(id);
-
-	ilLoadImage(imported_file_fullpath);
-
-	ILuint size;
-	ILubyte *data;
-	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);// To pick a specific DXT compression use
-	size = ilSaveL(IL_DDS, NULL, 0); // Get the size of the data buffer
-	if (size > 0) {
-		data = new ILubyte[size]; // allocate data buffer
-		if (ilSaveL(IL_DDS, data, size) > 0) // Save to buffer with the ilSaveIL function
-			ret = App->fs->Save(exported_file_name.append(".dds").c_str(), data, LIBRARY_TEXTURES_PATH, size);
-		delete[] data;
-	}
-
-	ilDeleteImages(1, &id);
-	return ret;
-}
-
-bool ModuleImporter::ImportTex(const void* buffer, uint size, std::string& exported_file_name)
-{
-	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);// To pick a specific DXT compression use
-	size = ilSaveL(IL_DDS, NULL, 0); // Get the size of the data buffer
-
-	if (size > 0) {
-		buffer = new ILubyte[size]; // allocate data buffer
-
-		if (ilSaveL(IL_DDS, (void*)buffer, size) > 0) // Save to buffer with the ilSaveIL function
-			return App->fs->Save(exported_file_name.append(".dds").c_str(), buffer, LIBRARY_TEXTURES_PATH, size);
-	}
-	return false;
-}
-
-bool ModuleImporter::LoadTex(const char* exported_file, Texture* resource)
-{
-	ILuint id; uint ret = 0;
-	ilGenImages(1, &id);
-	ilBindImage(id);
-
-	std::vector<std::string> textures = App->fs->GetFilesInDir(LIBRARY_TEXTURES_PATH);
-	char* buffer = nullptr;
-
-	for (std::vector<std::string>::iterator filename = textures.begin(); filename != textures.end(); filename++)
-	{
-		if (*filename == exported_file)
-		{
-			App->scene_intro->materials.push_back(new ComponentMaterial(exported_file));  // TODO: use resources
-			return true;
-		}
-	}
-	return false;
-}
+ 
 
 bool ModuleImporter::ImportMesh(aiMesh& imported_mesh, std::string& exported_file_name)
 {
@@ -282,60 +230,93 @@ bool ModuleImporter::ImportMesh(aiMesh& imported_mesh, std::string& exported_fil
 	cursor += bytes;
 	memcpy(cursor, imported_mesh.mColors, sizeof(float2) * ranges[4]);
 
-	return App->fs->Save(exported_file_name.c_str(), data, LIBRARY_MESHES_PATH, size);
+	std::string uid = CreateUID(exported_file_name.c_str(), exported_file_name.length());
+
+	if (App->fs->Save(uid.c_str(), data, LIBRARY_MESHES_PATH, size))
+	{
+		//SaveMeshMetaFile(*App->json->OpenFile(uid.append(".meta").c_str(), LIBRARY_TEXTURES_PATH), import_options);
+		ResourceMesh* mesh = new ResourceMesh(uid);
+		mesh->buffer = data;
+		App->resources->resources.insert(std::pair<std::string, Resource*>(exported_file_name, (Resource*)mesh));
+	}
+
+	return false;
 }
 
-bool ModuleImporter::LoadMesh(const char* exported_file, ComponentMesh* resource)
+
+bool ModuleImporter::ImportTex(const char* imported_file_fullpath)
 {
-	uint size = 0;
-	char* buffer = App->fs->Load(exported_file, size);
+	ILuint id; uint ret = 0;
+	ilGenImages(1, &id);
+	ilBindImage(id);
 
-	if (size) {
-		char* cursor = buffer;
+	ilLoadImage(imported_file_fullpath);
 
-		uint ranges[5];					 // amount of vertices / tris / normals / colors / texture_coords
-		uint bytes = sizeof(ranges);
-		memcpy(ranges, cursor, bytes);
+	TexImportOptions import_options = GetTexImportOptionsFromBoundImg();
 
-		resource->num_vertices = ranges[0];
-		resource->num_tris = ranges[1];
-		resource->num_normals = ranges[2];
-		resource->num_colors = ranges[3];
-		resource->num_texcoords = ranges[4];
+	ILuint size;
+	ILubyte *data;
+	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);// To pick a specific DXT compression use
+	size = ilSaveL(IL_DDS, NULL, 0); // Get the size of the data buffer
+	if (size > 0) {
 
-		// Load vertices
-		cursor += bytes;
-		bytes = sizeof(float3) * resource->num_vertices;
-		resource->vertices = new float3[resource->num_vertices];
-		memcpy(resource->vertices, cursor, bytes);
+		data = new ILubyte[size]; // allocate data buffer
 
-		// Load indices
-		cursor += bytes;
-		bytes = sizeof(Tri) * resource->num_tris;
-		resource->tris = new Tri[resource->num_tris];
-		memcpy(resource->tris, cursor, bytes);
+		//ilTexImage(import_options.Width, import_options.Height, import_options.Depth, import_options.Bpp,  // set import options
+			//import_options.Format, import_options.type, nullptr);
 
-		// Load normals
-		cursor += bytes;
-		bytes = sizeof(float3) * resource->num_normals;
-		resource->normals = new float3[resource->num_normals];
-		memcpy(resource->normals, cursor, bytes);
+		if (ilSaveL(IL_DDS, data, size) > 0)
+		{ // Save to buffer with the ilSaveIL function
+			std::string fullpath(imported_file_fullpath);
+			std::string filename;
 
-		// Load colors
-		cursor += bytes;
-		bytes = sizeof(Color) * resource->num_colors;
-		resource->colors = new Color[resource->num_colors];
-		memcpy(resource->colors, cursor, bytes);
+			for (int i = fullpath.find_last_of("/") + 1; i < fullpath.find_last_of("."); i++)
+				filename += (fullpath.at(i));
 
-		// Load texcoords
-		cursor += bytes;
-		bytes = sizeof(float2) * resource->num_texcoords;
-		resource->texcoords = new float2[resource->num_texcoords];
-		memcpy(resource->texcoords, cursor, bytes);
+			std::string uid = CreateUID(filename.c_str(), filename.length());
 
+			ret = App->fs->Save(uid.append(".dds").c_str(), data, LIBRARY_TEXTURES_PATH, size);
+
+			if (ret)
+			{
+				SaveTexMetaFile(*App->json->OpenFile(filename.append(".meta").c_str(), LIBRARY_TEXTURES_PATH), import_options);
+				Resource* new_tex = (Resource*) new ResourceTexture(uid);
+				App->resources->resources.insert(std::pair<std::string, Resource*>(filename, new_tex));
+			}
+		}
+		delete[] data;
 	}
-	else
-		App->gui->app_log.AddLog("error loading exported file: %s", exported_file);
 
-	return size;
+	ilDeleteImages(1, &id);
+	return ret;
+}
+
+
+TexImportOptions ModuleImporter::GetTexImportOptionsFromBoundImg()
+{
+	TexImportOptions options;
+
+	options.Width = ilGetInteger(IL_IMAGE_WIDTH);
+	options.Height = ilGetInteger(IL_IMAGE_HEIGHT);
+
+	options.Depth = ilGetInteger(IL_IMAGE_DEPTH);
+	options.Bpp = ilGetInteger(IL_IMAGE_BPP);
+
+	return options;
+}
+
+void ModuleImporter::SaveTexMetaFile(JSON_file& meta_file, TexImportOptions& options)
+{
+	meta_file.WriteNumber("Width", options.Width);
+	meta_file.WriteNumber("Height", options.Height);
+
+	meta_file.WriteNumber("Depth", options.Depth);
+	meta_file.WriteNumber("Bpp", options.Bpp);
+
+	meta_file.WriteNumber("Format", options.Format);
+	meta_file.WriteNumber("type", options.type);
+
+	meta_file.Save();
+	meta_file.CleanUp();
+
 }

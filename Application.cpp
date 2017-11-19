@@ -13,6 +13,7 @@ Application::Application()
 	camera = new ModuleEditorCam(this);
 	gui = new ModuleGui(this);
 	importer = new ModuleImporter(this);
+	resources = new ModuleResources(this);
 	json = new ModuleJSON(this);
 	fs = new ModuleFS(this);
 
@@ -28,6 +29,7 @@ Application::Application()
 	AddModule(importer);
 	AddModule(json);
 	AddModule(gui);
+	AddModule(resources);
 	AddModule(fs);
 	AddModule(camera);         
 

@@ -45,6 +45,7 @@ ComponentMaterial::ComponentMaterial(aiMaterial& mat) {
 		if (tex->gl_binding != 0) {
 			tex->width = ilGetInteger(IL_IMAGE_WIDTH);
 			tex->height = ilGetInteger(IL_IMAGE_HEIGHT);
+			
 
 			textures.push_back(tex);
 		}
