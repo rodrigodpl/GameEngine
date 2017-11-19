@@ -102,8 +102,6 @@ update_status ModuleSceneIntro::Update(float dt)
 		{
 			if (mesh->num_vertices == 0 && mesh->imported_file.length() > 0)
 			{
-				mesh->imported_file.insert(0, "/");
-				mesh->imported_file.insert(0, LIBRARY_MESHES_PATH);
 				char* buffer = App->fs->Load(mesh->imported_file.c_str(), mesh->imported_f_length);
 				mesh->LoadFromBuffer(buffer);
 			}
