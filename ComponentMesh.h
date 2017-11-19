@@ -32,6 +32,8 @@ public:
 	bool LoadDataFromAssimp(aiMesh& mesh);
 	void LoadDataToVRAM();
 
+	void LoadFromBuffer(char* buffer);
+
 	virtual void Draw();
 
 	Component* Duplicate();
@@ -59,4 +61,6 @@ public:
 
 	ComponentMaterial* mat = nullptr;
 	ComponentTransform* transform = nullptr;			// scene saved variable
+	std::string imported_file;
+	uint imported_f_length = 0;
 };

@@ -12,11 +12,8 @@ public:
 	ModuleResources(Application* app, bool start_enabled = true);
 	~ModuleResources();
 
-	std::string Find(const char* file_in_assets) const;
-	std::string ImportFile(const char* new_file_in_assets, bool force = false);
 	const Resource* Get(std::string& uid) const;
 	Resource* Get(std::string& uid);
-	Resource* CreateNewResource(Res_Type type, std::string& name);   
 
 	Resource*	LoadResource(std::string& imported_file);
 	void		UnLoadResource(std::string& imported_file);

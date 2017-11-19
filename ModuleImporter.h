@@ -12,6 +12,7 @@ class aiNode;
 class aiScene;
 class ComponentMesh;
 class GameObject;
+class ResourceMesh;
 
 enum supported_extensions
 {
@@ -37,15 +38,20 @@ public:
 	uint LoadImg(const char* full_path);
 
 	void LoadAssets(std::vector<std::string> files);
+	void ImportAssets(std::vector<std::string> files);
+	
+	// FBX:											not a resource itself, but is decomposed into meshes and textures
+	void ImportFBX(const char* full_path);
+	void ImportNodeRecursive(aiNode* node, const aiScene* scene);
 
 	// Textures:
-	bool ImportTex(const char* imported_file_fullpath);
+	ResourceTexture* ImportTex(const char* imported_file_fullpath);
 	void SaveTexMetaFile(JSON_file& meta_file, TexImportOptions& options);
 	TexImportOptions GetTexImportOptionsFromBoundImg();				// must be called only when there's a DevIL bound image
 	//bool LoadCheckers(Texture* resource);
 
 	// Meshes: 
-	bool ImportMesh(aiMesh& imported_mesh, std::string& exported_file_name);
+	uint ImportMesh(aiMesh& imported_mesh, std::string& exported_file_name);
 	//bool SaveMeshMetaFile(JSON_file& meta_file, TexImportOptions& options);
 
 };

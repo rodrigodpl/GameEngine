@@ -52,5 +52,5 @@ public:
 	uint num_vertices = 0;
 	float3* vertices = nullptr;     // vertices change with object transformation, so its ComponentMesh who handles vertices_id
 
-	ResourceTexture* bound_tex = nullptr;
+	std::string bound_tex_path = nullptr;
 };

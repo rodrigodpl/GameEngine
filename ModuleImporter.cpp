@@ -81,6 +81,36 @@ GameObject* ModuleImporter::LoadFBX(const char* full_path) {
 
 }
 
+void ModuleImporter::ImportFBX(const char* full_path) 
+{
+	const aiScene* scene = aiImportFile(full_path, aiProcessPreset_TargetRealtime_MaxQuality);
+
+	if (scene != nullptr) {
+
+		aiNode* root_node = scene->mRootNode;
+
+		for (int i = 0; i < scene->mNumMaterials; i++)
+		{
+			uint numTextures = scene->mMaterials[i]->GetTextureCount(aiTextureType_DIFFUSE);
+
+			for (int i = 0; i < numTextures; i++) 
+			{
+				aiString tex_path;
+				scene->mMaterials[i]->GetTexture(aiTextureType_DIFFUSE, i, &tex_path);
+				ImportTex(tex_path.C_Str());
+			}
+		}
+
+		ImportNodeRecursive(root_node, scene);
+
+		aiReleaseImport(scene);
+		App->gui->app_log.AddLog("Successfully impported %s\n", full_path);
+		App->gui->app_log.AddLog("Number of materials %d\n", scene->mNumMaterials);
+	}
+	else 
+		App->gui->app_log.AddLog("Error importing scene %s\n", full_path);
+}
+
 GameObject* ModuleImporter::LoadNodeRecursive(aiNode* node, const aiScene* scene, GameObject* parent) {
 
 	GameObject* game_object = nullptr;
@@ -109,7 +139,8 @@ GameObject* ModuleImporter::LoadNodeRecursive(aiNode* node, const aiScene* scene
 		aiMesh* imp_mesh = scene->mMeshes[node->mMeshes[i]];
 		
 		ComponentMesh* mesh = new ComponentMesh(*imp_mesh);
-		ImportMesh(*imp_mesh, mesh_name.append(std::to_string(i).append(".mesh")));
+		mesh->imported_f_length = ImportMesh(*imp_mesh, mesh_name.append(std::to_string(i).append(".mesh")));
+		mesh->imported_file = mesh_name;
 		mesh->mat = App->scene_intro->materials.at(imp_mesh->mMaterialIndex);
 
 		game_object->components.push_back((Component*)mesh);
@@ -128,6 +159,31 @@ GameObject* ModuleImporter::LoadNodeRecursive(aiNode* node, const aiScene* scene
 	}
 
 	return game_object;
+}
+
+
+void ModuleImporter::ImportNodeRecursive(aiNode* node, const aiScene* scene) {
+
+	//meshes and materials
+	App->gui->app_log.AddLog("Number of meshes %d\n", node->mNumMeshes);
+	for (uint i = 0; i < node->mNumMeshes; i++)
+	{
+		/*std::string mesh_name(node->mName.C_Str());
+		mesh_name.append("mesh");
+		aiMesh* imp_mesh = scene->mMeshes[node->mMeshes[i]];
+
+		ResourceMesh* mesh = ImportMesh(*imp_mesh, mesh_name.append(std::to_string(i).append(".mesh")));
+		aiString tex_path;
+		scene->mMaterials[imp_mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &tex_path);
+		mesh->bound_tex_path.append(tex_path.C_Str());*/
+	}
+
+	//children
+	for (uint i = 0; i < node->mNumChildren; i++)
+	{
+		aiNode* child_node = node->mChildren[i];
+		ImportNodeRecursive(child_node, scene);
+	}
 }
 
 uint ModuleImporter::LoadImg(const char* full_path) 
@@ -179,9 +235,54 @@ void ModuleImporter::LoadAssets(std::vector<std::string> files)
 	}
 
 }
+
+
+void ModuleImporter::ImportAssets(std::vector<std::string> files)
+{
+	bool ret = false;
+
+	for (std::vector<std::string>::iterator filename = files.begin(); filename != files.end(); filename++)
+	{
+		std::string extension;
+		supported_extensions file_type = UNKNOWN;
+
+		extension.append(&(*filename).at((*filename).find_last_of(".") + 1));
+
+		if (extension == "png" || extension == "PNG")       file_type = PNG;
+		else if (extension == "fbx" || extension == "FBX")  file_type = FBX;
+		else if (extension == "wav" || extension == "WAV")  file_type = WAV;
+
+		bool ret = false;
+
+		(*filename).insert(0, "/");
+		(*filename).insert(0, ASSETS_BASE_PATH);
+
+		GameObject* new_obj = nullptr;
+
+		switch (file_type)
+		{
+		case PNG: ret = ImportTex((*filename).c_str()); break;
+		case FBX:
+			new_obj = LoadFBX((*filename).c_str());
+			if (new_obj)
+			{
+				ret = true;
+				App->scene_intro->AddRootObject(new_obj);
+			}
+			break;
+		case WAV: break; // LoadWav((*filename).c_str());
+
+		default: App->gui->app_log.AddLog("unsupported extension found: %s\n", extension.c_str());
+		}
+
+		if (!ret)
+			App->gui->app_log.AddLog("error loading file: %s ! \n", (*filename).c_str());
+	}
+
+}
  
 
-bool ModuleImporter::ImportMesh(aiMesh& imported_mesh, std::string& exported_file_name)
+uint ModuleImporter::ImportMesh(aiMesh& imported_mesh, std::string& exported_file_name)
 {
 	uint ranges[5];
 
@@ -199,8 +300,8 @@ bool ModuleImporter::ImportMesh(aiMesh& imported_mesh, std::string& exported_fil
 	uint size = sizeof(ranges) + sizeof(float3) * ranges[0] + sizeof(Tri) * ranges[1] + sizeof(float3) * ranges[2] + sizeof(Color) * ranges[3] + sizeof(float2) * ranges[4];
 
 	char* data = new char[size];												// Allocate
-	char* cursor = data;	
-			
+	char* cursor = data;
+
 	memcpy(cursor, ranges, sizeof(ranges));										// First store ranges
 
 	uint bytes = sizeof(ranges);
@@ -219,33 +320,32 @@ bool ModuleImporter::ImportMesh(aiMesh& imported_mesh, std::string& exported_fil
 			cursor += bytes;
 		}
 	}
-		 
+
 	memcpy(cursor, imported_mesh.mNormals, sizeof(float3) * ranges[2]);			// Store normals
 
 	bytes = sizeof(float3) * ranges[2];											// Store colors
 	cursor += bytes;
 	memcpy(cursor, imported_mesh.mColors, sizeof(Color) * ranges[3]);
-	
+
 	bytes = sizeof(Color) * ranges[3];											// Store texcoords
 	cursor += bytes;
 	memcpy(cursor, imported_mesh.mColors, sizeof(float2) * ranges[4]);
 
-	std::string uid = CreateUID(exported_file_name.c_str(), exported_file_name.length());
-
-	if (App->fs->Save(uid.c_str(), data, LIBRARY_MESHES_PATH, size))
-	{
-		//SaveMeshMetaFile(*App->json->OpenFile(uid.append(".meta").c_str(), LIBRARY_TEXTURES_PATH), import_options);
-		ResourceMesh* mesh = new ResourceMesh(uid);
-		mesh->buffer = data;
-		App->resources->resources.insert(std::pair<std::string, Resource*>(exported_file_name, (Resource*)mesh));
-	}
-
-	return false;
+	return App->fs->Save(exported_file_name.c_str(), data, LIBRARY_MESHES_PATH, size);
+	//{
+	//	SaveMeshMetaFile(*App->json->OpenFile(uid.append(".meta").c_str(), LIBRARY_TEXTURES_PATH), import_options);
+	//	/*mesh = new ResourceMesh(uid);
+	//	mesh->buffer = data;
+	//	App->resources->resources.insert(std::pair<std::string, Resource*>(exported_file_name, (Resource*)mesh));
+	//	return mesh;*/
+	//}
 }
 
 
-bool ModuleImporter::ImportTex(const char* imported_file_fullpath)
+ResourceTexture* ModuleImporter::ImportTex(const char* imported_file_fullpath)
 {
+	ResourceTexture* new_tex = nullptr;
+
 	ILuint id; uint ret = 0;
 	ilGenImages(1, &id);
 	ilBindImage(id);
@@ -280,15 +380,16 @@ bool ModuleImporter::ImportTex(const char* imported_file_fullpath)
 			if (ret)
 			{
 				SaveTexMetaFile(*App->json->OpenFile(filename.append(".meta").c_str(), LIBRARY_TEXTURES_PATH), import_options);
-				Resource* new_tex = (Resource*) new ResourceTexture(uid);
-				App->resources->resources.insert(std::pair<std::string, Resource*>(filename, new_tex));
+				new_tex = new ResourceTexture(uid);
+				App->resources->resources.insert(std::pair<std::string, Resource*>(filename, (Resource*)new_tex));
+				return new_tex;
 			}
 		}
 		delete[] data;
 	}
 
 	ilDeleteImages(1, &id);
-	return ret;
+	return new_tex;
 }
 
 

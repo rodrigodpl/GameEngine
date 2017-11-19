@@ -1,6 +1,6 @@
 {
     "empty": false,
-    "obj_num": 10,
+    "obj_num": 7,
     "objects": {
         "0": {
             "name": "Main_Camera",
@@ -74,9 +74,10 @@
             "uid": "231e149236fe8a68bd439a9b9d528b82",
             "enabled": true,
             "parent_uid": "none",
-            "number of components": 1,
+            "number of components": 2,
             "components": {
                 "0": {
+                    "type": 3,
                     "transform": {
                         "type": 2,
                         "position": {
@@ -95,17 +96,8 @@
                             "z": -0
                         }
                     },
-                    "type": 4,
-                    "min_point": {
-                        "x": 0,
-                        "y": 0,
-                        "z": 0
-                    },
-                    "max_point": {
-                        "x": 0,
-                        "y": 0,
-                        "z": 0
-                    }
+                    "imported_file": "",
+                    "imported_file_length": 0
                 },
                 "1": {
                     "type": 4,
@@ -145,7 +137,7 @@
             "uid": "b2615254533c2451a8f65766f0a6a17c",
             "enabled": true,
             "parent_uid": "b3961b55abc27793cd7fca8f2aadd84b",
-            "number of components": 2,
+            "number of components": 3,
             "components": {
                 "0": {
                     "type": 2,
@@ -166,6 +158,7 @@
                     }
                 },
                 "1": {
+                    "type": 3,
                     "transform": {
                         "type": 2,
                         "position": {
@@ -174,9 +167,9 @@
                             "z": 0
                         },
                         "scale": {
-                            "x": 100,
-                            "y": 100,
-                            "z": 100
+                            "x": 1,
+                            "y": 1,
+                            "z": 1
                         },
                         "rotation_euler": {
                             "x": -0,
@@ -184,17 +177,8 @@
                             "z": -0
                         }
                     },
-                    "type": 4,
-                    "min_point": {
-                        "x": 1.5711853504180908,
-                        "y": 0.012897491455078125,
-                        "z": -0.035431612282991409
-                    },
-                    "max_point": {
-                        "x": 2.2668659687042236,
-                        "y": 2.3940756320953369,
-                        "z": 0.96456855535507202
-                    }
+                    "imported_file": "Library\/Meshes\/Chimneymesh0.mesh",
+                    "imported_file_length": 6436
                 },
                 "2": {
                     "type": 4,
@@ -221,9 +205,9 @@
                             "z": 100
                         },
                         "rotation_euler": {
-                            "x": -2.3561947345733643,
-                            "y": 1.5707963705062866,
-                            "z": 0
+                            "x": -0,
+                            "y": 0,
+                            "z": -0
                         }
                     }
                 }
@@ -234,7 +218,7 @@
             "uid": "f4aaddee8314e83973b961a37f0fd533",
             "enabled": true,
             "parent_uid": "b3961b55abc27793cd7fca8f2aadd84b",
-            "number of components": 2,
+            "number of components": 3,
             "components": {
                 "0": {
                     "type": 2,
@@ -255,6 +239,7 @@
                     }
                 },
                 "1": {
+                    "type": 3,
                     "transform": {
                         "type": 2,
                         "position": {
@@ -263,9 +248,9 @@
                             "z": 0
                         },
                         "scale": {
-                            "x": 100,
-                            "y": 100,
-                            "z": 100
+                            "x": 1,
+                            "y": 1,
+                            "z": 1
                         },
                         "rotation_euler": {
                             "x": -0,
@@ -273,17 +258,8 @@
                             "z": -0
                         }
                     },
-                    "type": 4,
-                    "min_point": {
-                        "x": -1.5340535640716553,
-                        "y": 0.012897372245788574,
-                        "z": -2.0603470802307129
-                    },
-                    "max_point": {
-                        "x": 1.6797043085098267,
-                        "y": 3.5558733940124512,
-                        "z": 1.9069129228591919
-                    }
+                    "imported_file": "Library\/Meshes\/Baker_housemesh0.mesh",
+                    "imported_file_length": 63536
                 },
                 "2": {
                     "type": 4,
@@ -310,9 +286,9 @@
                             "z": 100
                         },
                         "rotation_euler": {
-                            "x": -2.3561947345733643,
-                            "y": 1.5707963705062866,
-                            "z": 0
+                            "x": -0,
+                            "y": 0,
+                            "z": -0
                         }
                     }
                 }
@@ -451,6 +427,7 @@
             "number of components": 2,
             "components": {
                 "0": {
+                    "type": 3,
                     "transform": {
                         "type": 2,
                         "position": {
@@ -468,221 +445,9 @@
                             "y": 0,
                             "z": -0
                         }
-                    }
-                },
-                "1": {
-                    "type": 4,
-                    "min_point": {
-                        "x": 0,
-                        "y": 0,
-                        "z": 0
                     },
-                    "max_point": {
-                        "x": 0,
-                        "y": 0,
-                        "z": 0
-                    },
-                    "transform": {
-                        "type": 2,
-                        "position": {
-                            "x": 0,
-                            "y": 0,
-                            "z": 0
-                        },
-                        "scale": {
-                            "x": 1,
-                            "y": 1,
-                            "z": 1
-                        },
-                        "rotation_euler": {
-                            "x": -0,
-                            "y": 0,
-                            "z": -0
-                        }
-                    }
-                }
-            }
-        },
-        "7": {
-            "name": "Chimney",
-            "uid": "b2615254533c2451a8f65766f0a6a17c",
-            "enabled": true,
-            "parent_uid": "b3961b55abc27793cd7fca8f2aadd84b",
-            "number of components": 3,
-            "components": {
-                "0": {
-                    "type": 2,
-                    "position": {
-                        "x": 0,
-                        "y": 0,
-                        "z": 0
-                    },
-                    "scale": {
-                        "x": 100,
-                        "y": 100,
-                        "z": 100
-                    },
-                    "rotation_euler": {
-                        "x": -2.3561947345733643,
-                        "y": 1.5707963705062866,
-                        "z": 0
-                    }
-                },
-                "1": {
-                    "transform": {
-                        "type": 2,
-                        "position": {
-                            "x": 0,
-                            "y": 0,
-                            "z": 0
-                        },
-                        "scale": {
-                            "x": 1,
-                            "y": 1,
-                            "z": 1
-                        },
-                        "rotation_euler": {
-                            "x": -0,
-                            "y": 0,
-                            "z": -0
-                        }
-                    }
-                },
-                "2": {
-                    "type": 4,
-                    "min_point": {
-                        "x": 1.5711853504180908,
-                        "y": 0.012897491455078125,
-                        "z": -0.035431612282991409
-                    },
-                    "max_point": {
-                        "x": 2.2668659687042236,
-                        "y": 2.3940756320953369,
-                        "z": 0.96456855535507202
-                    },
-                    "transform": {
-                        "type": 2,
-                        "position": {
-                            "x": 0,
-                            "y": 0,
-                            "z": 0
-                        },
-                        "scale": {
-                            "x": 100,
-                            "y": 100,
-                            "z": 100
-                        },
-                        "rotation_euler": {
-                            "x": -2.3561947345733643,
-                            "y": 1.5707963705062866,
-                            "z": 0
-                        }
-                    }
-                }
-            }
-        },
-        "8": {
-            "name": "Baker_house",
-            "uid": "f4aaddee8314e83973b961a37f0fd533",
-            "enabled": true,
-            "parent_uid": "b3961b55abc27793cd7fca8f2aadd84b",
-            "number of components": 3,
-            "components": {
-                "0": {
-                    "type": 2,
-                    "position": {
-                        "x": 0,
-                        "y": 0,
-                        "z": 0
-                    },
-                    "scale": {
-                        "x": 100,
-                        "y": 100,
-                        "z": 100
-                    },
-                    "rotation_euler": {
-                        "x": -2.3561947345733643,
-                        "y": 1.5707963705062866,
-                        "z": 0
-                    }
-                },
-                "1": {
-                    "transform": {
-                        "type": 2,
-                        "position": {
-                            "x": 0,
-                            "y": 0,
-                            "z": 0
-                        },
-                        "scale": {
-                            "x": 1,
-                            "y": 1,
-                            "z": 1
-                        },
-                        "rotation_euler": {
-                            "x": -0,
-                            "y": 0,
-                            "z": -0
-                        }
-                    }
-                },
-                "2": {
-                    "type": 4,
-                    "min_point": {
-                        "x": -1.5340535640716553,
-                        "y": 0.012897372245788574,
-                        "z": -2.0603470802307129
-                    },
-                    "max_point": {
-                        "x": 1.6797043085098267,
-                        "y": 3.5558733940124512,
-                        "z": 1.9069129228591919
-                    },
-                    "transform": {
-                        "type": 2,
-                        "position": {
-                            "x": 0,
-                            "y": 0,
-                            "z": 0
-                        },
-                        "scale": {
-                            "x": 100,
-                            "y": 100,
-                            "z": 100
-                        },
-                        "rotation_euler": {
-                            "x": -2.3561947345733643,
-                            "y": 1.5707963705062866,
-                            "z": 0
-                        }
-                    }
-                }
-            }
-        },
-        "9": {
-            "name": "RootNode",
-            "uid": "b3961b55abc27793cd7fca8f2aadd84b",
-            "enabled": true,
-            "parent_uid": "none",
-            "number of components": 2,
-            "components": {
-                "0": {
-                    "type": 2,
-                    "position": {
-                        "x": 0,
-                        "y": 0,
-                        "z": 0
-                    },
-                    "scale": {
-                        "x": 1,
-                        "y": 1,
-                        "z": 1
-                    },
-                    "rotation_euler": {
-                        "x": -0,
-                        "y": 0,
-                        "z": -0
-                    }
+                    "imported_file": "",
+                    "imported_file_length": 0
                 },
                 "1": {
                     "type": 4,

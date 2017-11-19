@@ -188,11 +188,80 @@ void ComponentMesh::Draw() {
 void ComponentMesh::Save(JSON_file& save_file, const char* component_code)
 {
 	std::string attribute_code(component_code);
+
+	save_file.WriteNumber(std::string(".type").insert(0, component_code).c_str(), type);
+
 	transform->Save(save_file, attribute_code.append(".transform").c_str());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	save_file.WriteString(attribute_code.append(".imported_file").c_str(), imported_file.c_str());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	save_file.WriteNumber(attribute_code.append(".imported_file_length").c_str(), imported_f_length);
+
 }
 
 void ComponentMesh::Load(JSON_file& save_file, const char* component_code)
 {
 	std::string attribute_code(component_code);
+	transform = new ComponentTransform();
 	transform->Load(save_file, attribute_code.append(".transform").c_str());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	imported_file = save_file.ReadString(attribute_code.append(".imported_file").c_str());
+
+	attribute_code.clear(); attribute_code.append(component_code);
+	imported_f_length = save_file.ReadNumber(attribute_code.append(".imported_file_length").c_str());
+
+}
+
+void ComponentMesh::LoadFromBuffer(char* buffer)
+{
+	char* cursor = buffer;
+
+	uint ranges[5];					 // amount of vertices / tris / normals / colors / texture_coords
+	uint bytes = sizeof(ranges);
+	memcpy(ranges, cursor, bytes);
+
+	num_vertices = ranges[0];
+	num_tris = ranges[1];
+	num_normals = ranges[2];
+	num_colors = ranges[3];
+	num_texcoords = ranges[4];
+
+	// Load vertices
+	cursor += bytes;
+	bytes = sizeof(float3) * num_vertices;
+	vertices = new float3[num_vertices];
+	memcpy(vertices, cursor, bytes);
+
+	// Load indices
+	cursor += bytes;
+	bytes = sizeof(Tri) * num_tris;
+	tris = new Tri[num_tris];
+	memcpy(tris, cursor, bytes);
+
+
+	// Load normals
+	cursor += bytes;
+	bytes = sizeof(float3) * num_normals;
+	normals = new float3[num_normals];
+	memcpy(normals, cursor, bytes);
+
+
+	// Load colors
+	cursor += bytes;
+	bytes = sizeof(Color) * num_colors;
+	colors = new Color[num_colors];
+	memcpy(colors, cursor, bytes);
+
+
+	// Load texcoords
+	cursor += bytes;
+	bytes = sizeof(float2) * num_texcoords;
+	texcoords = new float2[num_texcoords];
+	memcpy(texcoords, cursor, bytes);
+
+
+	LoadDataToVRAM();
 }
