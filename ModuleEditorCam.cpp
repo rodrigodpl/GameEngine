@@ -31,7 +31,7 @@ bool ModuleEditorCam::Start() {
 	main_cam_obj = new GameObject("Main_Camera");
 
 	main_cam_obj->components.push_back(cam);
-	App->scene_intro->game_objects.push_back(main_cam_obj);
+	App->scene_intro->AddRootObject(main_cam_obj);
 
 	return cam;
 }
@@ -105,7 +105,7 @@ bool sortNearestHit(const RayHit& a, const RayHit& b) { return a.hit_distance < 
 GameObject* ModuleEditorCam::MouseRaycast(Ray ray) {
 
 	std::list<RayHit> hits;
-	std::vector<GameObject*>* game_objects = &App->scene_intro->game_objects;
+	std::vector<GameObject*>* game_objects = &App->scene_intro->all_game_objects;
 
 	for (std::vector<GameObject*>::iterator it = game_objects->begin(); it != game_objects->end(); it++)
 		(*it)->RayCastAgainstAABBs(ray, hits);

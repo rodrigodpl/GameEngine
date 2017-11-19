@@ -25,20 +25,19 @@ public:
 	std::vector<Component*> FindComponents(Component_type type);
 	GameObject* FindChild(const char* name);
 
-	void UpdateRecursive(float dt);
-	void DrawRecursive();
-	void CullRecursive(ComponentCamera* cam);
+	void Update(float dt);
+	void Draw();
+	bool Cull(ComponentCamera* cam);
 
 	void HierarchyTree(std::string& selected_obj_uid);
 
-	void RayCastAgainstAABBs(Ray ray, std::list<RayHit>& outHits);		// recursive
+	void RayCastAgainstAABBs(Ray ray, std::list<RayHit>& outHits);		
 	void RayCastAgainstMeshes(Ray ray, std::list<RayHit>& outHits);		// not recursive
 
 	void Save(JSON_file& save_file, uint& obj_index);
 	void Load(JSON_file& save_file, uint& obj_index);
 
-	void FindParent(std::vector<GameObject*>& objects);					// recursive
-	GameObject* RetrieveParent(std::string& parent_uid);				// recursive
+	void FindParent(std::vector<GameObject*>& objects);			
 
 public:
 
@@ -49,7 +48,6 @@ public:
 	std::vector<Component*> components;		// scene saved variable
 	std::vector<GameObject*> children;		// scene saved variable
 
-	bool culled = false;
 	bool enabled = true;					// scene saved variable
 };
 
