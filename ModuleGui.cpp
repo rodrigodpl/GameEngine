@@ -48,6 +48,10 @@ update_status ModuleGui::PreUpdate(float dt) {
 			{
 				App->LoadModules();
 			}
+			if (ImGui::MenuItem("Load Assets"))
+			{
+				App->importer->LoadAssets(App->fs->GetFilesInDir(ASSETS_BASE_PATH));
+			}
 			if (ImGui::MenuItem("Options"))
 			{
 				draw_options = !draw_options;
@@ -238,47 +242,58 @@ void ModuleGui::Draw() {
 		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Properties", &draw_properties, ImGuiWindowFlags_ShowBorders);
 		if (ImGui::CollapsingHeader("Transformation")) {
-			// Rodrigo --> Set values of the selected game object into the transform
-			//Position
-			transX = transform->position.x;
-			transY = transform->position.y;
-			transZ = transform->position.z;
 
-			ImGui::InputFloat("", &transX); ImGui::SameLine();
-			ImGui::InputFloat("", &transY); ImGui::SameLine();
-			ImGui::InputFloat("", &transZ); ImGui::SameLine();
-			ImGui::Text("Transformation");
+			GameObject* selected_obj = nullptr;
+			if (selected_obj = App->scene_intro->GetSelectedObj())
+			{
+				if (transform != (ComponentTransform*)selected_obj->FindComponent(COMPONENT_TRANSFORM))
+				{
+					if (transform) delete transform;
+					transform = (ComponentTransform*)selected_obj->FindComponent(COMPONENT_TRANSFORM)->Duplicate();
+				}
 
-			if (transX != transform->position.x || transY != transform->position.y || transZ != transform->position.z) {
-				transform->SetPosition((float3)(transX, transY, transZ));
-			}
-			//-----------
-			//Rotation
-			rotX = transform->rotation.x;
-			rotY = transform->rotation.y;
-			rotZ = transform->rotation.z;
+				//Position
+				transX = transform->position.x;
+				transY = transform->position.y;
+				transZ = transform->position.z;
 
-			ImGui::SliderFloat("", &rotX, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
-			ImGui::SliderFloat("", &rotY, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
-			ImGui::SliderFloat("", &rotZ, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
-			ImGui::Text("Rotation");
+				ImGui::InputFloat("", &transX); ImGui::SameLine();
+				ImGui::InputFloat("", &transY); ImGui::SameLine();
+				ImGui::InputFloat("", &transZ); ImGui::SameLine();
+				ImGui::Text("Transformation");
 
-			if (rotX != transform->rotation.x || rotY != transform->rotation.y || rotZ != transform->rotation.z) {
-				transform->SetRotationEuler((float3)(rotX, rotY, rotZ));
-			}
-			//-----------
-			//Scale
-			scaleX = transform->scale.x;
-			scaleY = transform->scale.y;
-			scaleZ = transform->scale.z;
+				if (transX != transform->position.x || transY != transform->position.y || transZ != transform->position.z) {
+					transform->SetPosition((float3)(transX, transY, transZ));
+				}
+				//-----------
+				//Rotation
+				rotX = transform->rotation.x;
+				rotY = transform->rotation.y;
+				rotZ = transform->rotation.z;
 
-			ImGui::InputFloat("", &scaleX); ImGui::SameLine();
-			ImGui::InputFloat("", &scaleY); ImGui::SameLine();
-			ImGui::InputFloat("", &scaleZ); ImGui::SameLine();
-			ImGui::Text("Scale");
+				ImGui::SliderFloat("", &rotX, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
+				ImGui::SliderFloat("", &rotY, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
+				ImGui::SliderFloat("", &rotZ, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
+				ImGui::Text("Rotation");
 
-			if (scaleX != transform->scale.x || scaleY != transform->scale.y || scaleZ != transform->scale.z) {
-				transform->SetScale((float3)(scaleX, scaleY, scaleZ));
+				if (rotX != transform->rotation.x || rotY != transform->rotation.y || rotZ != transform->rotation.z) {
+					transform->SetRotationEuler((float3)(rotX, rotY, rotZ));
+				}
+				//-----------
+				//Scale
+				scaleX = transform->scale.x;
+				scaleY = transform->scale.y;
+				scaleZ = transform->scale.z;
+
+				ImGui::InputFloat("", &scaleX); ImGui::SameLine();
+				ImGui::InputFloat("", &scaleY); ImGui::SameLine();
+				ImGui::InputFloat("", &scaleZ); ImGui::SameLine();
+				ImGui::Text("Scale");
+
+				if (scaleX != transform->scale.x || scaleY != transform->scale.y || scaleZ != transform->scale.z) {
+					transform->SetScale((float3)(scaleX, scaleY, scaleZ));
+				}
+
 			}
 			//-----------
 		}

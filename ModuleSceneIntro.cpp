@@ -24,7 +24,6 @@ bool ModuleSceneIntro::Start()
 
 	srand(time(NULL));
 
-	if (empty_scene) App->importer->LoadAssets(App->fs->GetFilesInDir(ASSETS_BASE_PATH));
 
 	GameObject* floor = new GameObject("floor plane");
 	floor->components.push_back((Component*)new PrimPlane(0, 1, 0, 10));
@@ -68,15 +67,24 @@ void ModuleSceneIntro::Load(JSON_file& config)
 	
 	if (!save_file->ReadBool("empty"))
 	{
-		empty_scene = false;
 		uint obj_num = save_file->ReadNumber("obj_num");
 		for (uint obj_index = 0; obj_index < obj_num; obj_index++)
 		{
 			GameObject* new_obj = new GameObject();
 			new_obj->Load(*save_file, obj_index);
 
-			if (new_obj->parent_uid == "none")	AddRootObject(new_obj);
-			else								all_game_objects.push_back(new_obj);
+			bool exists = false;
+			for (std::vector<GameObject*>::iterator it = all_game_objects.begin(); it != all_game_objects.end(); it++)
+			{
+				if ((*it)->uid == new_obj->uid) exists = true;
+			}
+
+			if (exists) delete new_obj;
+			else
+			{
+				if (new_obj->parent_uid == "none")	AddRootObject(new_obj);
+				else								all_game_objects.push_back(new_obj);
+			}
 		}
 
 		for (std::vector<GameObject*>::iterator it = all_game_objects.begin(); it != all_game_objects.end(); it++)
@@ -102,5 +110,18 @@ void ModuleSceneIntro::AddRootObject(GameObject* game_obj)
 {
 	root_game_objects.push_back(game_obj);
 	all_game_objects.push_back(game_obj);
+}
+
+GameObject* ModuleSceneIntro::GetSelectedObj()
+{
+	if (selected_game_obj_uid != "none")
+	{
+		for (std::vector<GameObject*>::iterator it = all_game_objects.begin(); it != all_game_objects.end(); it++) 
+		{
+			if (selected_game_obj_uid == (*it)->uid) return (*it);
+		}
+	}
+
+	return nullptr;
 }
 

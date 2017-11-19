@@ -74,7 +74,7 @@ private:
 	int win_size;
 	int window_option;
 
-	ComponentTransform* transform;
+	ComponentTransform* transform = nullptr;
 
 	float transX;
 	float transY;
