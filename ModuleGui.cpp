@@ -238,25 +238,49 @@ void ModuleGui::Draw() {
 		ImGui::SetNextWindowPos(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Properties", &draw_properties, ImGuiWindowFlags_ShowBorders);
 		if (ImGui::CollapsingHeader("Transformation")) {
+			// Rodrigo --> Set values of the selected game object into the transform
 			//Position
-			if (ImGui::CollapsingHeader("Position")) {
-				//App->scene_intro->selected_game_obj
-				/*ImGui::InputInt("", &transX); ImGui::SameLine();
-				ImGui::InputInt("", &transY); ImGui::SameLine();
-				ImGui::InputInt("", &transZ);*/
+			transX = transform->position.x;
+			transY = transform->position.y;
+			transZ = transform->position.z;
+
+			ImGui::InputFloat("", &transX); ImGui::SameLine();
+			ImGui::InputFloat("", &transY); ImGui::SameLine();
+			ImGui::InputFloat("", &transZ); ImGui::SameLine();
+			ImGui::Text("Transformation");
+
+			if (transX != transform->position.x || transY != transform->position.y || transZ != transform->position.z) {
+				transform->SetPosition((float3)(transX, transY, transZ));
 			}
+			//-----------
 			//Rotation
-			if (ImGui::CollapsingHeader("Rotation")) {
-				/*ImGui::SliderFloat("", &rotX, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
-				ImGui::SliderFloat("", &rotY, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
-				ImGui::SliderFloat("", &rotZ, -180.0f, 180.0f, "%.0f");*/
+			rotX = transform->rotation.x;
+			rotY = transform->rotation.y;
+			rotZ = transform->rotation.z;
+
+			ImGui::SliderFloat("", &rotX, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
+			ImGui::SliderFloat("", &rotY, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
+			ImGui::SliderFloat("", &rotZ, -180.0f, 180.0f, "%.0f"); ImGui::SameLine();
+			ImGui::Text("Rotation");
+
+			if (rotX != transform->rotation.x || rotY != transform->rotation.y || rotZ != transform->rotation.z) {
+				transform->SetRotationEuler((float3)(rotX, rotY, rotZ));
 			}
+			//-----------
 			//Scale
-			if (ImGui::CollapsingHeader("Scale")) {
-				/*ImGui::InputInt("", &scaleX); ImGui::SameLine();
-				ImGui::InputInt("", &scaleY); ImGui::SameLine();
-				ImGui::InputInt("", &scaleZ);*/
+			scaleX = transform->scale.x;
+			scaleY = transform->scale.y;
+			scaleZ = transform->scale.z;
+
+			ImGui::InputFloat("", &scaleX); ImGui::SameLine();
+			ImGui::InputFloat("", &scaleY); ImGui::SameLine();
+			ImGui::InputFloat("", &scaleZ); ImGui::SameLine();
+			ImGui::Text("Scale");
+
+			if (scaleX != transform->scale.x || scaleY != transform->scale.y || scaleZ != transform->scale.z) {
+				transform->SetScale((float3)(scaleX, scaleY, scaleZ));
 			}
+			//-----------
 		}
 		if (ImGui::CollapsingHeader("Geometry")) {
 			//ImGui::Text("# Indices: "); ImGui::SameLine();

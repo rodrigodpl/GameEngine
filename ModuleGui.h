@@ -5,6 +5,7 @@
 #include "imgui.h"
 #include "SDL\include\SDL.h"
 #include "Color.h"
+#include "ComponentTransform.h"
 
 #include <vector>
 #include <string>
@@ -73,6 +74,20 @@ private:
 	int win_size;
 	int window_option;
 
+	ComponentTransform* transform;
+
+	float transX;
+	float transY;
+	float transZ;
+
+	float rotX;
+	float rotY;
+	float rotZ;
+
+	float scaleX;
+	float scaleY;
+	float scaleZ;
+
 public:
 	void Fps_app_data(float aux);
 	void Fps_renderer_data(float aux);
@@ -80,8 +95,5 @@ public:
 	void Fps_input_data(float aux);
 
 	void Get_colour(Color aux);
-
-private:
-	void CreateTree();
 };
 
